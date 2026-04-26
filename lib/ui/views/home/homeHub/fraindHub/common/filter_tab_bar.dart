@@ -13,7 +13,7 @@ class FilterTabBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 44,
-      color: const Color(0xFF1E2124),
+      color: const Color(0xFF1a1a1e),
       child: ListView(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -33,7 +33,7 @@ class FilterTabBar extends StatelessWidget implements PreferredSizeWidget {
               filter: FriendFilter.blocked,
               viewModel: viewModel),
           _TabChip(
-              label: 'addFraind',
+              label: 'AddFraind',
               filter: FriendFilter.addfraind,
               viewModel: viewModel),
           const SizedBox(width: 10),
@@ -57,22 +57,41 @@ class _TabChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isActive = viewModel.selectedFilter == filter;
+    final bool isAddFriendTab = filter == FriendFilter.addfraind;
+
+    Color getBgColor() {
+      if (isAddFriendTab) {
+        return isActive
+            ? const Color(0xFF363e8e).withOpacity(0.5)
+            : const Color(0xFF5a68ed);
+      }
+
+      return isActive ? const Color(0xFF404249) : Colors.transparent;
+    }
+
+    Color getTextColor() {
+      if (isAddFriendTab) {
+        return isActive ? const Color(0xFF5a68ed) : Colors.white;
+      }
+      return isActive ? Colors.white : const Color(0xFFB5BAC1);
+    }
+
     return GestureDetector(
       onTap: () => viewModel.setFilter(filter),
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        margin: const EdgeInsets.only(right: 6),
+        duration: const Duration(milliseconds: 350),
+        margin: const EdgeInsets.only(right: 10),
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
         decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF5865F2) : const Color(0xFF2C2F33),
+          color: getBgColor(),
           borderRadius: BorderRadius.circular(6),
         ),
         child: Text(
           label,
           style: TextStyle(
-            color: isActive ? Colors.white : const Color(0xFFB9BBBE),
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
+            color: getTextColor(),
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
           ),
         ),
       ),

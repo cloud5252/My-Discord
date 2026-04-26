@@ -27,7 +27,7 @@ class DmSideView extends StackedView<DmSideViewModel> {
             decoration: BoxDecoration(
                 color: const Color(0xFF1E1F22),
                 borderRadius: BorderRadius.circular(4),
-                border: Border(
+                border: const Border(
                     left: BorderSide(
                   color: Colors.grey,
                 ))),

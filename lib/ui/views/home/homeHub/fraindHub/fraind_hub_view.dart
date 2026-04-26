@@ -18,7 +18,7 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
       BuildContext context, FraindHubViewModel viewModel, Widget? child) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF313338), // Discord ka standard background
+        color: const Color(0xFF1a1a1e),
         border: Border(
           left: BorderSide(
             color: Colors.grey.withOpacity(0.2),
@@ -28,14 +28,32 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
       ),
       child: Column(
         children: [
+          Container(
+            height: 48,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            decoration: const BoxDecoration(
+              border: Border(
+                bottom: BorderSide(color: Color(0xFF1E1F22), width: 1.5),
+              ),
+            ),
+            child: Row(
+              children: [
+                const _tabtag(),
+                const SizedBox(width: 16),
+
+                const SizedBox(width: 16),
+                // Tabs (Online, All, Pending, etc.)
+                Expanded(child: FilterTabBar(viewModel: viewModel)),
+                const ChatPopupMenu(),
+              ],
+            ),
+          ),
           if (viewModel.selectedFilter == FriendFilter.blocked ||
               viewModel.selectedFilter == FriendFilter.all)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: FriendsSearchBar(viewModel: viewModel),
             ),
-
-          // Body
           Expanded(child: _buildBody(viewModel)),
         ],
       ),
@@ -49,10 +67,10 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
       FriendFilter.addfraind => const AddFraindView(),
       FriendFilter.blocked => const Center(
           child: Text('No blocked users',
-              style: TextStyle(color: Color(0xFF80848E))),
+              style: TextStyle(color: Color(0xFF1a1a1e))),
         ),
       FriendFilter.all => const Center(
-          child: Text('not found', style: TextStyle(color: Color(0xFF80848E))),
+          child: Text('not found', style: TextStyle(color: Color(0xFF1a1a1e))),
         ),
       _ => const Text('error'),
     };
@@ -63,38 +81,25 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
       FraindHubViewModel();
 }
 
-class _FriendsHeader extends StatelessWidget {
-  final FraindHubViewModel viewModel;
-  const _FriendsHeader({required this.viewModel});
+class _tabtag extends StatelessWidget {
+  const _tabtag();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFF1E2124),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          GestureDetector(
-            onTap: () => viewModel.logout(),
-            child: const Text('Friends Logout',
-                style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600)),
+    return const Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(Icons.people_alt, color: Color(0xFFabacb2), size: 18),
+        SizedBox(width: 8),
+        Text(
+          'Friends',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.bold,
           ),
-          const Spacer(),
-          const ChatPopupMenu(),
-        ],
-      ),
+        ),
+      ],
     );
-  }
-}
-
-class _fraindstag extends StatelessWidget {
-  const _fraindstag({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }
