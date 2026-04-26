@@ -49,7 +49,9 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
             ),
           ),
           if (viewModel.selectedFilter == FriendFilter.blocked ||
-              viewModel.selectedFilter == FriendFilter.all)
+              viewModel.selectedFilter == FriendFilter.all ||
+              viewModel.selectedFilter == FriendFilter.online ||
+              viewModel.selectedFilter == FriendFilter.pending)
             Padding(
               padding: const EdgeInsets.all(16.0),
               child: FriendsSearchBar(viewModel: viewModel),

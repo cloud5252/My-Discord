@@ -20,30 +20,33 @@ class DmSideView extends StackedView<DmSideViewModel> {
           ))),
       child: Column(
         children: [
-          // Search bar
-          Container(
-            margin: const EdgeInsets.all(10),
-            height: 28,
-            decoration: BoxDecoration(
-                color: const Color(0xFF1E1F22),
-                borderRadius: BorderRadius.circular(4),
-                border: const Border(
-                    left: BorderSide(
-                  color: Colors.grey,
-                ))),
-            child: const TextField(
-              style: TextStyle(color: Colors.white, fontSize: 12),
-              decoration: InputDecoration(
-                hintText: 'Find or start a conversation',
-                hintStyle: TextStyle(color: Color(0xFF80848E), fontSize: 12),
-                border: InputBorder.none,
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+          const SizedBox(height: 5),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 5),
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey.shade900),
+                  color: const Color(0xFF1d1d1e),
+                  borderRadius: BorderRadius.circular(10)),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                child: Center(
+                  child: Text(
+                    'Find or start a conversation',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
-
-          // ─── Menu Tabs ─────────────────────────────
+          Divider(
+            thickness: 0.5,
+            color: Colors.grey.shade700,
+          ),
           _SidebarTab(
             icon: Icons.people,
             label: 'Friends',
@@ -75,15 +78,13 @@ class DmSideView extends StackedView<DmSideViewModel> {
             tab: SidebarTab.quests,
             viewModel: viewModel,
           ),
-
-          // ─── Direct Messages Header ─────────────────
           const Padding(
             padding: EdgeInsets.fromLTRB(16, 16, 8, 4),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
-                    'DIRECT MESSAGES',
+                    'Direct Messages',
                     style: TextStyle(
                       color: Color(0xFF80848E),
                       fontSize: 11,
@@ -96,13 +97,9 @@ class DmSideView extends StackedView<DmSideViewModel> {
               ],
             ),
           ),
-
-          // ─── Friends List ───────────────────────────
           const Expanded(
             child: DmSideFraindWidget(),
           ),
-
-          // ─── Bottom User Bar ────────────────────────
           const _BottomUserBar(),
         ],
       ),
@@ -113,7 +110,6 @@ class DmSideView extends StackedView<DmSideViewModel> {
   DmSideViewModel viewModelBuilder(BuildContext context) => DmSideViewModel();
 }
 
-// ─── Sidebar Tab Widget ─────────────────────────────────
 class _SidebarTab extends StatelessWidget {
   final IconData icon;
   final String label;
@@ -153,7 +149,7 @@ class _SidebarTab extends StatelessWidget {
                 label,
                 style: TextStyle(
                   color: isActive ? Colors.white : const Color(0xFFDBDEE1),
-                  fontSize: 14,
+                  fontSize: 13,
                   fontWeight: FontWeight.w500,
                 ),
               ),
@@ -181,7 +177,6 @@ class _SidebarTab extends StatelessWidget {
   }
 }
 
-// ─── Bottom User Bar ────────────────────────────────────
 class _BottomUserBar extends StatelessWidget {
   const _BottomUserBar();
 

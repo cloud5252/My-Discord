@@ -30,28 +30,21 @@ class HomeView extends StackedView<HomeViewModel> {
       backgroundColor: const Color(0xFF121214),
       body: Row(
         children: [
-          // 1. Server icons — 72px
           const SizedBox(
             width: 50,
             child: ServerSidebar(),
           ),
-
-          // 2. DM Sidebar — 240px
           const SizedBox(
-            width: 240,
+            width: 270,
             child: DmSideView(),
           ),
-
-          // 3. Main Friends Panel — baaki sab
           Expanded(
             child: viewModel.currentView is SizedBox
-                ? const FraindHubView() // ← default view
-                : viewModel.currentView, // ← chat open hone pe yahan aayega
+                ? const FraindHubView()
+                : viewModel.currentView,
           ),
-
-          // 4. Active Now Panel — 240px
           const SizedBox(
-            width: 240,
+            width: 270,
             child: ActiveNowPanel(),
           ),
         ],

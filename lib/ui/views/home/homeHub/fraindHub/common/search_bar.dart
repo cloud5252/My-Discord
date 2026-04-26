@@ -10,7 +10,6 @@ class FriendsSearchBar extends StatelessWidget {
     return SizedBox(
       width: double.infinity,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
         height: 36,
         decoration: BoxDecoration(
           color: const Color(0xFF202225),
@@ -20,12 +19,27 @@ class FriendsSearchBar extends StatelessWidget {
           style: const TextStyle(color: Colors.white, fontSize: 14),
           cursorColor: Colors.white,
           onChanged: viewModel.onSearchChanged,
-          decoration: const InputDecoration(
+          textAlignVertical: TextAlignVertical.center,
+          decoration: InputDecoration(
+            hoverColor: Colors.transparent,
+            fillColor: const Color(0xFF17171a),
+            filled: true,
             hintText: 'Search',
-            hintStyle: TextStyle(color: Color(0xFF72767D), fontSize: 14),
-            prefixIcon: Icon(Icons.search, color: Color(0xFF72767D), size: 18),
+            hintStyle: const TextStyle(color: Color(0xFF72767D), fontSize: 14),
+            prefixIcon:
+                const Icon(Icons.search, color: Color(0xFF72767D), size: 18),
             border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(vertical: 8),
+            contentPadding:
+                const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide:
+                  const BorderSide(color: Color(0xFF3e4fed), width: 2.0),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(4),
+              borderSide: BorderSide.none,
+            ),
           ),
         ),
       ),
