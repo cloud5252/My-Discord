@@ -4,9 +4,8 @@ import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:my_discord/ui/dialogs/bottom_sheets/notice/notice_sheet.dart';
 import 'package:my_discord/ui/dialogs/add_user/add_user_dialog.dart';
 import 'package:my_discord/ui/dialogs/confirm_action/add_user_dialog.dart';
-import 'package:my_discord/ui/views/home/homeHub/chat/chat_view.dart';
-import 'package:my_discord/ui/views/home/homeHub/fraindHub/fraind_hub_view.dart';
-import 'package:my_discord/ui/views/home/homeHub/fraindHub/Tabs/pending/pending_view.dart';
+import 'package:my_discord/ui/views/home/center%20panels/chat/chat_view.dart';
+import 'package:my_discord/ui/views/home/center%20panels/friends/Tabs/pending/pending_view.dart';
 import 'package:my_discord/ui/views/home/home_view.dart';
 import 'package:my_discord/ui/views/log_in/log_in_view.dart';
 import 'package:my_discord/ui/views/sign_in/sign_in_view.dart';
@@ -23,7 +22,7 @@ import 'package:stacked_services/stacked_services.dart';
     MaterialRoute(page: SignInView),
     MaterialRoute(page: PendingView),
     MaterialRoute(page: LogInView),
-    MaterialRoute(page: FraindHubView),
+
     // @stacked-route
   ],
   dependencies: [

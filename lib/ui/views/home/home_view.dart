@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_discord/ui/views/home/coversationHub/dmSide/dm_side_view.dart';
-import 'package:my_discord/ui/views/home/homeHub/fraindHub/fraind_hub_view.dart';
+import 'package:my_discord/ui/views/home/sidebar/dmSide/dm_side_view.dart';
+import 'package:my_discord/ui/views/home/center%20panels/friends/fraind_hub_view.dart';
 import 'package:my_discord/ui/views/home/home_viewmodel.dart';
-import 'package:my_discord/ui/views/home/homeHub/server_sidebar/server_sidebar_view.dart';
+import 'package:my_discord/ui/views/home/center%20panels/server_sidebar/server_sidebar_view.dart';
 import 'package:my_discord/ui/views/home/widget/My_active_now_panel.dart';
 import 'package:stacked/stacked.dart';
 
@@ -18,7 +18,9 @@ class HomeView extends StackedView<HomeViewModel> {
         toolbarHeight: 30,
         automaticallyImplyLeading: false,
         titleSpacing: 16,
-        title: const _tabtag(),
+        title: _tabtag(
+          title: viewModel.appBarTitle,
+        ),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
           child: Container(
@@ -57,24 +59,45 @@ class HomeView extends StackedView<HomeViewModel> {
 }
 
 class _tabtag extends StatelessWidget {
-  const _tabtag();
+  final String title;
+
+  const _tabtag({required this.title});
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.people_alt, color: Color(0xFFabacb2), size: 18),
-        SizedBox(width: 8),
+        _buildIconForTitle(title),
+        const SizedBox(width: 8),
         Text(
-          'Friends',
-          style: TextStyle(
+          title,
+          style: const TextStyle(
             color: Colors.white,
-            fontSize: 13,
+            fontSize: 14,
             fontWeight: FontWeight.bold,
           ),
         ),
       ],
     );
+  }
+
+  Widget _buildIconForTitle(String title) {
+    if (title == "Friends") {
+      return const Icon(Icons.people_alt, color: Color(0xFF80848E), size: 20);
+    } else if (title == "Nitro") {
+      return const Icon(Icons.bolt, color: Color(0xFF80848E), size: 20);
+    } else if (title == "Shop") {
+      return const Icon(Icons.shopping_bag, color: Color(0xFF80848E), size: 20);
+    } else {
+      return const Text(
+        '@',
+        style: TextStyle(
+          color: Color(0xFF80848E),
+          fontSize: 20,
+          fontWeight: FontWeight.w300,
+        ),
+      );
+    }
   }
 }

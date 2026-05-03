@@ -1,19 +1,22 @@
-// lib/services/view_service.dart
 import 'package:flutter/material.dart';
+import 'package:my_discord/ui/views/home/center%20panels/friends/fraind_hub_view.dart';
 import 'package:stacked/stacked.dart';
-import 'package:my_discord/ui/views/home/homeHub/fraindHub/fraind_hub_view.dart';
 
 class ViewService with ListenableServiceMixin {
-  // Shuru mein FraindHubView dikhao
-  Widget _currentView = const FraindHubView();
-  Widget get currentView => _currentView;
+  final _currentView = ReactiveValue<Widget>(const FraindHubView());
+  final _currentTitle = ReactiveValue<String>("Friends");
+
+  // Getters
+  Widget get currentView => _currentView.value;
+  String get currentTitle => _currentTitle.value;
 
   ViewService() {
-    listenToReactiveValues([_currentView]);
+    listenToReactiveValues([_currentView, _currentTitle]);
   }
 
-  void setView(Widget view) {
-    _currentView = view;
+  void setView(Widget view, {String title = "Friends"}) {
+    _currentView.value = view;
+    _currentTitle.value = title;
     notifyListeners();
   }
 }
