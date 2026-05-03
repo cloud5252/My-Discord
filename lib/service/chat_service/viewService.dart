@@ -15,6 +15,7 @@ class ViewService with ListenableServiceMixin {
   }
 
   void setView(Widget view, {String title = "Friends"}) {
+    
     _currentView.value = view;
     _currentTitle.value = title;
     notifyListeners();

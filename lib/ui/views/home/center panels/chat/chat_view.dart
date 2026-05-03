@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/ui/views/home/center%20panels/chat/chat_view_model.dart';
 import 'package:stacked/stacked.dart';
 
@@ -15,29 +17,62 @@ class ChatView extends StackedView<ChatViewModel> {
   @override
   Widget builder(BuildContext context, ChatViewModel viewModel, Widget? child) {
     return Container(
-      color: const Color(0xFF313338),
+      color: const Color(0xFF1a1a1e),
       child: Column(
         children: [
           _buildTopHeader(),
           const Divider(color: Color(0xFF1E1F22), height: 1),
+
+          // Messages list
           Expanded(
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              reverse: false,
-              children: [
-                const SizedBox(height: 40),
-                _buildUserProfileHeader(),
-                const SizedBox(height: 20),
-                const Divider(color: Colors.white10),
-                const SizedBox(height: 10),
-                _buildMessageBubble(
-                    "Programer", "hello sir", "4/9/25, 9:52 PM"),
-                _buildMessageBubble("Programer",
-                    "rooom karo ge 4v4 broly ka dost hon", "4/9/25, 9:53 PM"),
-              ],
+            child: StreamBuilder<List<MessageModel>>(
+              key: ValueKey(viewModel.receiverId),
+              stream: viewModel.messagesStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(color: Color(0xFF5865F2)),
+                  );
+                }
+
+                final messages = snapshot.data ?? [];
+
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  // ← +1 sirf profile header ke liye
+                  itemCount: messages.length + 1,
+                  itemBuilder: (context, index) {
+                    // index 0 — profile header
+                    if (index == 0) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const SizedBox(height: 40),
+                          _buildUserProfileHeader(),
+                          const SizedBox(height: 20),
+                          const Divider(color: Colors.white10),
+                          const SizedBox(height: 10),
+                          if (messages.isEmpty)
+                            const Padding(
+                              padding: EdgeInsets.all(20),
+                              child: Text('No messages yet!',
+                                  style: TextStyle(color: Color(0xFF80848E))),
+                            ),
+                        ],
+                      );
+                    }
+
+                    // index 1 se messages start — index-1 se list access karo
+                    final message = messages[index - 1];
+                    final bool isMe = message.senderId == viewModel.myUid;
+                    return _buildMessageBubble(message, isMe);
+                  },
+                );
+              },
             ),
           ),
-          _buildMessageInput(),
+
+          _buildMessageInput(viewModel),
         ],
       ),
     );
@@ -62,7 +97,6 @@ class ChatView extends StackedView<ChatViewModel> {
     );
   }
 
-// Badi Avatar aur Naam (Start of conversation)
   Widget _buildUserProfileHeader() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -91,13 +125,18 @@ class ChatView extends StackedView<ChatViewModel> {
     );
   }
 
-  Widget _buildMessageBubble(String user, String message, String time) {
+  // ─── Message Bubble ────────────────────────────────────
+  Widget _buildMessageBubble(MessageModel message, bool isMe) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const CircleAvatar(radius: 20, backgroundColor: Colors.grey),
+          const CircleAvatar(
+            radius: 20,
+            backgroundColor: Color(0xFF5865F2),
+            child: Icon(Icons.person, color: Colors.white, size: 18),
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
@@ -105,19 +144,27 @@ class ChatView extends StackedView<ChatViewModel> {
               children: [
                 Row(
                   children: [
-                    Text(user,
-                        style: const TextStyle(
-                            color: Colors.white, fontWeight: FontWeight.w600)),
+                    Text(
+                      isMe ? 'You' : chatWithName,
+                      style: TextStyle(
+                        color: isMe ? const Color(0xFF5865F2) : Colors.white,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
                     const SizedBox(width: 8),
-                    Text(time,
-                        style: const TextStyle(
-                            color: Color(0xFF80848E), fontSize: 11)),
+                    Text(
+                      _formatTime(message.timestamp),
+                      style: const TextStyle(
+                          color: Color(0xFF80848E), fontSize: 11),
+                    ),
                   ],
                 ),
-                const SizedBox(height: 2),
-                Text(message,
-                    style: const TextStyle(
-                        color: Color(0xFFDBDEE1), fontSize: 15)),
+                const SizedBox(height: 4),
+                Text(
+                  message.messageText ?? '',
+                  style:
+                      const TextStyle(color: Color(0xFFDBDEE1), fontSize: 15),
+                ),
               ],
             ),
           ),
@@ -126,32 +173,70 @@ class ChatView extends StackedView<ChatViewModel> {
     );
   }
 
-  Widget _buildMessageInput() {
+  Widget _buildMessageInput(ChatViewModel viewModel) {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF383A40),
-          borderRadius: BorderRadius.circular(8),
-        ),
+      padding: const EdgeInsets.all(16),
+      child: KeyboardListener(
+        focusNode: FocusNode(),
+        onKeyEvent: (event) {
+          if (event is KeyDownEvent &&
+              event.logicalKey == LogicalKeyboardKey.enter) {
+            if (HardwareKeyboard.instance.isShiftPressed) {
+              final controller = viewModel.messageController;
+              final text = controller.text;
+              final selection = controller.selection;
+              final newText =
+                  text.replaceRange(selection.start, selection.end, '\n');
+              controller.value = TextEditingValue(
+                text: newText,
+                selection: TextSelection.collapsed(offset: selection.start + 1),
+              );
+            } else {
+              // Enter — send
+              viewModel.sendMessage();
+            }
+          }
+        },
         child: TextField(
+          controller: viewModel.messageController,
           style: const TextStyle(color: Colors.white),
+          cursorColor: Colors.white,
+          autofocus: false,
+          textAlignVertical: TextAlignVertical.center,
+          maxLines: null,
+          // ← onSubmitted hata diya — KeyboardListener handle karega
           decoration: InputDecoration(
             hintText: 'Message @$chatWithName',
+            hoverColor: Colors.transparent,
             hintStyle: const TextStyle(color: Color(0xFF80848E)),
+            fillColor: const Color(0xFF222327),
+            filled: true,
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 16,
+              vertical: 14,
+            ),
             prefixIcon: const Icon(Icons.add_circle, color: Color(0xFFB5BAC1)),
-            border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(vertical: 12),
             suffixIcon: const Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(Icons.card_giftcard, color: Color(0xFFB5BAC1)),
-                SizedBox(width: 10),
-                Icon(Icons.gif, color: Color(0xFFB5BAC1)),
-                SizedBox(width: 10),
-                Icon(Icons.emoji_emotions, color: Color(0xFFB5BAC1)),
-                SizedBox(width: 10),
+                Icon(Icons.card_giftcard, color: Color(0xFFB5BAC1), size: 20),
+                SizedBox(width: 8),
+                Icon(Icons.gif_box_outlined,
+                    color: Color(0xFFB5BAC1), size: 20),
+                SizedBox(width: 8),
+                Icon(Icons.emoji_emotions_outlined,
+                    color: Color(0xFFB5BAC1), size: 20),
+                SizedBox(width: 12),
               ],
+            ),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide.none,
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide:
+                  const BorderSide(color: Color(0xFF48484b), width: 1.0),
             ),
           ),
         ),
@@ -159,136 +244,17 @@ class ChatView extends StackedView<ChatViewModel> {
     );
   }
 
+  String _formatTime(dynamic timestamp) {
+    if (timestamp == null) return '';
+    final dt = timestamp.toDate();
+    final hour = dt.hour.toString().padLeft(2, '0');
+    final min = dt.minute.toString().padLeft(2, '0');
+    return '$hour:$min';
+  }
+
   @override
-  ChatViewModel viewModelBuilder(BuildContext context) => ChatViewModel();
+  ChatViewModel viewModelBuilder(BuildContext context) => ChatViewModel(
+        receiverId: chatWithId,
+        receiverName: chatWithName,
+      );
 }
-
-  // Widget _buildMessagesList(ChatViewModel viewModel) {
-  //   if (viewModel.isBusy) {
-  //     return const Center(child: CircularProgressIndicator());
-  //   }
-
-  //   if (viewModel.messages.isEmpty) {
-  //     return const Center(
-  //       child: Text('No messages yet!', style: TextStyle(color: Colors.white)),
-  //     );
-  //   }
-
-  //   return ListView.builder(
-  //     padding: const EdgeInsets.all(10),
-  //     itemCount: viewModel.messages.length,
-  //     itemBuilder: (context, index) {
-  //       final message = viewModel.messages[index];
-  //       // ✅ isMe check karo
-  //       final bool isMe = message.senderId == viewModel.currentUserId;
-  //       return _buildMessageBubble(message, isMe);
-  //     },
-  //   );
-  // }
-
-  // Widget _buildMessageBubble(ChatMessage message, bool isMe) {
-  //   return Align(
-  //     alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-  //     child: Container(
-  //       margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-  //       padding: const EdgeInsets.all(10),
-  //       decoration: BoxDecoration(
-  //         color: isMe ? const Color(0xFF005C4B) : const Color(0xFF242C32),
-  //         borderRadius: BorderRadius.circular(12),
-  //       ),
-  //       child: message.isVoiceMessage
-  //           ? _buildVoiceMessageWidget(message, isMe)
-  //           : Text(
-  //               message.messageText ?? '',
-  //               style: const TextStyle(color: Colors.white),
-  //             ),
-  //     ),
-  //   );
-  // }
-
-  // Widget _buildVoiceMessageWidget(ChatMessage message, bool isMe) {
-  //   return Row(
-  //     mainAxisSize: MainAxisSize.min,
-  //     children: [
-  //       IconButton(
-  //         icon: const Icon(Icons.play_arrow, color: Colors.white),
-  //         onPressed: () {
-  //           // Play audio — next step mein add karenge
-  //         },
-  //       ),
-  //       const SizedBox(width: 8),
-  //       Container(
-  //         width: 150,
-  //         height: 30,
-  //         decoration: BoxDecoration(
-  //           color: Colors.white24,
-  //           borderRadius: BorderRadius.circular(10),
-  //         ),
-  //         child: const Center(
-  //           child: Text(
-  //             '🎙️ Voice message',
-  //             style: TextStyle(color: Colors.white70, fontSize: 12),
-  //           ),
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
-  // Widget _buildMessageInput(ChatViewModel viewModel) {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(10.0),
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           child: TextField(
-  //             controller: viewModel.messageController,
-  //             cursorColor: Colors.white,
-  //             style: const TextStyle(color: Colors.white),
-  //             decoration: InputDecoration(
-  //               hintText: viewModel.isRecording
-  //                   ? '🎙️ Listening...'
-  //                   : 'Write here...',
-  //               hintStyle: TextStyle(
-  //                 color: viewModel.isRecording ? Colors.red : Colors.white54,
-  //               ),
-  //               enabledBorder: OutlineInputBorder(
-  //                 borderRadius: BorderRadius.circular(25),
-  //                 borderSide: BorderSide(
-  //                   color: viewModel.isRecording ? Colors.red : Colors.white24,
-  //                 ),
-  //               ),
-  //               focusedBorder: OutlineInputBorder(
-  //                 borderRadius: BorderRadius.circular(25),
-  //                 borderSide: BorderSide(
-  //                   color: viewModel.isRecording ? Colors.red : Colors.white,
-  //                 ),
-  //               ),
-  //               contentPadding: const EdgeInsets.symmetric(
-  //                 horizontal: 16,
-  //                 vertical: 10,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //         const SizedBox(width: 8),
-  //         GestureDetector(
-  //           onTap: () {
-  //             viewModel.sendMessage(viewModel.messageController.text);
-  //           },
-  //           child: Container(
-  //               width: 50,
-  //               height: 50,
-  //               decoration: BoxDecoration(
-  //                   color: const Color(0xFF00A884),
-  //                   borderRadius: BorderRadius.circular(15)),
-  //               child: IconButton(onPressed: () {}, icon: const Icon(Icons.send))),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-//   @override
-//   ChatViewModel viewModelBuilder(BuildContext context) => ChatViewModel();
-// }

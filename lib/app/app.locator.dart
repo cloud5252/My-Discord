@@ -13,6 +13,7 @@ import 'package:stacked_services/src/snackbar/snackbar_service.dart';
 import 'package:stacked_shared/stacked_shared.dart';
 
 import '../service/FB_Auth/Authentication.dart';
+import '../service/chat_service/chat_service.dart';
 import '../service/chat_service/user_service.dart';
 import '../service/chat_service/viewService.dart';
 
@@ -34,4 +35,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => Authentication());
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => ViewService());
+  locator.registerLazySingleton(() => ChatService());
 }

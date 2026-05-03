@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/service/FB_Auth/Authentication.dart';
 import 'package:my_discord/service/chat_service/viewService.dart';
@@ -49,7 +50,6 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
     });
   }
 
-  // ─── Tab switch ────────────────────────────────────────
   void onTabTap(SidebarTab tab) {
     _activeTab = tab;
     notifyListeners();
@@ -70,9 +70,15 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
   }
 
   void navigateToChat(Map<String, dynamic> friend) {
+    print('═══════════════════════════');
+    print('contactId:   ${friend['contactId']}');
+    print('contactName: ${friend['contactName']}');
+    print('═══════════════════════════');
     String name = friend['contactName'] ?? 'Unknown';
+    final id = friend['contactId'] ?? '';
     _viewService.setView(
       ChatView(
+        key: ValueKey(id),
         chatWithId: friend['contactId'] ?? '',
         chatWithName: name,
       ),

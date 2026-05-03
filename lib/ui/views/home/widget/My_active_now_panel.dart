@@ -6,7 +6,7 @@ class ActiveNowPanel extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xFF2B2D31),
+      color: const Color(0xFF242429),
       child: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

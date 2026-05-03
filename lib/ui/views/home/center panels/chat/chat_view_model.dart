@@ -1,51 +1,52 @@
+import 'package:flutter/material.dart';
+import 'package:my_discord/app/app.locator.dart';
+import 'package:my_discord/models/messsage_model.dart';
+import 'package:my_discord/service/FB_Auth/Authentication.dart';
+import 'package:my_discord/service/chat_service/chat_service.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatViewModel extends BaseViewModel {
-  // final TextEditingController messageController = TextEditingController();
-  // // final _chatService = locator<ChatService>();
-  // final _navigationService = locator<NavigationService>();
-  // final _auth = locator<Authentication>();
+  final _auth = locator<Authentication>();
+  final _chatService = locator<ChatService>();
 
-  // final String receiverId;
-  // final String receiverName;
-  // // List<ChatMessage> get messages => data ?? [];
+  final String receiverId;
+  final String receiverName;
 
-  // ChatViewModel({
-  //   required this.receiverId,
-  //   required this.receiverName,
-  // }) {
-  //   messageController.addListener(() {
-  //     rebuildUi();
-  //   });
-  // }
+  final TextEditingController messageController = TextEditingController();
 
-  // String get currentUserId => _auth.getCurrentuser()?.uid ?? '';
-  // String get currentUserEmail => _auth.getCurrentuser()?.email ?? '';
-  // String get currentUserName => _auth.getCurrentuser()?.displayName ?? '';
+  ChatViewModel({
+    required this.receiverId,
+    required this.receiverName,
+  });
 
-  // @override
-  // Stream<List<ChatRoom>> get stream => _chatService.getChatRooms(currentUserId);
+  String get myUid => _auth.getCurrentuser()?.uid ?? '';
+  String get myEmail => _auth.getCurrentuser()?.email ?? '';
 
-  // Future<void> sendMessage([String? text]) async {
-  //   final messageText = text ?? messageController.text.trim();
-  //   if (messageText.isEmpty) return;
-  //   messageController.clear();
+  Stream<List<MessageModel>> get messagesStream =>
+      _chatService.getMessages(receiverId);
 
-  //   await _chatService.sendMessage(
-  //     receiverId: receiverId,
-  //     messageText: messageText,
-  //   );
-  // }
+  @override
+  void initialise() {
+    messageController.addListener(notifyListeners);
+  }
 
-  // void navigatorPop() {
-  //   _navigationService.back();
-  // }
+  Future<void> sendMessage() async {
+    final text = messageController.text.trim();
+    if (text.isEmpty) return;
+    messageController.clear();
 
-  // @override
-  // void dispose() {
-  //   messageController.dispose();
-  //   super.dispose();
-  // }
+    await _chatService.sendMessage(
+      receiverId: receiverId,
+      messageText: text,
+    );
+  }
 
-  // bool isRecording = false;
+  // ─── Helpers ───────────────────────────────────────────
+  bool get isSendButtonActive => messageController.text.trim().isNotEmpty;
+
+  @override
+  void dispose() {
+    messageController.dispose();
+    super.dispose();
+  }
 }

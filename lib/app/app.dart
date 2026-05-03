@@ -1,4 +1,5 @@
 import 'package:my_discord/service/FB_Auth/Authentication.dart';
+import 'package:my_discord/service/chat_service/chat_service.dart';
 import 'package:my_discord/service/chat_service/user_service.dart';
 import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:my_discord/ui/dialogs/bottom_sheets/notice/notice_sheet.dart';
@@ -33,6 +34,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: Authentication),
     LazySingleton(classType: UserService),
     LazySingleton(classType: ViewService),
+    LazySingleton(classType: ChatService),
 
     // @stacked-service
   ],
