@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_discord/ui/views/home/center%20panels/friends/fraind_hub_view.dart';
+import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view.dart';
 import 'package:stacked/stacked.dart';
 
 class ViewService with ListenableServiceMixin {
@@ -15,7 +15,6 @@ class ViewService with ListenableServiceMixin {
   }
 
   void setView(Widget view, {String title = "Friends"}) {
-    
     _currentView.value = view;
     _currentTitle.value = title;
     notifyListeners();

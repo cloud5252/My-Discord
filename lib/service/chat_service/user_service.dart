@@ -1,3 +1,5 @@
+// ignore_for_file: unused_field
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:my_discord/models/contect_model.dart';
@@ -7,7 +9,6 @@ class UserService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   List<UserModel> _allFriends = [];
-  // 1. Saare Users Get Karein (Testing ke liye)
   Future<List<UserModel>> getAllUsers() async {
     try {
       var snapshot = await _firestore.collection('Users').get();
@@ -18,7 +19,6 @@ class UserService {
     }
   }
 
-  // 2. Specific User ka Data Get Karein (by ID)
   Future<UserModel?> getUserById(String uid) async {
     try {
       var doc = await _firestore.collection('Users').doc(uid).get();
@@ -44,7 +44,6 @@ class UserService {
     });
   }
 
-  // User ko add karne ka function
   Future<void> addToContacts(String currentUserId, UserModel user) async {
     ContactModel newContact = ContactModel(
       uid: user.uid,
@@ -64,11 +63,9 @@ class UserService {
         .set(newContact.toMap());
   }
 
-  // Yeh replace karo _listenToFriends() ko
   void listenToFriends() {
     final myUid = _auth.currentUser!.uid;
 
-    // Doosre project ka same logic — sirf Isar hata diya
     _firestore
         .collection('Contacts')
         .where('ownerId', isEqualTo: myUid)
@@ -79,16 +76,6 @@ class UserService {
 
         return;
       }
-
-      // _allFriends = snapshot.docs.map((doc) {
-      //   final data = doc.data();
-      //   return AddFraindModel(
-      //     uid: data['contactId'] ?? '',
-      //     displayName: data['contactName'] ?? 'Unknown',
-      //     photoUrl: data['photoUrl'],
-      //     status: data['status'] ?? 'offline',
-      //   );
-      // }).toList();
     });
   }
 }

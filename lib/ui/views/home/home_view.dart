@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:my_discord/ui/views/home/sidebar/dmSide/dm_side_view.dart';
-import 'package:my_discord/ui/views/home/center%20panels/friends/fraind_hub_view.dart';
+import 'package:my_discord/ui/views/home/man_hub/dmSide/dm_side_view.dart';
+import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view.dart';
 import 'package:my_discord/ui/views/home/home_viewmodel.dart';
-import 'package:my_discord/ui/views/home/center%20panels/server_sidebar/server_sidebar_view.dart';
-import 'package:my_discord/ui/views/home/widget/My_active_now_panel.dart';
+import 'package:my_discord/ui/views/home/widget/server_sidebar/server_sidebar_view.dart';
 import 'package:stacked/stacked.dart';
 
 class HomeView extends StackedView<HomeViewModel> {

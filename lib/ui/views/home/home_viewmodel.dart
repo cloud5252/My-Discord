@@ -5,7 +5,7 @@ import 'package:my_discord/app/app.router.dart';
 import 'package:my_discord/service/FB_Auth/Authentication.dart';
 import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:my_discord/ui/common/app_strings.dart';
-import 'package:my_discord/ui/views/home/center%20panels/friends/fraind_hub_view.dart';
+import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -27,7 +27,6 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
   void initialise() {
     _viewService.addListener(notifyListeners);
   }
-
 
   void setCenterView(Widget view) {
     _currentCenterView = view;

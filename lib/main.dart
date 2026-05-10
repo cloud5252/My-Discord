@@ -11,13 +11,19 @@ import 'package:stacked_services/stacked_services.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
   await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
 
-  await setupLocator();
+  await FirebaseAuth.instance.authStateChanges().first;
 
+  final user = FirebaseAuth.instance.currentUser;
+  print('MAIN after wait: user = ${user?.email}');
+
+  await setupLocator();
   setupDialogUi();
   setupBottomSheetUi();
   runApp(const MainApp());
