@@ -8,6 +8,7 @@ import 'package:my_discord/ui/views/home/center%20panels/friends/common/popup_me
 import 'package:my_discord/ui/views/home/center%20panels/friends/fraind_hub_view_model.dart';
 import 'package:my_discord/ui/views/home/center%20panels/friends/Tabs/online/online_view.dart';
 import 'package:my_discord/ui/views/home/center%20panels/friends/Tabs/pending/pending_view.dart';
+import 'package:my_discord/ui/views/home/widget/My_active_now_panel.dart';
 import 'package:stacked/stacked.dart';
 
 class FraindHubView extends StackedView<FraindHubViewModel> {
@@ -42,23 +43,36 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
               children: [
                 const _tabtag(),
                 const SizedBox(width: 16),
-
-                const SizedBox(width: 16),
-                // Tabs (Online, All, Pending, etc.)
                 Expanded(child: FilterTabBar(viewModel: viewModel)),
                 const ChatPopupMenu(),
               ],
             ),
           ),
-          if (viewModel.selectedFilter == FriendFilter.blocked ||
-              viewModel.selectedFilter == FriendFilter.all ||
-              viewModel.selectedFilter == FriendFilter.online ||
-              viewModel.selectedFilter == FriendFilter.pending)
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FriendsSearchBar(viewModel: viewModel),
+          Expanded(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Column(
+                    children: [
+                      if (viewModel.selectedFilter == FriendFilter.blocked ||
+                          viewModel.selectedFilter == FriendFilter.all ||
+                          viewModel.selectedFilter == FriendFilter.online ||
+                          viewModel.selectedFilter == FriendFilter.pending)
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: FriendsSearchBar(viewModel: viewModel),
+                        ),
+                      Expanded(child: _buildBody(viewModel)),
+                    ],
+                  ),
+                ),
+                // if (viewModel.selectedFilter != FriendFilter.addfraind &&
+                //     viewModel.selectedFilter != FriendFilter.blocked)
+                const ActiveNowPanel(),
+              ],
             ),
-          Expanded(child: _buildBody(viewModel)),
+          ),
         ],
       ),
     );

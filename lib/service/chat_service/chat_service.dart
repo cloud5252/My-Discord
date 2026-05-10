@@ -21,28 +21,25 @@ class ChatService {
     final chatRoomId = getChatRoomId(myUid, receiverId);
     final now = Timestamp.now();
 
-    // 1. Message doc banao — ID pehle lo
     final docRef = _firestore
         .collection('chat_rooms')
         .doc(chatRoomId)
         .collection('messages')
         .doc();
 
-    // 2. Save karo — field names MessageModel se match
     await docRef.set({
       'firebaseId': docRef.id,
       'chatRoomId': chatRoomId,
       'senderId': myUid,
       'senderEmail': myEmail,
-      'receiverId': receiverId, // ← lowercase d
-      'messageText': messageText, // ← messageText
+      'receiverId': receiverId,
+      'messageText': messageText,
       'timestamp': now,
       'isRead': 0,
       'isVoiceMessage': false,
       'profileUrl': '',
     });
 
-    // 3. ChatRoom update
     await _firestore.collection('chat_rooms').doc(chatRoomId).set({
       'participants': [myUid, receiverId],
       'lastMessage': messageText,

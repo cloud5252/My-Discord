@@ -10,7 +10,7 @@ class MessageModel {
   final int? isRead;
   final bool? isVoiceMessage;
   final String? profileUrl;
-
+  final String? firebaseId;
   MessageModel({
     required this.chatRoomId,
     required this.senderId,
@@ -21,6 +21,7 @@ class MessageModel {
     required this.isRead,
     required this.isVoiceMessage,
     required this.profileUrl,
+    this.firebaseId,
   });
 
   factory MessageModel.fromMap(Map<String, dynamic> map) {
@@ -28,12 +29,13 @@ class MessageModel {
       chatRoomId: map['chatRoomId'],
       senderId: map['senderId'],
       senderEmail: map['senderEmail'],
-      receiverId: map['receiverId'], // ← lowercase d
-      messageText: map['messageText'], // ← messageText
+      receiverId: map['receiverId'],
+      messageText: map['messageText'],
       timestamp: map['timestamp'],
       isRead: map['isRead'],
       isVoiceMessage: map['isVoiceMessage'],
       profileUrl: map['profileUrl'],
+      firebaseId: map['firebaseId'], 
     );
   }
 

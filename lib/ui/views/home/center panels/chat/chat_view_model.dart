@@ -26,6 +26,7 @@ class ChatViewModel extends BaseViewModel {
       _chatService.getMessages(receiverId);
 
   @override
+  // ignore: override_on_non_overriding_member
   void initialise() {
     messageController.addListener(notifyListeners);
   }
@@ -41,12 +42,27 @@ class ChatViewModel extends BaseViewModel {
     );
   }
 
-  // ─── Helpers ───────────────────────────────────────────
   bool get isSendButtonActive => messageController.text.trim().isNotEmpty;
 
   @override
   void dispose() {
     messageController.dispose();
     super.dispose();
+  }
+
+  String? _hoveredMessageId;
+  String? get hoveredMessageId => _hoveredMessageId;
+
+  void setHoveredMessage(String? id) {
+    _hoveredMessageId = id;
+    notifyListeners();
+  }
+
+  void onReplyMessage(MessageModel message) {
+    print("Replying to: ${message.messageText}");
+  }
+
+  void showOptions(MessageModel message) {
+    print("Options for message ID: ${message.firebaseId}");
   }
 }

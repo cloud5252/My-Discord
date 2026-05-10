@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/ui/views/home/center%20panels/chat/chat_view_model.dart';
+import 'package:my_discord/ui/views/home/center%20panels/chat/widget/message_bubble_widget.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatView extends StackedView<ChatViewModel> {
@@ -22,8 +23,6 @@ class ChatView extends StackedView<ChatViewModel> {
         children: [
           _buildTopHeader(),
           const Divider(color: Color(0xFF1E1F22), height: 1),
-
-          // Messages list
           Expanded(
             child: StreamBuilder<List<MessageModel>>(
               key: ValueKey(viewModel.receiverId),
@@ -38,11 +37,8 @@ class ChatView extends StackedView<ChatViewModel> {
                 final messages = snapshot.data ?? [];
 
                 return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  // ← +1 sirf profile header ke liye
                   itemCount: messages.length + 1,
                   itemBuilder: (context, index) {
-                    // index 0 — profile header
                     if (index == 0) {
                       return Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,13 +61,12 @@ class ChatView extends StackedView<ChatViewModel> {
                     // index 1 se messages start — index-1 se list access karo
                     final message = messages[index - 1];
                     final bool isMe = message.senderId == viewModel.myUid;
-                    return _buildMessageBubble(message, isMe);
+                    return MessageBubbleWidget(message: message);
                   },
                 );
               },
             ),
           ),
-
           _buildMessageInput(viewModel),
         ],
       ),
@@ -98,75 +93,30 @@ class ChatView extends StackedView<ChatViewModel> {
   }
 
   Widget _buildUserProfileHeader() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const CircleAvatar(
-          radius: 40,
-          backgroundColor: Color(0xFF5865F2),
-          child: Icon(Icons.person, color: Colors.white, size: 40),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          chatWithName,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          chatWithName.toLowerCase(),
-          style: const TextStyle(color: Color(0xFFB5BAC1), fontSize: 20),
-        ),
-        const SizedBox(height: 12),
-        Text(
-          'This is the beginning of your direct message history with @$chatWithName.',
-          style: const TextStyle(color: Color(0xFFB5BAC1), fontSize: 14),
-        ),
-      ],
-    );
-  }
-
-  // ─── Message Bubble ────────────────────────────────────
-  Widget _buildMessageBubble(MessageModel message, bool isMe) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const CircleAvatar(
-            radius: 20,
+            radius: 40,
             backgroundColor: Color(0xFF5865F2),
-            child: Icon(Icons.person, color: Colors.white, size: 18),
+            child: Icon(Icons.person, color: Colors.white, size: 40),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      isMe ? 'You' : chatWithName,
-                      style: TextStyle(
-                        color: isMe ? const Color(0xFF5865F2) : Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Text(
-                      _formatTime(message.timestamp),
-                      style: const TextStyle(
-                          color: Color(0xFF80848E), fontSize: 11),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  message.messageText ?? '',
-                  style:
-                      const TextStyle(color: Color(0xFFDBDEE1), fontSize: 15),
-                ),
-              ],
-            ),
+          const SizedBox(height: 16),
+          Text(
+            chatWithName,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            chatWithName.toLowerCase(),
+            style: const TextStyle(color: Color(0xFFB5BAC1), fontSize: 20),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            'This is the beginning of your direct message history with @$chatWithName.',
+            style: const TextStyle(color: Color(0xFFB5BAC1), fontSize: 14),
           ),
         ],
       ),
@@ -176,26 +126,23 @@ class ChatView extends StackedView<ChatViewModel> {
   Widget _buildMessageInput(ChatViewModel viewModel) {
     return Padding(
       padding: const EdgeInsets.all(16),
-      child: KeyboardListener(
-        focusNode: FocusNode(),
-        onKeyEvent: (event) {
-          if (event is KeyDownEvent &&
-              event.logicalKey == LogicalKeyboardKey.enter) {
-            if (HardwareKeyboard.instance.isShiftPressed) {
-              final controller = viewModel.messageController;
-              final text = controller.text;
-              final selection = controller.selection;
-              final newText =
-                  text.replaceRange(selection.start, selection.end, '\n');
-              controller.value = TextEditingValue(
-                text: newText,
-                selection: TextSelection.collapsed(offset: selection.start + 1),
-              );
-            } else {
-              // Enter — send
+      child: CallbackShortcuts(
+        bindings: {
+          const SingleActivator(LogicalKeyboardKey.enter): () {
+            if (viewModel.messageController.text.trim().isNotEmpty) {
               viewModel.sendMessage();
             }
-          }
+          },
+          const SingleActivator(LogicalKeyboardKey.enter, shift: true): () {
+            final controller = viewModel.messageController;
+            final selection = controller.selection;
+            final newText = controller.text
+                .replaceRange(selection.start, selection.end, '\n');
+            controller.value = TextEditingValue(
+              text: newText,
+              selection: TextSelection.collapsed(offset: selection.start + 1),
+            );
+          },
         },
         child: TextField(
           controller: viewModel.messageController,
@@ -204,7 +151,6 @@ class ChatView extends StackedView<ChatViewModel> {
           autofocus: false,
           textAlignVertical: TextAlignVertical.center,
           maxLines: null,
-          // ← onSubmitted hata diya — KeyboardListener handle karega
           decoration: InputDecoration(
             hintText: 'Message @$chatWithName',
             hoverColor: Colors.transparent,

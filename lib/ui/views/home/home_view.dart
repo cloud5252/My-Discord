@@ -45,10 +45,10 @@ class HomeView extends StackedView<HomeViewModel> {
                 ? const FraindHubView()
                 : viewModel.currentView,
           ),
-          const SizedBox(
-            width: 270,
-            child: ActiveNowPanel(),
-          ),
+          // const SizedBox(
+          //   width: 270,
+          //   child: ActiveNowPanel(),
+          // ),
         ],
       ),
     );
