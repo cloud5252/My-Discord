@@ -41,49 +41,45 @@ class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
       Map<String, dynamic> friend, DmSideViewModel viewModel) {
     bool isOnline = friend['status'] == 'online';
 
-    return Material(
-      color: Colors.transparent,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        child: ListTile(
-          onTap: () => viewModel.navigateToChat(friend),
-          mouseCursor: SystemMouseCursors.click,
-          hoverColor: const Color(0xFF35373C),
-          splashColor: Colors.transparent,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-          visualDensity: const VisualDensity(vertical: -3),
-          dense: true,
-          contentPadding: const EdgeInsets.symmetric(horizontal: 8),
-          leading: Stack(
-            children: [
-              const CircleAvatar(
-                radius: 16,
-                backgroundColor: Color(0xFF5865F2),
-                child: Icon(Icons.person, color: Colors.white, size: 18),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  width: 12,
-                  height: 12,
-                  decoration: BoxDecoration(
-                    color: isOnline ? Colors.green : Colors.grey,
-                    shape: BoxShape.circle,
-                    border:
-                        Border.all(color: const Color(0xFF2B2D31), width: 2),
-                  ),
+     return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      child: ListTile(
+        onTap: () => viewModel.navigateToChat(friend),
+        mouseCursor: SystemMouseCursors.click,
+        hoverColor: const Color(0xFF35373C),
+        splashColor: Colors.transparent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        visualDensity: const VisualDensity(vertical: -3),
+        dense: true,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 8),
+        leading: Stack(
+          children: [
+            const CircleAvatar(
+              radius: 16,
+              backgroundColor: Color(0xFF5865F2),
+              child: Icon(Icons.person, color: Colors.white, size: 18),
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: isOnline ? Colors.green : Colors.grey,
+                  shape: BoxShape.circle,
+                  border: Border.all(color: const Color(0xFF2B2D31), width: 2),
                 ),
               ),
-            ],
-          ),
-          title: Text(
-            friend['contactName'] ?? 'Unknown',
-            style: const TextStyle(
-                color: Color(0xFFDBDEE1),
-                fontSize: 14,
-                fontWeight: FontWeight.w500),
-          ),
+            ),
+          ],
+        ),
+        title: Text(
+          friend['contactName'] ?? 'Unknown',
+          style: const TextStyle(
+              color: Color(0xFFDBDEE1),
+              fontSize: 14,
+              fontWeight: FontWeight.w500),
         ),
       ),
     );

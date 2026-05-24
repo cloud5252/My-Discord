@@ -34,7 +34,7 @@ class ProfilePanel extends StatelessWidget {
           ),
           _ActiveNowTile(
             name: 'z8ReapeR',
-            activity: 'Forza Horizon 5 – 12h',
+            activity: 'Forza Horizon 5 -- 12h',
             activityColor: Color(0xFF3BA55C),
           ),
         ],

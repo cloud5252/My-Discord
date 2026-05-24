@@ -77,11 +77,10 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
 
   String? _currentChatId;
   void navigateToChat(Map<String, dynamic> friend) {
+    print('TAP: ${friend['contactId']}'); // ✅ Yeh add karo
     final id = friend['contactId'] ?? '';
+    final name = friend['contactName'] ?? 'Unknown';
 
-    if (_currentChatId == id) return;
-    _currentChatId = id;
-    String name = friend['contactName'] ?? 'Unknown';
     _viewService.setView(
       ChatView(
         key: ValueKey(id),
@@ -89,6 +88,7 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
         chatWithName: name,
       ),
       title: name,
+      id: id,
     );
   }
 }

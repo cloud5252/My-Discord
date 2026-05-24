@@ -72,20 +72,11 @@ class FraindHubViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void onAddFriendTap() {
-    // navigation ya dialog
-  }
+  void onAddFriendTap() {}
 
-  void navigateToChat(ContactModel contact) {
-    // navigation service use karo
-  }
+  void navigateToChat(ContactModel contact) {}
   Future<void> logout() async {
     await _auth.logOut();
     _navigationService.replaceWithSignInView();
   }
-
-  // // Sidebar mein 'Friends' menu item ke tap par:
-  // void onFriendsMenuTap() {
-  //   _viewService.setView(const FraindHubView());
-  // }
 }

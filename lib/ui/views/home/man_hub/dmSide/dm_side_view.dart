@@ -129,48 +129,51 @@ class _SidebarTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final bool isActive = viewModel.activeTab == tab;
 
-    return GestureDetector(
-      onTap: () => viewModel.onTabTap(tab),
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-        decoration: BoxDecoration(
-          color: isActive ? const Color(0xFF35373C) : Colors.transparent,
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
+      child: Material(
+        color: isActive ? const Color(0xFF35373C) : Colors.transparent,
+        borderRadius: BorderRadius.circular(4),
+        child: InkWell(
+          onTap: () => viewModel.onTabTap(tab),
           borderRadius: BorderRadius.circular(4),
-        ),
-        child: Row(
-          children: [
-            Icon(icon,
-                color: isActive ? Colors.white : const Color(0xFF80848E),
-                size: 18),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: isActive ? Colors.white : const Color(0xFFDBDEE1),
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
+          hoverColor: const Color(0xFF2E3035), // ✅ Ab dikhega
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+            child: Row(
+              children: [
+                Icon(icon,
+                    color: isActive ? Colors.white : const Color(0xFF80848E),
+                    size: 18),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: Text(label,
+                      style: TextStyle(
+                        color:
+                            isActive ? Colors.white : const Color(0xFFDBDEE1),
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      )),
                 ),
-              ),
-            ),
-            if (badge != null)
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF5865F2),
-                  borderRadius: BorderRadius.circular(4),
-                ),
-                child: Text(
-                  badge!,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
+                if (badge != null)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF5865F2),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: Text(badge!,
+                        style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w700)),
                   ),
-                ),
-              ),
-          ],
+              ],
+            ),
+          ),
         ),
       ),
     );

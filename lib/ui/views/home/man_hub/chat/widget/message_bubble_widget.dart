@@ -7,30 +7,28 @@ import 'package:stacked/stacked.dart';
 
 class MessageBubbleWidget extends StatelessWidget {
   final MessageModel message;
+  final _hovered = ValueNotifier<bool>(false);
 
-  const MessageBubbleWidget({Key? key, required this.message})
-      : super(key: key);
+  MessageBubbleWidget({Key? key, required this.message}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<_HoverViewModel>.reactive(
-      viewModelBuilder: () => _HoverViewModel(),
-      builder: (context, model, child) => MouseRegion(
-        onEnter: (_) => model.setHover(true),
-        onExit: (_) => model.setHover(false),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 80),
+    return MouseRegion(
+      onEnter: (_) => _hovered.value = true,
+      onExit: (_) => _hovered.value = false,
+      child: ValueListenableBuilder<bool>(
+        valueListenable: _hovered,
+        builder: (context, isHovered, child) => Container(
           decoration: BoxDecoration(
-            color:
-                model.isHovered ? const Color(0xFF2E3035) : Colors.transparent,
+            color: isHovered ? const Color(0xFF2E3035) : Colors.transparent,
           ),
           margin: const EdgeInsets.only(right: 20),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              _buildMessageLayout(),
-              if (model.isHovered)
+              child!,
+              if (isHovered)
                 Positioned(
                   top: -20,
                   right: 0,
@@ -39,6 +37,7 @@ class MessageBubbleWidget extends StatelessWidget {
             ],
           ),
         ),
+        child: _buildMessageLayout(),
       ),
     );
   }
@@ -129,10 +128,10 @@ class MessageBubbleWidget extends StatelessWidget {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const _HoverEmoji(emoji: '❤️', tooltip: 'Heart'),
-                const _HoverEmoji(emoji: '🔖', tooltip: 'Bookmark'),
-                const _HoverEmoji(emoji: '👍', tooltip: 'Thumbs Up'),
-                const _HoverEmoji(emoji: '😊', tooltip: 'Smile'),
+                _HoverEmoji(emoji: '❤️', tooltip: 'Heart'),
+                _HoverEmoji(emoji: '🔖', tooltip: 'Bookmark'),
+                _HoverEmoji(emoji: '👍', tooltip: 'Thumbs Up'),
+                _HoverEmoji(emoji: '😊', tooltip: 'Smile'),
                 Container(
                   width: 1,
                   margin: const EdgeInsets.symmetric(vertical: 6),
@@ -164,45 +163,29 @@ class MessageBubbleWidget extends StatelessWidget {
   }
 }
 
-class _HoverIcon extends StatelessWidget {
-  final IconData icon;
+class _HoverEmoji extends StatelessWidget {
+  final String emoji;
   final String tooltip;
-  final VoidCallback onTap;
-  final bool isMirrored;
+  final _hovered = ValueNotifier<bool>(false);
 
-  const _HoverIcon({
-    required this.icon,
-    required this.tooltip,
-    required this.onTap,
-    this.isMirrored = false,
-  });
+  _HoverEmoji({required this.emoji, required this.tooltip});
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<_HoverViewModel>.reactive(
-      viewModelBuilder: () => _HoverViewModel(),
-      builder: (context, model, child) => MouseRegion(
-        onEnter: (_) => model.setHover(true),
-        onExit: (_) => model.setHover(false),
-        child: GestureDetector(
-          onTap: onTap,
+    return MouseRegion(
+      onEnter: (_) => _hovered.value = true,
+      onExit: (_) => _hovered.value = false,
+      child: ValueListenableBuilder<bool>(
+        valueListenable: _hovered,
+        builder: (context, isHovered, child) => InkWell(
+          borderRadius: BorderRadius.circular(4),
+          onTap: () {},
           child: Padding(
-            padding: const EdgeInsets.all(7),
+            padding: const EdgeInsets.all(6),
             child: AnimatedScale(
-              scale: model.isHovered ? 1.25 : 1.0,
-              duration: const Duration(milliseconds: 150),
-              child: Transform(
-                alignment: Alignment.center,
-                transform: isMirrored
-                    ? Matrix4.rotationY(3.14159)
-                    : Matrix4.identity(),
-                child: Icon(
-                  icon,
-                  size: 18,
-                  color:
-                      model.isHovered ? Colors.white : const Color(0xFF8A8E94),
-                ),
-              ),
+              scale: isHovered ? 1.3 : 1.0,
+              duration: const Duration(milliseconds: 100),
+              child: Text(emoji, style: const TextStyle(fontSize: 15)),
             ),
           ),
         ).withDiscordTooltip(tooltip),
@@ -211,28 +194,45 @@ class _HoverIcon extends StatelessWidget {
   }
 }
 
-class _HoverEmoji extends StatelessWidget {
-  final String emoji;
+class _HoverIcon extends StatelessWidget {
+  final IconData icon;
   final String tooltip;
+  final VoidCallback onTap;
+  final bool isMirrored;
+  final _hovered = ValueNotifier<bool>(false);
 
-  const _HoverEmoji({required this.emoji, required this.tooltip});
+  _HoverIcon({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+    this.isMirrored = false,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<_HoverViewModel>.reactive(
-      viewModelBuilder: () => _HoverViewModel(),
-      builder: (context, model, child) => MouseRegion(
-        onEnter: (_) => model.setHover(true),
-        onExit: (_) => model.setHover(false),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(4),
-          onTap: () {},
+    return MouseRegion(
+      onEnter: (_) => _hovered.value = true,
+      onExit: (_) => _hovered.value = false,
+      child: ValueListenableBuilder<bool>(
+        valueListenable: _hovered,
+        builder: (context, isHovered, child) => GestureDetector(
+          onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(6),
+            padding: const EdgeInsets.all(7),
             child: AnimatedScale(
-              scale: model.isHovered ? 1.3 : 1.0,
-              duration: const Duration(milliseconds: 150),
-              child: Text(emoji, style: const TextStyle(fontSize: 15)),
+              scale: isHovered ? 1.25 : 1.0,
+              duration: const Duration(milliseconds: 100),
+              child: Transform(
+                alignment: Alignment.center,
+                transform: isMirrored
+                    ? Matrix4.rotationY(3.14159)
+                    : Matrix4.identity(),
+                child: Icon(
+                  icon,
+                  size: 18,
+                  color: isHovered ? Colors.white : const Color(0xFF8A8E94),
+                ),
+              ),
             ),
           ),
         ).withDiscordTooltip(tooltip),

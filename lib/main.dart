@@ -15,13 +15,10 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-
   await FirebaseAuth.instance.setPersistence(Persistence.LOCAL);
-
   await FirebaseAuth.instance.authStateChanges().first;
-
-  final user = FirebaseAuth.instance.currentUser;
-  print('MAIN after wait: user = ${user?.email}');
+  // final user = FirebaseAuth.instance.currentUser;
+  // print('MAIN after wait: user = ${user?.email}');
 
   await setupLocator();
   setupDialogUi();

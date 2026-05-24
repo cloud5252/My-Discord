@@ -5,8 +5,8 @@ import 'package:stacked/stacked.dart';
 class ViewService with ListenableServiceMixin {
   final _currentView = ReactiveValue<Widget>(const FraindHubView());
   final _currentTitle = ReactiveValue<String>("Friends");
+  String? _currentId;  
 
-  // Getters
   Widget get currentView => _currentView.value;
   String get currentTitle => _currentTitle.value;
 
@@ -14,7 +14,10 @@ class ViewService with ListenableServiceMixin {
     listenToReactiveValues([_currentView, _currentTitle]);
   }
 
-  void setView(Widget view, {String title = "Friends"}) {
+  void setView(Widget view, {String title = "Friends", String? id}) {
+    if (id != null && _currentId == id) return;
+
+    _currentId = id;
     _currentView.value = view;
     _currentTitle.value = title;
     notifyListeners();
