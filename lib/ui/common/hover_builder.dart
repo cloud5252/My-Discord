@@ -1,30 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:stacked/stacked.dart';
 
-class HoverViewModel extends BaseViewModel {
-  bool _isHovered = false;
-  bool get isHovered => _isHovered;
-
-  void setHover(bool value) {
-    _isHovered = value;
-    notifyListeners();
-  }
-}
-
-class HoverBuilder extends StatelessWidget {
+ class HoverBuilder extends StatefulWidget {
   final Widget Function(bool isHovered) builder;
 
   const HoverBuilder({Key? key, required this.builder}) : super(key: key);
 
   @override
+  State<HoverBuilder> createState() => _HoverBuilderState();
+}
+
+class _HoverBuilderState extends State<HoverBuilder> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return ViewModelBuilder<HoverViewModel>.reactive(
-      viewModelBuilder: () => HoverViewModel(),
-      builder: (context, viewModel, child) => MouseRegion(
-        onEnter: (_) => viewModel.setHover(true),
-        onExit: (_) => viewModel.setHover(false),
-        child: builder(viewModel.isHovered),
-      ),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: widget.builder(_isHovered),
     );
   }
 }
