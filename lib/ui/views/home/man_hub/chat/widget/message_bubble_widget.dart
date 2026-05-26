@@ -25,12 +25,17 @@ class MessageBubbleWidget extends StatelessWidget {
           clipBehavior: Clip.none,
           children: [
             _buildMessageLayout(),
-            if (isHovered)
-              Positioned(
-                top: -20,
-                right: 0,
-                child: _buildHoverToolbar(context),
+            Positioned(
+              top: -20,
+              right: 0,
+              child: Opacity(
+                opacity: isHovered ? 1.0 : 0.0,
+                child: IgnorePointer(
+                  ignoring: !isHovered,
+                  child: _buildHoverToolbar(context),
+                ),
               ),
+            ),
           ],
         ),
       ),
@@ -108,32 +113,36 @@ class MessageBubbleWidget extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            _HoverEmoji(emoji: '❤️', tooltip: 'Heart'),
-            _HoverEmoji(emoji: '🔖', tooltip: 'Bookmark'),
-            _HoverEmoji(emoji: '👍', tooltip: 'Thumbs Up'),
-            _HoverEmoji(emoji: '😊', tooltip: 'Smile'),
+            const _HoverEmoji(emoji: '❤️', tooltip: 'Heart'),
+            const _HoverEmoji(emoji: '🔖', tooltip: 'Bookmark'),
+            const _HoverEmoji(emoji: '👍', tooltip: 'Thumbs Up'),
+            const _HoverEmoji(emoji: '😊', tooltip: 'Smile'),
             Container(
               width: 1,
               margin: const EdgeInsets.symmetric(vertical: 6),
               color: const Color(0xFF1E1F22),
             ),
             _HoverIcon(
-                icon: Icons.add_reaction_outlined,
-                tooltip: 'Add Reaction',
-                onTap: () {}),
+              icon: Icons.add_reaction_outlined,
+              tooltip: 'Add Reaction',
+              onTap: () {},
+            ),
             _HoverIcon(
-                icon: Icons.reply,
-                tooltip: 'Reply',
-                onTap: () => chatViewModel.onReplyMessage(message)),
+              icon: Icons.reply,
+              tooltip: 'Reply',
+              onTap: () => chatViewModel.onReplyMessage(message),
+            ),
             _HoverIcon(
-                icon: Icons.reply,
-                tooltip: 'Forward',
-                onTap: () {},
-                isMirrored: true),
+              icon: Icons.reply,
+              tooltip: 'Forward',
+              onTap: () {},
+              isMirrored: true,
+            ),
             _HoverIcon(
-                icon: Icons.more_horiz,
-                tooltip: 'More',
-                onTap: () => chatViewModel.showOptions(message)),
+              icon: Icons.more_horiz,
+              tooltip: 'More',
+              onTap: () => chatViewModel.showOptions(message),
+            ),
           ],
         ),
       ),
@@ -145,7 +154,6 @@ class _HoverEmoji extends StatelessWidget {
   final String emoji;
   final String tooltip;
 
-  // ✅ ValueNotifier hatao
   const _HoverEmoji({Key? key, required this.emoji, required this.tooltip})
       : super(key: key);
 
@@ -174,7 +182,6 @@ class _HoverIcon extends StatelessWidget {
   final VoidCallback onTap;
   final bool isMirrored;
 
-  // ✅ ValueNotifier hatao
   const _HoverIcon({
     Key? key,
     required this.icon,
