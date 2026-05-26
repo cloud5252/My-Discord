@@ -7,6 +7,7 @@ class ViewService with ListenableServiceMixin {
   final _currentTitle = ReactiveValue<String>("Friends");
   String? _currentId;
   String? get currentId => _currentId;
+  set currentId(String? value) => _currentId = value;
   Widget get currentView => _currentView.value;
   String get currentTitle => _currentTitle.value;
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_discord/ui/views/home/man_hub/dmSide/widget/hover_builder.dart';
+import 'package:my_discord/ui/common/hover_builder.dart';
 import 'package:stacked/stacked.dart';
 
 class PressBuilder extends StatelessWidget {

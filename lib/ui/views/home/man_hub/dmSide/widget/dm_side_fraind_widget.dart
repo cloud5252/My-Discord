@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/dm_side_view_model.dart';
-import 'package:my_discord/ui/views/home/man_hub/dmSide/widget/hover_builder.dart';
-import 'package:my_discord/ui/views/home/man_hub/dmSide/widget/press_builder.dart';
+import 'package:my_discord/ui/common/hover_builder.dart';
+import 'package:my_discord/ui/common/press_builder.dart';
 import 'package:stacked/stacked.dart';
 
 class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
@@ -56,9 +56,9 @@ class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
                 : isActive
                     ? isHovered
                         ? const Color(0xFF1d1d1e)
-                        : const Color(0xFF35373C)
+                        : const Color(0xFF2d2d30)
                     : isHovered
-                        ? const Color(0xFF2E3035)
+                        ? const Color(0xFF1d1d1e)
                         : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
@@ -96,7 +96,7 @@ class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
                     style: TextStyle(
                       color: isActive || isHovered || isPressed
                           ? Colors.white
-                          : const Color(0xFFDBDEE1),
+                          : const Color(0xFF96979e),
                       fontSize: 14,
                       fontWeight: FontWeight.w500,
                     ),

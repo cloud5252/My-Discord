@@ -2,42 +2,37 @@
 import 'package:flutter/material.dart';
 import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
+import 'package:my_discord/ui/common/hover_builder.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
 import 'package:stacked/stacked.dart';
 
 class MessageBubbleWidget extends StatelessWidget {
   final MessageModel message;
-  final _hovered = ValueNotifier<bool>(false);
 
-  MessageBubbleWidget({Key? key, required this.message}) : super(key: key);
+  const MessageBubbleWidget({Key? key, required this.message})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => _hovered.value = true,
-      onExit: (_) => _hovered.value = false,
-      child: ValueListenableBuilder<bool>(
-        valueListenable: _hovered,
-        builder: (context, isHovered, child) => Container(
-          decoration: BoxDecoration(
-            color: isHovered ? const Color(0xFF2E3035) : Colors.transparent,
-          ),
-          margin: const EdgeInsets.only(right: 20),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-          child: Stack(
-            clipBehavior: Clip.none,
-            children: [
-              child!,
-              if (isHovered)
-                Positioned(
-                  top: -20,
-                  right: 0,
-                  child: _buildHoverToolbar(context),
-                ),
-            ],
-          ),
+    return HoverBuilder(
+      builder: (isHovered) => Container(
+        decoration: BoxDecoration(
+          color: isHovered ? const Color(0xFF2E3035) : Colors.transparent,
         ),
-        child: _buildMessageLayout(),
+        margin: const EdgeInsets.only(right: 20),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            _buildMessageLayout(),
+            if (isHovered)
+              Positioned(
+                top: -20,
+                right: 0,
+                child: _buildHoverToolbar(context),
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -99,63 +94,47 @@ class MessageBubbleWidget extends StatelessWidget {
   Widget _buildHoverToolbar(BuildContext context) {
     final chatViewModel = getParentViewModel<ChatViewModel>(context);
 
-    return ViewModelBuilder<_HoverViewModel>.reactive(
-      viewModelBuilder: () => _HoverViewModel(),
-      builder: (context, model, child) => MouseRegion(
-        onEnter: (_) => model.setHover(true),
-        onExit: (_) => model.setHover(false),
-        hitTestBehavior: HitTestBehavior.opaque,
-        child: Container(
-          decoration: BoxDecoration(
-            color: const Color(0xFF2B2D31),
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(
-              color: model.isHovered
-                  ? const Color(0xFF404249)
-                  : const Color(0xFF1E1F22),
+    return HoverBuilder(
+      builder: (isHovered) => Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFF2B2D31),
+          borderRadius: BorderRadius.circular(4),
+          border: Border.all(
+            color:
+                isHovered ? const Color(0xFF404249) : const Color(0xFF1E1F22),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _HoverEmoji(emoji: '❤️', tooltip: 'Heart'),
+            _HoverEmoji(emoji: '🔖', tooltip: 'Bookmark'),
+            _HoverEmoji(emoji: '👍', tooltip: 'Thumbs Up'),
+            _HoverEmoji(emoji: '😊', tooltip: 'Smile'),
+            Container(
               width: 1,
+              margin: const EdgeInsets.symmetric(vertical: 6),
+              color: const Color(0xFF1E1F22),
             ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(model.isHovered ? 0.6 : 0.3),
-                blurRadius: model.isHovered ? 12 : 4,
-                offset: Offset(0, model.isHovered ? 4 : 2),
-              ),
-            ],
-          ),
-          child: IntrinsicHeight(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _HoverEmoji(emoji: '❤️', tooltip: 'Heart'),
-                _HoverEmoji(emoji: '🔖', tooltip: 'Bookmark'),
-                _HoverEmoji(emoji: '👍', tooltip: 'Thumbs Up'),
-                _HoverEmoji(emoji: '😊', tooltip: 'Smile'),
-                Container(
-                  width: 1,
-                  margin: const EdgeInsets.symmetric(vertical: 6),
-                  color: const Color(0xFF1E1F22),
-                ),
-                _HoverIcon(
-                    icon: Icons.add_reaction_outlined,
-                    tooltip: 'Add Reaction',
-                    onTap: () {}),
-                _HoverIcon(
-                    icon: Icons.reply,
-                    tooltip: 'Reply',
-                    onTap: () => chatViewModel.onReplyMessage(message)),
-                _HoverIcon(
-                    icon: Icons.reply,
-                    tooltip: 'Forward',
-                    onTap: () {},
-                    isMirrored: true),
-                _HoverIcon(
-                    icon: Icons.more_horiz,
-                    tooltip: 'More',
-                    onTap: () => chatViewModel.showOptions(message)),
-              ],
-            ),
-          ),
+            _HoverIcon(
+                icon: Icons.add_reaction_outlined,
+                tooltip: 'Add Reaction',
+                onTap: () {}),
+            _HoverIcon(
+                icon: Icons.reply,
+                tooltip: 'Reply',
+                onTap: () => chatViewModel.onReplyMessage(message)),
+            _HoverIcon(
+                icon: Icons.reply,
+                tooltip: 'Forward',
+                onTap: () {},
+                isMirrored: true),
+            _HoverIcon(
+                icon: Icons.more_horiz,
+                tooltip: 'More',
+                onTap: () => chatViewModel.showOptions(message)),
+          ],
         ),
       ),
     );
@@ -165,31 +144,26 @@ class MessageBubbleWidget extends StatelessWidget {
 class _HoverEmoji extends StatelessWidget {
   final String emoji;
   final String tooltip;
-  final _hovered = ValueNotifier<bool>(false);
 
-  _HoverEmoji({Key? key, required this.emoji, required this.tooltip})
-      : super(key: key ?? ValueKey(emoji));
+  // ✅ ValueNotifier hatao
+  const _HoverEmoji({Key? key, required this.emoji, required this.tooltip})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => _hovered.value = true,
-      onExit: (_) => _hovered.value = false,
-      child: ValueListenableBuilder<bool>(
-        valueListenable: _hovered,
-        builder: (context, isHovered, child) => InkWell(
-          borderRadius: BorderRadius.circular(4),
-          onTap: () {},
-          child: Padding(
-            padding: const EdgeInsets.all(6),
-            child: AnimatedScale(
-              scale: isHovered ? 1.3 : 1.0,
-              duration: const Duration(milliseconds: 100),
-              child: Text(emoji, style: const TextStyle(fontSize: 15)),
-            ),
+    return HoverBuilder(
+      builder: (isHovered) => InkWell(
+        borderRadius: BorderRadius.circular(4),
+        onTap: () {},
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: AnimatedScale(
+            scale: isHovered ? 1.3 : 1.0,
+            duration: const Duration(milliseconds: 100),
+            child: Text(emoji, style: const TextStyle(fontSize: 15)),
           ),
-        ).withDiscordTooltip(tooltip),
-      ),
+        ),
+      ).withDiscordTooltip(tooltip),
     );
   }
 }
@@ -199,54 +173,39 @@ class _HoverIcon extends StatelessWidget {
   final String tooltip;
   final VoidCallback onTap;
   final bool isMirrored;
-  final _hovered = ValueNotifier<bool>(false);
 
-  _HoverIcon({
+  // ✅ ValueNotifier hatao
+  const _HoverIcon({
     Key? key,
     required this.icon,
     required this.tooltip,
     required this.onTap,
     this.isMirrored = false,
-  }) : super(key: key ?? ValueKey('${tooltip}_$isMirrored'));
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MouseRegion(
-      onEnter: (_) => _hovered.value = true,
-      onExit: (_) => _hovered.value = false,
-      child: ValueListenableBuilder<bool>(
-        valueListenable: _hovered,
-        builder: (context, isHovered, child) => GestureDetector(
-          onTap: onTap,
-          child: Padding(
-            padding: const EdgeInsets.all(7),
-            child: AnimatedScale(
-              scale: isHovered ? 1.25 : 1.0,
-              duration: const Duration(milliseconds: 100),
-              child: Transform(
-                alignment: Alignment.center,
-                transform: isMirrored
-                    ? Matrix4.rotationY(3.14159)
-                    : Matrix4.identity(),
-                child: Icon(
-                  icon,
-                  size: 18,
-                  color: isHovered ? Colors.white : const Color(0xFF8A8E94),
-                ),
+    return HoverBuilder(
+      builder: (isHovered) => GestureDetector(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(7),
+          child: AnimatedScale(
+            scale: isHovered ? 1.25 : 1.0,
+            duration: const Duration(milliseconds: 100),
+            child: Transform(
+              alignment: Alignment.center,
+              transform:
+                  isMirrored ? Matrix4.rotationY(3.14159) : Matrix4.identity(),
+              child: Icon(
+                icon,
+                size: 18,
+                color: isHovered ? Colors.white : const Color(0xFF8A8E94),
               ),
             ),
           ),
-        ).withDiscordTooltip(tooltip),
-      ),
+        ),
+      ).withDiscordTooltip(tooltip),
     );
-  }
-}
-
-class _HoverViewModel extends BaseViewModel {
-  bool _isHovered = false;
-  bool get isHovered => _isHovered;
-  void setHover(bool value) {
-    _isHovered = value;
-    notifyListeners();
   }
 }

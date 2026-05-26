@@ -1,3 +1,5 @@
+// ignore_for_file: camel_case_types
+
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/dm_side_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view.dart';
@@ -44,10 +46,6 @@ class HomeView extends StackedView<HomeViewModel> {
                 ? const FraindHubView()
                 : viewModel.currentView,
           ),
-          // const SizedBox(
-          //   width: 270,
-          //   child: ActiveNowPanel(),
-          // ),
         ],
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/dm_side_view_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/widget/dm_side_fraind_widget.dart';
+import 'package:my_discord/ui/common/hover_builder.dart';
+import 'package:my_discord/ui/common/press_builder.dart';
 import 'package:stacked/stacked.dart';
 
 class DmSideView extends StackedView<DmSideViewModel> {
@@ -132,47 +134,63 @@ class _SidebarTab extends StatelessWidget {
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 1),
-      child: Material(
-        color: isActive ? const Color(0xFF35373C) : Colors.transparent,
-        borderRadius: BorderRadius.circular(4),
-        child: InkWell(
+      child: HoverBuilder(
+        builder: (isHovered) => PressBuilder(
           onTap: () => viewModel.onTabTap(tab),
-          borderRadius: BorderRadius.circular(4),
-          hoverColor: const Color(0xFF2E3035),
-          splashColor: Colors.transparent,
-          highlightColor: Colors.transparent,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
-            child: Row(
-              children: [
-                Icon(icon,
-                    color: isActive ? Colors.white : const Color(0xFF80848E),
-                    size: 18),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Text(label,
+          builder: (isPressed) => Container(
+            decoration: BoxDecoration(
+              color: isPressed
+                  ? const Color(0xFF2d2d30)
+                  : isActive
+                      ? isHovered
+                          ? const Color(0xFF1d1d1e)
+                          : const Color(0xFF2d2d30)
+                      : isHovered
+                          ? const Color(0xFF1d1d1e)
+                          : Colors.transparent,
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+              child: Row(
+                children: [
+                  Icon(
+                    icon,
+                    size: 18,
+                    color: const Color(0xFF96979e),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      label,
                       style: TextStyle(
-                        color:
-                            isActive ? Colors.white : const Color(0xFFDBDEE1),
+                        color: isActive || isHovered || isPressed
+                            ? Colors.white
+                            : const Color(0xFF96979e),
                         fontSize: 13,
                         fontWeight: FontWeight.w500,
-                      )),
-                ),
-                if (badge != null)
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF5865F2),
-                      borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
-                    child: Text(badge!,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 10,
-                            fontWeight: FontWeight.w700)),
                   ),
-              ],
+                  if (badge != null)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF5865F2),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        badge!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ),

@@ -19,8 +19,8 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
   final _viewService = locator<ViewService>();
   final _firestore = FirebaseFirestore.instance;
 
-  SidebarTab _activeTab = SidebarTab.friends;
-  SidebarTab get activeTab => _activeTab;
+  SidebarTab? _activeTab = SidebarTab.friends;
+  SidebarTab? get activeTab => _activeTab;
   String? get currentChatId => _viewService.currentId;
   StreamSubscription? _contactsSub;
 
@@ -64,6 +64,7 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
 
   void onTabTap(SidebarTab tab) {
     _activeTab = tab;
+    _viewService.currentId = null;
     notifyListeners();
 
     switch (tab) {
@@ -82,6 +83,8 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
   }
 
   void navigateToChat(Map<String, dynamic> friend) {
+    _activeTab = null;
+    notifyListeners();
     final id = friend['contactId'] ?? '';
     final name = friend['contactName'] ?? 'Unknown';
 
