@@ -75,9 +75,7 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
     }
   }
 
-  String? _currentChatId;
   void navigateToChat(Map<String, dynamic> friend) {
-    print('TAP: ${friend['contactId']}'); // ✅ Yeh add karo
     final id = friend['contactId'] ?? '';
     final name = friend['contactName'] ?? 'Unknown';
 

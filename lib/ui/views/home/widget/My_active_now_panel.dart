@@ -49,10 +49,11 @@ class _ActiveNowTile extends StatelessWidget {
   final Color activityColor;
 
   const _ActiveNowTile({
+    Key? key,
     required this.name,
     required this.activity,
     required this.activityColor,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

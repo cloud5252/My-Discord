@@ -27,7 +27,6 @@ class PendingView extends StackedView<PendingViewModel> {
 
     return ListView(
       children: [
-        // Incoming section
         if (viewModel.incomingRequests.isNotEmpty) ...[
           _SectionLabel('Incoming — ${viewModel.incomingRequests.length}'),
           ...viewModel.incomingRequests.map(
@@ -39,10 +38,8 @@ class PendingView extends StackedView<PendingViewModel> {
             ),
           ),
         ],
-
-        // Outgoing section
         if (viewModel.outgoingRequests.isNotEmpty) ...[
-          _SectionLabel('Outgoing — ${viewModel.outgoingRequests.length}'),
+          _SectionLabel('Sent — ${viewModel.outgoingRequests.length}'),
           ...viewModel.outgoingRequests.map(
             (r) => PendingRequestTile(
               request: r,
@@ -61,14 +58,14 @@ class PendingView extends StackedView<PendingViewModel> {
 
 class _SectionLabel extends StatelessWidget {
   final String text;
-  const _SectionLabel(this.text);
+  const _SectionLabel(this.text, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
       child: Text(
-        text.toUpperCase(),
+        text,
         style: const TextStyle(
           color: Color(0xFF80848E),
           fontSize: 11,

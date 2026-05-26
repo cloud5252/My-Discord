@@ -49,10 +49,11 @@ class _TabChip extends StatelessWidget {
   final FraindHubViewModel viewModel;
 
   const _TabChip({
+    Key? key,
     required this.label,
     required this.filter,
     required this.viewModel,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

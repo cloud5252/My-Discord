@@ -9,13 +9,11 @@ import 'package:stacked_services/stacked_services.dart';
 
 class AllFraindViewModel extends BaseViewModel {
   List<UserModel> filteredContacts = [];
-  // final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // final FirebaseAuth _auth = FirebaseAuth.instance;
+
   final _snackbarService = locator<SnackbarService>();
   final _dialogService = locator<DialogService>();
   final auth = locator<Authentication>();
 
-  // List<UserModel> _allFriends = [];
   void showDialog() async {
     var response = await _dialogService.showCustomDialog(
       variant: DialogType.addUser,

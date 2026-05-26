@@ -118,12 +118,13 @@ class _SidebarTab extends StatelessWidget {
   final String? badge;
 
   const _SidebarTab({
+    Key? key,
     required this.icon,
     required this.label,
     required this.tab,
     required this.viewModel,
     this.badge,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -137,7 +138,7 @@ class _SidebarTab extends StatelessWidget {
         child: InkWell(
           onTap: () => viewModel.onTabTap(tab),
           borderRadius: BorderRadius.circular(4),
-          hoverColor: const Color(0xFF2E3035), // ✅ Ab dikhega
+          hoverColor: const Color(0xFF2E3035),  
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           child: Padding(
@@ -181,7 +182,7 @@ class _SidebarTab extends StatelessWidget {
 }
 
 class _BottomUserBar extends StatelessWidget {
-  const _BottomUserBar();
+  const _BottomUserBar({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

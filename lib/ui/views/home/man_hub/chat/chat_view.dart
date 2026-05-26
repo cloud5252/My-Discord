@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_discord/models/messsage_model.dart';
+import 'package:my_discord/ui/views/home/man_hub/active_panel/profile_panel.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/message_bubble_widget.dart';
-import 'package:my_discord/ui/views/home/man_hub/dmSide/active_panel/profile_panel.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatView extends StackedView<ChatViewModel> {

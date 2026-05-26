@@ -107,11 +107,12 @@ class _ActionButton extends StatelessWidget {
   final VoidCallback onTap;
 
   const _ActionButton({
+    Key? key,
     required this.icon,
     required this.color,
     required this.tooltip,
     required this.onTap,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

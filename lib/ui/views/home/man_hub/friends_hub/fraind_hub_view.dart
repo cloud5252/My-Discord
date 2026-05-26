@@ -98,7 +98,7 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
 }
 
 class _tabtag extends StatelessWidget {
-  const _tabtag();
+  const _tabtag({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

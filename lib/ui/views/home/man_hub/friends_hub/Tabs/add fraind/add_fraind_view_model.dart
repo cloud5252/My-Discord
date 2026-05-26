@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/service/FB_Auth/Authentication.dart';
 import 'package:stacked/stacked.dart';
@@ -6,6 +7,7 @@ import 'package:stacked/stacked.dart';
 class AddFraindViewModel extends BaseViewModel {
   final _auth = locator<Authentication>();
   final _firestore = FirebaseFirestore.instance;
+  final textController = TextEditingController();
 
   String inputValue = '';
   String? feedbackMessage;
@@ -13,7 +15,7 @@ class AddFraindViewModel extends BaseViewModel {
 
   void onInputChanged(String value) {
     inputValue = value;
-    feedbackMessage = null; // message clear karo jab type kare
+    feedbackMessage = null;
     notifyListeners();
   }
 
@@ -25,7 +27,6 @@ class AddFraindViewModel extends BaseViewModel {
       final myUid = _auth.getCurrentuser()?.uid;
       if (myUid == null) return;
 
-      // Target user dhundo
       final query = await _firestore
           .collection('Users')
           .where('username', isEqualTo: inputValue.trim())
@@ -37,21 +38,21 @@ class AddFraindViewModel extends BaseViewModel {
             'Hm, didn\'t work. Check that the username is correct.';
         isSuccess = false;
         setBusy(false);
+        notifyListeners();
         return;
       }
 
       final targetUser = query.docs.first;
       final targetUid = targetUser.id;
 
-      // Khud ko add na kare
       if (targetUid == myUid) {
         feedbackMessage = 'You cannot send a request to yourself.';
         isSuccess = false;
         setBusy(false);
+        notifyListeners();
         return;
       }
 
-      // Pehle se request check karo
       final existing = await _firestore
           .collection('friend_requests')
           .where('fromUid', isEqualTo: myUid)
@@ -64,17 +65,16 @@ class AddFraindViewModel extends BaseViewModel {
         feedbackMessage = 'Friend request already sent.';
         isSuccess = false;
         setBusy(false);
+        notifyListeners();
         return;
       }
 
-      // Apna data fetch karo — alag se
       final myDoc = await _firestore.collection('Users').doc(myUid).get();
 
-      // Request bhejo
       await _firestore.collection('friend_requests').add({
         'fromUid': myUid,
         'toUid': targetUid,
-        'fromName': myDoc.data()?['displayName'] ?? 'Unknown', // ← fix
+        'fromName': myDoc.data()?['displayName'] ?? 'Unknown',
         'toName': targetUser.data()['displayName'] ?? 'Unknown',
         'status': 'pending',
         'sentAt': FieldValue.serverTimestamp(),
@@ -83,12 +83,21 @@ class AddFraindViewModel extends BaseViewModel {
       feedbackMessage = 'Success! Your friend request was sent.';
       isSuccess = true;
       inputValue = '';
+      textController.clear();
+      notifyListeners();
     } catch (e) {
       print('❌ Error: $e');
       feedbackMessage = 'Something went wrong. Try again.';
       isSuccess = false;
+      notifyListeners();
     }
 
     setBusy(false);
+  }
+
+  @override
+  void dispose() {
+    textController.dispose();
+    super.dispose();
   }
 }

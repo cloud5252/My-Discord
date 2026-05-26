@@ -78,7 +78,11 @@ class _Avatar extends StatelessWidget {
   final ContactModel contact;
   final Color statusColor;
 
-  const _Avatar({required this.contact, required this.statusColor});
+  const _Avatar({
+    Key? key,
+    required this.contact,
+    required this.statusColor,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -123,7 +127,11 @@ class _ActionIcon extends StatelessWidget {
   final IconData icon;
   final VoidCallback onTap;
 
-  const _ActionIcon({required this.icon, required this.onTap});
+  const _ActionIcon({
+    Key? key,
+    required this.icon,
+    required this.onTap,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

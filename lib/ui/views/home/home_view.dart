@@ -60,7 +60,7 @@ class HomeView extends StackedView<HomeViewModel> {
 class _tabtag extends StatelessWidget {
   final String title;
 
-  const _tabtag({required this.title});
+  const _tabtag({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

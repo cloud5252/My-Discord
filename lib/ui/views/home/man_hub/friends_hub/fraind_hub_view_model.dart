@@ -55,9 +55,7 @@ class FraindHubViewModel extends BaseViewModel {
 
   Future<void> _loadContacts() async {
     setBusy(true);
-    // apna contacts fetch logic yahan
-    // _allContacts = await _contactService.getContacts();
-    setBusy(false);
+
     notifyListeners();
   }
 

@@ -34,6 +34,7 @@ class AddFraindView extends StackedView<AddFraindViewModel> {
             alignment: Alignment.centerRight,
             children: [
               TextField(
+                controller: viewModel.textController,
                 onChanged: viewModel.onInputChanged,
                 style: const TextStyle(color: Colors.white, fontSize: 14),
                 cursorColor: Colors.white,

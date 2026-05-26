@@ -105,8 +105,7 @@ class MessageBubbleWidget extends StatelessWidget {
         onEnter: (_) => model.setHover(true),
         onExit: (_) => model.setHover(false),
         hitTestBehavior: HitTestBehavior.opaque,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
+        child: Container(
           decoration: BoxDecoration(
             color: const Color(0xFF2B2D31),
             borderRadius: BorderRadius.circular(4),
@@ -168,7 +167,8 @@ class _HoverEmoji extends StatelessWidget {
   final String tooltip;
   final _hovered = ValueNotifier<bool>(false);
 
-  _HoverEmoji({required this.emoji, required this.tooltip});
+  _HoverEmoji({Key? key, required this.emoji, required this.tooltip})
+      : super(key: key ?? ValueKey(emoji));
 
   @override
   Widget build(BuildContext context) {
@@ -202,11 +202,12 @@ class _HoverIcon extends StatelessWidget {
   final _hovered = ValueNotifier<bool>(false);
 
   _HoverIcon({
+    Key? key,
     required this.icon,
     required this.tooltip,
     required this.onTap,
     this.isMirrored = false,
-  });
+  }) : super(key: key ?? ValueKey('${tooltip}_$isMirrored'));
 
   @override
   Widget build(BuildContext context) {
