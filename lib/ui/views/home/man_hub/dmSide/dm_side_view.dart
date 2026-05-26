@@ -138,7 +138,7 @@ class _SidebarTab extends StatelessWidget {
         child: InkWell(
           onTap: () => viewModel.onTabTap(tab),
           borderRadius: BorderRadius.circular(4),
-          hoverColor: const Color(0xFF2E3035),  
+          hoverColor: const Color(0xFF2E3035),
           splashColor: Colors.transparent,
           highlightColor: Colors.transparent,
           child: Padding(

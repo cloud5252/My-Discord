@@ -21,7 +21,7 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
 
   SidebarTab _activeTab = SidebarTab.friends;
   SidebarTab get activeTab => _activeTab;
-
+  String? get currentChatId => _viewService.currentId;
   StreamSubscription? _contactsSub;
 
   List<Map<String, dynamic>>? data;
@@ -29,11 +29,17 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
   @override
   void initialise() {
     _listenToContacts();
+    _viewService.addListener(_onViewChanged);
+  }
+
+  void _onViewChanged() {
+    notifyListeners();
   }
 
   @override
   void dispose() {
     _contactsSub?.cancel();
+    _viewService.removeListener(_onViewChanged);
     super.dispose();
   }
 

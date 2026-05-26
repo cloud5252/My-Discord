@@ -20,10 +20,10 @@ class HoverBuilder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ViewModelBuilder<HoverViewModel>.reactive(
       viewModelBuilder: () => HoverViewModel(),
-      builder: (context, model, child) => MouseRegion(
-        onEnter: (_) => model.setHover(true),
-        onExit: (_) => model.setHover(false),
-        child: builder(model.isHovered),
+      builder: (context, viewModel, child) => MouseRegion(
+        onEnter: (_) => viewModel.setHover(true),
+        onExit: (_) => viewModel.setHover(false),
+        child: builder(viewModel.isHovered),
       ),
     );
   }
