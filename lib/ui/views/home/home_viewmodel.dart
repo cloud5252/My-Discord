@@ -48,15 +48,11 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
 
     _firestore
         .collection('Contacts')
-        .where('ownerId',
-            isEqualTo:
-                myUid) // 🔑 Yeh filter sirf Cloud ke banaye contacts layega
+        .where('ownerId', isEqualTo: myUid)
         .snapshots()
         .listen((snapshot) async {
       final friendsBox = Hive.box<HiveUserModel>('friends_box');
 
-      // 🔥 FIX 1: Naya data aane par pehle local Hive box ko khali (clear) karo!
-      // Is se har user ko sirf wahi dosto dikhenge jo abhi Firestore mein uske ownerId ke sath hain.
       await friendsBox.clear();
 
       for (var doc in snapshot.docs) {
@@ -64,8 +60,6 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
         final contactId = mapData['contactId'] ?? '';
         final ownerId = mapData['ownerId'] ?? '';
 
-        // 🔥 FIX 2: Double Security Check
-        // Agar contactId aapki apni hai, YA ownerId aapki apni nahi hai, to usko hargiz add mat karo!
         if (contactId == myUid || ownerId != myUid) {
           continue;
         }
@@ -79,12 +73,9 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
           status: mapData['status'] ?? 'offline',
         );
 
-        // Fresh list ko Hive mein save kar diya
         await friendsBox.put(contactUser.uid, contactUser);
+        notifyListeners();
       }
-
-      print(
-          "DEBUG HIVE: Total fresh friends saved for $myUid -> ${friendsBox.length}");
     });
   }
 
