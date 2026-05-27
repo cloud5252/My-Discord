@@ -89,28 +89,33 @@ class AddFraindView extends StackedView<AddFraindViewModel> {
         ),
         if (viewModel.feedbackMessage != null) ...[
           const SizedBox(height: 12),
-          Row(
-            children: [
-              Icon(
-                viewModel.isSuccess
-                    ? Icons.check_circle_outline
-                    : Icons.error_outline,
-                size: 16,
-                color: viewModel.isSuccess
-                    ? const Color(0xFF3BA55C)
-                    : const Color(0xFFED4245),
-              ),
-              const SizedBox(width: 8),
-              Text(
-                viewModel.feedbackMessage!,
-                style: TextStyle(
+          Padding(
+            padding: const EdgeInsets.only(
+              left: 20.0,
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  viewModel.isSuccess
+                      ? Icons.check_circle_outline
+                      : Icons.error_outline,
+                  size: 16,
                   color: viewModel.isSuccess
                       ? const Color(0xFF3BA55C)
                       : const Color(0xFFED4245),
-                  fontSize: 13,
                 ),
-              ),
-            ],
+                const SizedBox(width: 8),
+                Text(
+                  viewModel.feedbackMessage!,
+                  style: TextStyle(
+                    color: viewModel.isSuccess
+                        ? const Color(0xFF3BA55C)
+                        : const Color(0xFFED4245),
+                    fontSize: 13,
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
         const SizedBox(height: 10),

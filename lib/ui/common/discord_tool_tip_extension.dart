@@ -8,9 +8,12 @@ extension DiscordTooltipExtension on Widget {
     return Tooltip(
       message: message,
       preferBelow: preferBelow,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      waitDuration: Duration.zero,
+      showDuration: Duration.zero,
       decoration: BoxDecoration(
         color: const Color(0xFF242429),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(8),
         border: Border.all(color: const Color(0xFF323237), width: 0.9),
         boxShadow: const [
           BoxShadow(

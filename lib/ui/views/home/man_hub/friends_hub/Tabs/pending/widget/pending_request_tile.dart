@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
 
 class PendingRequestTile extends StatelessWidget {
   final Map<String, dynamic> request;
@@ -35,7 +36,6 @@ class PendingRequestTile extends StatelessWidget {
       ),
       child: Row(
         children: [
-          // Avatar
           CircleAvatar(
             radius: 20,
             backgroundColor: const Color(0xFF5865F2),
@@ -50,8 +50,6 @@ class PendingRequestTile extends StatelessWidget {
                 : null,
           ),
           const SizedBox(width: 12),
-
-          // Name + label
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,8 +69,6 @@ class PendingRequestTile extends StatelessWidget {
               ],
             ),
           ),
-
-          // Action buttons
           if (isIncoming) ...[
             _ActionButton(
               icon: Icons.check,
@@ -116,20 +112,17 @@ class _ActionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Tooltip(
-      message: tooltip,
-      child: GestureDetector(
-        onTap: onTap,
-        child: Container(
-          width: 32,
-          height: 32,
-          decoration: const BoxDecoration(
-            color: Color(0xFF2B2D31),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: color, size: 16),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 32,
+        height: 32,
+        decoration: const BoxDecoration(
+          color: Color(0xFF2B2D31),
+          shape: BoxShape.circle,
         ),
+        child: Icon(icon, color: color, size: 16),
       ),
-    );
+    ).withDiscordTooltip(tooltip);
   }
 }

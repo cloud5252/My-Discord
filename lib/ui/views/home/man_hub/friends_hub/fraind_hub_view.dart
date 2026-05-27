@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/add%20fraind/add_fraind_view.dart';
+import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/all%20fraind/all_fraind_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/online/online_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/pending/pending_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/common/filter_tab_bar.dart';
@@ -81,14 +82,12 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
       FriendFilter.pending => const PendingView(),
       FriendFilter.online => const OnlineView(),
       FriendFilter.addfraind => const AddFraindView(),
+      FriendFilter.all => const AllFraindView(),
       FriendFilter.blocked => const Center(
-          child: Text('No blocked users',
-              style: TextStyle(color: Color(0xFF1a1a1e))),
+          child:
+              Text('No blocked users', style: TextStyle(color: Colors.white)),
         ),
-      FriendFilter.all => const Center(
-          child: Text('not found', style: TextStyle(color: Color(0xFF1a1a1e))),
-        ),
-      _ => const Text('error'),
+      _ => const Text('error', style: TextStyle(color: Colors.white)),
     };
   }
 
