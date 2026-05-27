@@ -35,7 +35,7 @@ class MessageModel {
       isRead: map['isRead'],
       isVoiceMessage: map['isVoiceMessage'],
       profileUrl: map['profileUrl'],
-      firebaseId: map['firebaseId'], 
+      firebaseId: map['firebaseId'],
     );
   }
 

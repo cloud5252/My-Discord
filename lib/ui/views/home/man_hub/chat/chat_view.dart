@@ -31,48 +31,57 @@ class ChatView extends StackedView<ChatViewModel> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: StreamBuilder<List<MessageModel>>(
-                          key: ValueKey(viewModel.receiverId),
-                          stream: viewModel.messagesStream,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                child: CircularProgressIndicator(
-                                    color: Color(0xFF5865F2)),
-                              );
-                            }
-                            final messages = snapshot.data ?? [];
-                            return ListView.builder(
-                              itemCount: messages.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index == 0) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 40),
-                                      _buildUserProfileHeader(),
-                                      const SizedBox(height: 20),
-                                      const Divider(color: Colors.white10),
-                                      const SizedBox(height: 10),
-                                      if (messages.isEmpty)
-                                        const Padding(
-                                          padding: EdgeInsets.all(20),
-                                          child: Text('No messages yet!',
-                                              style: TextStyle(
-                                                  color: Color(0xFF80848E))),
-                                        ),
-                                    ],
-                                  );
-                                }
-                                final message = messages[index - 1];
-                                return MessageBubbleWidget(message: message);
-                              },
+                          child: StreamBuilder<List<MessageModel>>(
+                        key: ValueKey(viewModel.receiverId),
+                        stream: viewModel.messagesStream,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(
+                                  color: Color(0xFF5865F2)),
                             );
-                          },
-                        ),
-                      ),
+                          }
+
+                          final messages =
+                              snapshot.data?.reversed.toList() ?? [];
+
+                          return ListView.builder(
+                            reverse: true,
+                            cacheExtent: 1000,
+                            controller: viewModel.scrollController,
+                            itemCount: messages.length + 1,
+                            itemBuilder: (context, index) {
+                              if (index == messages.length) {
+                                return Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const SizedBox(height: 40),
+                                    _buildUserProfileHeader(),
+                                    const SizedBox(height: 20),
+                                    const Divider(color: Colors.white10),
+                                    const SizedBox(height: 10),
+                                    if (messages.isEmpty)
+                                      const Padding(
+                                        padding: EdgeInsets.all(20),
+                                        child: Text('No messages yet!',
+                                            style: TextStyle(
+                                                color: Color(0xFF80848E))),
+                                      ),
+                                  ],
+                                );
+                              }
+
+                              final message = messages[index];
+                              return MessageBubbleWidget(
+                                message: message,
+                                key: ValueKey(
+                                    message.firebaseId ?? index.toString()),
+                              );
+                            },
+                          );
+                        },
+                      )),
                       _buildMessageInput(viewModel),
                     ],
                   ),

@@ -18,7 +18,7 @@ class ChatViewModel extends BaseViewModel {
     required this.receiverId,
     required this.receiverName,
   });
-
+  final ScrollController scrollController = ScrollController();
   String get myUid => _auth.getCurrentuser()?.uid ?? '';
   String get myEmail => _auth.getCurrentuser()?.email ?? '';
 
@@ -40,6 +40,14 @@ class ChatViewModel extends BaseViewModel {
       receiverId: receiverId,
       messageText: text,
     );
+
+    if (scrollController.hasClients) {
+      scrollController.animateTo(
+        0.0,
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOut,
+      );
+    }
   }
 
   bool get isSendButtonActive => messageController.text.trim().isNotEmpty;
@@ -47,6 +55,7 @@ class ChatViewModel extends BaseViewModel {
   @override
   void dispose() {
     messageController.dispose();
+    scrollController.dispose();
     super.dispose();
   }
 

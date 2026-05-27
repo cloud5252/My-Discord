@@ -9,7 +9,7 @@
             "args": [
                 "-d",
                 "chrome",
-                "--web-port=3000"
+                "--web-port=3000",
             ]
         }
     ]

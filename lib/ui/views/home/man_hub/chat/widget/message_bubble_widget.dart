@@ -109,6 +109,16 @@ class MessageBubbleWidget extends StatelessWidget {
                 isHovered ? const Color(0xFF404249) : const Color(0xFF1E1F22),
             width: 1,
           ),
+          boxShadow: isHovered
+              ? [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    offset: const Offset(0, 4),
+                    blurRadius: 8,
+                    spreadRadius: 0,
+                  ),
+                ]
+              : [],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
