@@ -62,33 +62,37 @@ class PendingViewModel extends BaseViewModel implements Initialisable {
     if (myUid == null) return;
     final batch = _firestore.batch();
 
+    // 1. Request status accepted karo
     batch.update(
       _firestore.collection('friend_requests').doc(docId),
       {'status': 'accepted'},
     );
 
-    // Dono ke Contacts mein add karo — FraindHub wali collection
+    // Request ka data nikalen taake sahi names mil sakein
+    final requestDoc =
+        incomingRequests.firstWhere((r) => r['id'] == docId, orElse: () => {});
+    final fromName = requestDoc['fromName'] ?? '';
+    final toName = requestDoc['toName'] ?? '';
+
+    // 2. Cloud ke contacts mein Junaid ko add karo
     batch.set(
       _firestore.collection('Contacts').doc(),
       {
-        'ownerId': myUid,
-        'contactId': fromUid,
-        'contactName':
-            incomingRequests.firstWhere((r) => r['id'] == docId)['fromName'] ??
-                '',
+        'ownerId': myUid, // Cloud
+        'contactId': fromUid, // Junaid
+        'contactName': fromName, // Junaid ka naam
         'status': 'online',
         'addedAt': FieldValue.serverTimestamp(),
       },
     );
 
+    // 3. Junaid ke contacts mein Cloud ko add karo
     batch.set(
       _firestore.collection('Contacts').doc(),
       {
-        'ownerId': fromUid,
-        'contactId': myUid,
-        'contactName':
-            incomingRequests.firstWhere((r) => r['id'] == docId)['toName'] ??
-                '',
+        'ownerId': fromUid, // Junaid
+        'contactId': myUid, // Cloud
+        'contactName': toName, // Cloud ka naam
         'status': 'online',
         'addedAt': FieldValue.serverTimestamp(),
       },
