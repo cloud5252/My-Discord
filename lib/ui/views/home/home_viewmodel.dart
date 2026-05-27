@@ -1,7 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_ce/hive.dart';
 import 'package:my_discord/app/app.bottomsheets.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/app/app.router.dart';
+import 'package:my_discord/models/hive_user_model.dart';
 import 'package:my_discord/service/FB_Auth/Authentication.dart';
 import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:my_discord/ui/common/app_strings.dart';
@@ -15,10 +18,10 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
   final _navigationService = locator<NavigationService>();
   Widget _currentCenterView = const FraindHubView();
   Widget get currentCenterView => _currentCenterView;
-  final viewService = locator<ViewService>();
   final _viewService = locator<ViewService>();
   Widget get currentView => _viewService.currentView;
   String get appBarTitle => _viewService.currentTitle;
+  final _firestore = FirebaseFirestore.instance;
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_viewService];
@@ -26,6 +29,7 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
   @override
   void initialise() {
     _viewService.addListener(notifyListeners);
+    listenToContactsGlobal();
   }
 
   void setCenterView(Widget view) {
@@ -36,6 +40,37 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
   Future<void> logout() async {
     await _auth.logOut();
     _navigationService.clearStackAndShow(Routes.logInView);
+  }
+
+  void listenToContactsGlobal() {
+    final myUid = _auth.getCurrentuser()?.uid;
+    if (myUid == null) return;
+
+    _firestore
+        .collection('Contacts')
+        .where('ownerId', isEqualTo: myUid)
+        .snapshots()
+        .listen((snapshot) async {
+      final friendsBox = Hive.box<HiveUserModel>('friends_box');
+
+      for (var doc in snapshot.docs) {
+        final mapData = doc.data();
+        final contactId = mapData['contactId'] ?? '';
+        if (contactId == myUid) {
+          continue;
+        }
+        HiveUserModel contactUser = HiveUserModel(
+          uid: mapData['contactId'] ?? '',
+          username: mapData['contactName'] ?? '',
+          displayName: mapData['contactName'] ?? 'Unknown',
+          email: mapData['email'] ?? '',
+          createdAt: DateTime.now(),
+          status: mapData['status'] ?? 'offline',
+        );
+
+        await friendsBox.put(contactUser.uid, contactUser);
+      }
+    });
   }
 
   void showBottomSheet() {

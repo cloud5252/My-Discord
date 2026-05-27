@@ -22,9 +22,9 @@ class ChatViewModel extends BaseViewModel {
   String get myUid => _auth.getCurrentuser()?.uid ?? '';
   String get myEmail => _auth.getCurrentuser()?.email ?? '';
 
-  Stream<List<MessageModel>> get messagesStream =>
-      _chatService.getMessages(receiverId);
-
+  // Stream<List<MessageModel>> get messagesStream =>
+  //     _chatService.getMessages(receiverId);
+  Stream<List<MessageModel>>? get messagesStream => null;
   @override
   // ignore: override_on_non_overriding_member
   void initialise() {

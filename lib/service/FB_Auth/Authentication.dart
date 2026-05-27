@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:my_discord/models/user_model.dart';
+import 'package:hive_ce/hive.dart';
+import 'package:my_discord/models/hive_user_model.dart';
 
 class Authentication {
   static final Authentication _instance = Authentication._internal();
@@ -39,7 +40,7 @@ class Authentication {
         throw Exception("User creation failed on Firebase");
       }
 
-      UserModel newUser = UserModel(
+      HiveUserModel newUser = HiveUserModel(
         uid: firebaseUser.uid,
         username: name,
         displayName: displayname,
@@ -52,6 +53,9 @@ class Authentication {
           .collection('Users')
           .doc(firebaseUser.uid)
           .set(newUser.toMap());
+
+      var currentUserBox = Hive.box<HiveUserModel>('current_user_box');
+      await currentUserBox.put(firebaseUser.uid, newUser);
 
       return userCredential;
     } on FirebaseAuthException catch (e) {

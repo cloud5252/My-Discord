@@ -16,6 +16,7 @@ import '../service/FB_Auth/Authentication.dart';
 import '../service/chat_service/chat_service.dart';
 import '../service/chat_service/user_service.dart';
 import '../service/chat_service/viewService.dart';
+import '../service/hive_service/hive_service.dart';
 
 final locator = StackedLocator.instance;
 
@@ -36,4 +37,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => UserService());
   locator.registerLazySingleton(() => ViewService());
   locator.registerLazySingleton(() => ChatService());
+  locator.registerLazySingleton(() => HiveService());
 }
