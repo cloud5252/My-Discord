@@ -89,7 +89,7 @@ class _TooltipBox extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
         decoration: BoxDecoration(
-          color: const Color(0xFF111214),
+          color: const Color(0xFF242429),
           borderRadius: BorderRadius.circular(4),
           border: Border.all(color: const Color(0xFF2A2B30), width: 0.8),
           boxShadow: const [

@@ -23,10 +23,6 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: Row(
         children: [
-          // @ symbol
-          const Text('@',
-              style: TextStyle(color: Color(0xFF80848E), fontSize: 18)),
-          const SizedBox(width: 6),
           Text(
             chatWithName,
             style: const TextStyle(
@@ -36,8 +32,6 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
             ),
           ),
           const Spacer(),
-
-          // ✅ Custom header icons
           _HeaderIcon(
             icon: Icons.phone_in_talk,
             tooltip: 'Start Voice Call',
@@ -63,9 +57,7 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
             tooltip: 'User Profile Toggle',
             onTap: () {},
           ),
-
           const SizedBox(width: 8),
-
           _SearchBar(),
         ],
       ),
@@ -110,17 +102,22 @@ class _SearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return HoverBuilder(
       builder: (isHovered) => Container(
-        width: 144,
-        height: 24,
+        width: 250,
+        height: 32,
         padding: const EdgeInsets.symmetric(horizontal: 8),
         decoration: BoxDecoration(
-          color: isHovered ? const Color(0xFF2B2D31) : const Color(0xFF1e1f22),
-          borderRadius: BorderRadius.circular(4),
+          color: const Color(0xFF17171a),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: const Color(0xFF2c2d32),
+            width: 1,
+          ),
         ),
         child: const Row(
           children: [
             Expanded(
               child: TextField(
+                cursorWidth: 0.9,
                 cursorColor: Colors.white,
                 style: TextStyle(color: Colors.white, fontSize: 12),
                 decoration: InputDecoration(
