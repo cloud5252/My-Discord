@@ -37,12 +37,12 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
             padding: const EdgeInsets.symmetric(horizontal: 16),
             decoration: const BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Color(0xFF1E1F22), width: 1.5),
+                bottom: BorderSide(color: Color(0xFF2c2c30), width: 1.0),
               ),
             ),
             child: Row(
               children: [
-                const _tabtag(),
+                _tabtag(viewModel: viewModel),
                 const SizedBox(width: 16),
                 Expanded(child: FilterTabBar(viewModel: viewModel)),
                 const ChatPopupMenu(),
@@ -97,18 +97,19 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
 }
 
 class _tabtag extends StatelessWidget {
-  const _tabtag({Key? key}) : super(key: key);
+  final FraindHubViewModel viewModel;
+  const _tabtag({Key? key, required this.viewModel}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const Row(
+    return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.people_alt, color: Color(0xFFabacb2), size: 18),
-        SizedBox(width: 8),
+        const Icon(Icons.people_alt, color: Color(0xFFabacb2), size: 18),
+        const SizedBox(width: 8),
         Text(
-          'Friends',
-          style: TextStyle(
+          '${viewModel.appBarTitle}',
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 13,
             fontWeight: FontWeight.bold,

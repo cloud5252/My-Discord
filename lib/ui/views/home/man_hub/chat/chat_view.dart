@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/active_panel/profile_panel.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/widget/chat_top_header.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/message_bubble_widget.dart';
 import 'package:stacked/stacked.dart';
 
@@ -22,7 +23,7 @@ class ChatView extends StackedView<ChatViewModel> {
       color: const Color(0xFF1a1a1e),
       child: Column(
         children: [
-          _buildTopHeader(),
+          ChatTopHeader(chatWithName: chatWithName),
           const Divider(color: Color(0xFF1E1F22), height: 1),
           Expanded(
             child: Row(
@@ -89,25 +90,6 @@ class ChatView extends StackedView<ChatViewModel> {
                 const ProfilePanel(),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTopHeader() {
-    return Container(
-      height: 48,
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          const Text('@',
-              style: TextStyle(color: Color(0xFF80848E), fontSize: 20)),
-          const SizedBox(width: 8),
-          Text(
-            chatWithName,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold, fontSize: 15),
           ),
         ],
       ),

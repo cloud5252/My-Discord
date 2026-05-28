@@ -60,7 +60,6 @@ class ContactTile extends StatelessWidget {
                   ],
                 ),
               ),
-              // Action buttons
               _ActionIcon(
                   icon: Icons.chat_bubble_outline,
                   onTap: () => viewModel.navigateToChat(contact)),

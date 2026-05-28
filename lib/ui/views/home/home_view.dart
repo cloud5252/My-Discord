@@ -16,7 +16,7 @@ class HomeView extends StackedView<HomeViewModel> {
       appBar: AppBar(
         centerTitle: true,
         backgroundColor: const Color(0xFF121214),
-        toolbarHeight: 30,
+        toolbarHeight: 33,
         automaticallyImplyLeading: false,
         titleSpacing: 16,
         title: _tabtag(
@@ -86,9 +86,12 @@ class _tabtag extends StatelessWidget {
       return const Icon(Icons.bolt, color: Color(0xFF80848E), size: 20);
     } else if (title == "Shop") {
       return const Icon(Icons.shopping_bag, color: Color(0xFF80848E), size: 20);
+    } else if (title == "Quests") {
+      return const Icon(Icons.checklist_outlined,
+          color: Color(0xFF80848E), size: 20);
     } else {
       return const Text(
-        '@',
+        '',
         style: TextStyle(
           color: Color(0xFF80848E),
           fontSize: 20,

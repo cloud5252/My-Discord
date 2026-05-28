@@ -26,6 +26,7 @@ class DmSideView extends StackedView<DmSideViewModel> {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Container(
+              height: 34,
               width: double.infinity,
               decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey.shade900),
@@ -46,7 +47,7 @@ class DmSideView extends StackedView<DmSideViewModel> {
             ),
           ),
           Divider(
-            thickness: 0.5,
+            thickness: 0.4,
             color: Colors.grey.shade700,
           ),
           _SidebarTab(

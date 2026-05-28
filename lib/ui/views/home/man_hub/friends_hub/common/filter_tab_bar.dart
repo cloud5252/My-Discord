@@ -1,5 +1,10 @@
+// ignore_for_file: deprecated_member_use, curly_braces_in_flow_control_structures
+
 import 'package:flutter/material.dart';
- import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view_model.dart';
+import 'package:my_discord/ui/common/hover_builder.dart';
+import 'package:my_discord/ui/common/press_builder.dart';
+import 'package:my_discord/ui/views/home/man_hub/friends_hub/common/filter_tab_style.dart';
+import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view_model.dart';
 
 class FilterTabBar extends StatelessWidget implements PreferredSizeWidget {
   final FraindHubViewModel viewModel;
@@ -33,7 +38,7 @@ class FilterTabBar extends StatelessWidget implements PreferredSizeWidget {
               filter: FriendFilter.blocked,
               viewModel: viewModel),
           _TabChip(
-              label: 'AddFraind',
+              label: 'Add Friend',
               filter: FriendFilter.addfraind,
               viewModel: viewModel),
           const SizedBox(width: 10),
@@ -58,44 +63,41 @@ class _TabChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bool isActive = viewModel.selectedFilter == filter;
-    final bool isAddFriendTab = filter == FriendFilter.addfraind;
 
-    Color getBgColor() {
-      if (isAddFriendTab) {
-        return isActive
-            ? const Color(0xFF363e8e).withOpacity(0.5)
-            : const Color(0xFF5a68ed);
-      }
-
-      return isActive ? const Color(0xFF404249) : Colors.transparent;
-    }
-
-    Color getTextColor() {
-      if (isAddFriendTab) {
-        return isActive ? const Color(0xFF5a68ed) : Colors.white;
-      }
-      return isActive ? Colors.white : const Color(0xFFB5BAC1);
-    }
-
-    return GestureDetector(
-      onTap: () => viewModel.setFilter(filter),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 350),
-        margin: const EdgeInsets.only(right: 10),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-        decoration: BoxDecoration(
-          color: getBgColor(),
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            color: getTextColor(),
-            fontSize: 13,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
+    return HoverBuilder(
+      builder: (isHovered) {
+        return PressBuilder(
+          onTap: () => viewModel.setFilter(filter),
+          builder: (isPressed) {
+            return AnimatedContainer(
+              duration: const Duration(milliseconds: 120),
+              margin: const EdgeInsets.only(right: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+              decoration: BoxDecoration(
+                color: FilterTabStyle.getBgColor(
+                  filter: filter,
+                  isActive: isActive,
+                  isHovered: isHovered,
+                  isPressed: isPressed,
+                ),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: Text(
+                label,
+                style: TextStyle(
+                  color: FilterTabStyle.getTextColor(
+                    filter: filter,
+                    isActive: isActive,
+                    isHovered: isHovered,
+                  ),
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            );
+          },
+        );
+      },
     );
   }
 }

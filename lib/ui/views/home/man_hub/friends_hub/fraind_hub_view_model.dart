@@ -2,6 +2,7 @@ import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/app/app.router.dart';
 import 'package:my_discord/models/contect_model.dart';
 import 'package:my_discord/service/FB_Auth/Authentication.dart';
+import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -12,7 +13,7 @@ class FraindHubViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
   FriendFilter _selectedFilter = FriendFilter.online;
   FriendFilter get selectedFilter => _selectedFilter;
-
+  final _viewService = locator<ViewService>();
   String _searchQuery = '';
 
   final List<ContactModel> _allContacts = [];
@@ -68,6 +69,16 @@ class FraindHubViewModel extends BaseViewModel {
   void onSearchChanged(String query) {
     _searchQuery = query;
     notifyListeners();
+  }
+
+  String get appBarTitle {
+    final currentTitle = _viewService.currentTitle;
+
+    if (currentTitle == 'Friends') {
+      return currentTitle;
+    }
+
+    return '';
   }
 
   void onAddFriendTap() {}
