@@ -81,14 +81,17 @@ class _HeaderIcon extends StatelessWidget {
     return HoverBuilder(
       builder: (isHovered) => GestureDetector(
         onTap: onTap,
-        child: Container(
-          width: 32,
-          height: 32,
-          child: Center(
-            child: Icon(
-              icon,
-              color: isHovered ? Colors.white : const Color(0xFFB5BAC1),
-              size: 20,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 2.0),
+          child: SizedBox(
+            width: 32,
+            height: 32,
+            child: Center(
+              child: Icon(
+                icon,
+                color: isHovered ? Colors.white : const Color(0xFFB5BAC1),
+                size: 20,
+              ),
             ),
           ),
         ),

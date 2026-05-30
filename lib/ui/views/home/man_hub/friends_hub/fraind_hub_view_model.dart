@@ -15,7 +15,8 @@ class FraindHubViewModel extends BaseViewModel {
   FriendFilter get selectedFilter => _selectedFilter;
   final _viewService = locator<ViewService>();
   String _searchQuery = '';
-
+  RightPanel get rightPanel => locator<ViewService>().rightPanel;
+  String? get currentId => locator<ViewService>().currentId;
   final List<ContactModel> _allContacts = [];
 
   List<ContactModel> get filteredContacts {

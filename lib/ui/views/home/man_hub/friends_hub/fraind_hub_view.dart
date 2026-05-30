@@ -1,33 +1,33 @@
-// ignore_for_file: unreachable_switch_case
+// ignore_for_file: unnecessary_string_interpolations, camel_case_types, unreachable_switch_case
 
 import 'package:flutter/material.dart';
+import 'package:my_discord/app/app.locator.dart';
+import 'package:my_discord/service/chat_service/viewService.dart';
+import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
+import 'package:my_discord/ui/common/hover_builder.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/add%20fraind/add_fraind_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/all%20fraind/all_fraind_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/online/online_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/pending/pending_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/common/filter_tab_bar.dart';
-import 'package:my_discord/ui/views/home/man_hub/friends_hub/common/popup_menu.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/common/search_bar.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view_model.dart';
-import 'package:my_discord/ui/views/home/widget/My_active_now_panel.dart';
+import 'package:my_discord/ui/views/home/man_hub/panel_hub/active_panel/active_panel_view.dart';
+import 'package:my_discord/ui/views/home/man_hub/panel_hub/profile_panel/profile_panel_view.dart';
 import 'package:stacked/stacked.dart';
 
 class FraindHubView extends StackedView<FraindHubViewModel> {
-  const FraindHubView({
-    Key? key,
-  }) : super(key: key);
+  const FraindHubView({Key? key}) : super(key: key);
 
   @override
   Widget builder(
       BuildContext context, FraindHubViewModel viewModel, Widget? child) {
+    final viewService = locator<ViewService>();
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF1a1a1e),
         border: Border(
-          left: BorderSide(
-            color: Colors.grey.withOpacity(0.2),
-            width: 0.5,
-          ),
+          left: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
         ),
       ),
       child: Column(
@@ -42,10 +42,34 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
             ),
             child: Row(
               children: [
-                _tabtag(viewModel: viewModel),
-                const SizedBox(width: 16),
+                const Icon(Icons.people_alt,
+                    color: Color(0xFFabacb2), size: 18),
+                const SizedBox(width: 8),
+                const Text(
+                  'Friends',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Container(
+                  width: 1,
+                  height: 20,
+                  margin: const EdgeInsets.symmetric(horizontal: 12),
+                  color: const Color(0xFF3F4147),
+                ),
                 Expanded(child: FilterTabBar(viewModel: viewModel)),
-                const ChatPopupMenu(),
+                _FriendHeaderIcon(
+                  icon: Icons.inbox,
+                  tooltip: 'New Group DM',
+                  onTap: () {},
+                ),
+                _FriendHeaderIcon(
+                  icon: Icons.help_outline,
+                  tooltip: 'Help',
+                  onTap: () {},
+                ),
               ],
             ),
           ),
@@ -68,7 +92,13 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
                     ],
                   ),
                 ),
-                const ActiveNowPanel(),
+                if (viewModel.selectedFilter != FriendFilter.addfraind)
+                  switch (viewService.rightPanel) {
+                    RightPanel.profile =>
+                      ProfilePanel(userId: viewService.currentId ?? ''),
+                    RightPanel.activeNow => const ActiveNowPanel(),
+                    RightPanel.none => const SizedBox.shrink(),
+                  },
               ],
             ),
           ),
@@ -96,26 +126,43 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
       FraindHubViewModel();
 }
 
-class _tabtag extends StatelessWidget {
-  final FraindHubViewModel viewModel;
-  const _tabtag({Key? key, required this.viewModel}) : super(key: key);
+class _FriendHeaderIcon extends StatelessWidget {
+  final IconData icon;
+  final String tooltip;
+  final VoidCallback onTap;
+
+  const _FriendHeaderIcon({
+    required this.icon,
+    required this.tooltip,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        const Icon(Icons.people_alt, color: Color(0xFFabacb2), size: 18),
-        const SizedBox(width: 8),
-        Text(
-          '${viewModel.appBarTitle}',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 13,
-            fontWeight: FontWeight.bold,
+    return HoverBuilder(
+      builder: (isHovered) => GestureDetector(
+        onTap: onTap,
+        child: Container(
+          width: 32,
+          height: 32,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            color: isHovered ? const Color(0xFF35373C) : Colors.transparent,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: Center(
+            child: AnimatedScale(
+              scale: isHovered ? 1.15 : 1.0,
+              duration: const Duration(milliseconds: 100),
+              child: Icon(
+                icon,
+                color: isHovered ? Colors.white : const Color(0xFFB5BAC1),
+                size: 20,
+              ),
+            ),
           ),
         ),
-      ],
-    );
+      ),
+    ).withDiscordTooltip(tooltip, preferBelow: true);
   }
 }

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_discord/models/messsage_model.dart';
-import 'package:my_discord/ui/views/home/man_hub/active_panel/profile_panel.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/chat_top_header.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/message_bubble_widget.dart';
+import 'package:my_discord/ui/views/home/man_hub/panel_hub/profile_panel/profile_panel_view.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatView extends StackedView<ChatViewModel> {
@@ -27,6 +27,8 @@ class ChatView extends StackedView<ChatViewModel> {
           const Divider(color: Color(0xFF1E1F22), height: 1),
           Expanded(
             child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
                   child: Column(
@@ -87,7 +89,7 @@ class ChatView extends StackedView<ChatViewModel> {
                     ],
                   ),
                 ),
-                const ProfilePanel(),
+                ProfilePanel(userId: chatWithId),
               ],
             ),
           ),

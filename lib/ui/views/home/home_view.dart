@@ -2,8 +2,8 @@
 
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/dm_side_view.dart';
-import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view.dart';
 import 'package:my_discord/ui/views/home/home_viewmodel.dart';
+import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view.dart';
 import 'package:my_discord/ui/views/home/widget/server_sidebar/server_sidebar_view.dart';
 import 'package:stacked/stacked.dart';
 
@@ -19,28 +19,17 @@ class HomeView extends StackedView<HomeViewModel> {
         toolbarHeight: 33,
         automaticallyImplyLeading: false,
         titleSpacing: 16,
-        title: _tabtag(
-          title: viewModel.appBarTitle,
-        ),
+        title: _tabtag(title: viewModel.appBarTitle),
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(1),
-          child: Container(
-            color: const Color(0xFF1E1F22),
-            height: 1.5,
-          ),
+          child: Container(color: const Color(0xFF1E1F22), height: 1.5),
         ),
       ),
       backgroundColor: const Color(0xFF121214),
       body: Row(
         children: [
-          const SizedBox(
-            width: 50,
-            child: ServerSidebar(),
-          ),
-          const SizedBox(
-            width: 270,
-            child: DmSideView(),
-          ),
+          const SizedBox(width: 50, child: ServerSidebar()),
+          const SizedBox(width: 270, child: DmSideView()),
           Expanded(
             child: viewModel.currentView is SizedBox
                 ? const FraindHubView()
@@ -57,7 +46,6 @@ class HomeView extends StackedView<HomeViewModel> {
 
 class _tabtag extends StatelessWidget {
   final String title;
-
   const _tabtag({Key? key, required this.title}) : super(key: key);
 
   @override
@@ -90,14 +78,7 @@ class _tabtag extends StatelessWidget {
       return const Icon(Icons.checklist_outlined,
           color: Color(0xFF80848E), size: 20);
     } else {
-      return const Text(
-        '',
-        style: TextStyle(
-          color: Color(0xFF80848E),
-          fontSize: 20,
-          fontWeight: FontWeight.w300,
-        ),
-      );
+      return const Text('');
     }
   }
 }

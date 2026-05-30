@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
-class ProfilePanel extends StatelessWidget {
-  const ProfilePanel({super.key});
+class ActiveNowPanel extends StatelessWidget {
+  const ActiveNowPanel({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 320,
+      width: 240,
       decoration: const BoxDecoration(
         color: Color(0xFF1a1a1e),
         border: Border(
