@@ -8,15 +8,20 @@ import 'package:stacked_services/stacked_services.dart';
 
 enum FriendFilter { online, all, pending, blocked, addfraind }
 
-class FraindHubViewModel extends BaseViewModel {
+class FraindHubViewModel extends BaseViewModel implements Initialisable {
   final _auth = locator<Authentication>();
   final _navigationService = locator<NavigationService>();
+  final _viewService = locator<ViewService>();
+
   FriendFilter _selectedFilter = FriendFilter.online;
   FriendFilter get selectedFilter => _selectedFilter;
-  final _viewService = locator<ViewService>();
+
   String _searchQuery = '';
-  RightPanel get rightPanel => locator<ViewService>().rightPanel;
-  String? get currentId => locator<ViewService>().currentId;
+
+  ViewService get viewService => _viewService;
+  RightPanel get rightPanel => _viewService.rightPanel;
+  String? get currentId => _viewService.currentId;
+
   final List<ContactModel> _allContacts = [];
 
   List<ContactModel> get filteredContacts {
@@ -50,20 +55,27 @@ class FraindHubViewModel extends BaseViewModel {
       filteredContacts.where((c) => c.status == 'offline').toList();
 
   @override
-  // ignore: override_on_non_overriding_member
   void initialise() {
     _loadContacts();
+    _viewService.addListener(_onViewChanged);
+  }
+
+  void _onViewChanged() => notifyListeners();
+
+  @override
+  void dispose() {
+    _viewService.removeListener(_onViewChanged);
+    super.dispose();
   }
 
   Future<void> _loadContacts() async {
     setBusy(true);
-
-    notifyListeners();
+    // Firebase se data load karo yahan
+    setBusy(false);
   }
 
   void setFilter(FriendFilter filter) {
     _selectedFilter = filter;
-
     notifyListeners();
   }
 
@@ -72,19 +84,10 @@ class FraindHubViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  String get appBarTitle {
-    final currentTitle = _viewService.currentTitle;
-
-    if (currentTitle == 'Friends') {
-      return currentTitle;
-    }
-
-    return '';
-  }
-
   void onAddFriendTap() {}
 
   void navigateToChat(ContactModel contact) {}
+
   Future<void> logout() async {
     await _auth.logOut();
     _navigationService.replaceWithSignInView();

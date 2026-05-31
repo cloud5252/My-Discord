@@ -1,7 +1,6 @@
 // ignore_for_file: unnecessary_string_interpolations, camel_case_types, unreachable_switch_case
 
 import 'package:flutter/material.dart';
-import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
 import 'package:my_discord/ui/common/hover_builder.dart';
@@ -22,7 +21,6 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
   @override
   Widget builder(
       BuildContext context, FraindHubViewModel viewModel, Widget? child) {
-    final viewService = locator<ViewService>();
     return Container(
       decoration: BoxDecoration(
         color: const Color(0xFF1a1a1e),
@@ -93,9 +91,9 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
                   ),
                 ),
                 if (viewModel.selectedFilter != FriendFilter.addfraind)
-                  switch (viewService.rightPanel) {
-                    RightPanel.profile =>
-                      ProfilePanel(userId: viewService.currentId ?? ''),
+                  switch (viewModel.viewService.rightPanel) {
+                    RightPanel.profile => ProfilePanel(
+                        userId: viewModel.viewService.currentId ?? ''),
                     RightPanel.activeNow => const ActiveNowPanel(),
                     RightPanel.none => const SizedBox.shrink(),
                   },
