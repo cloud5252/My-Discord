@@ -8,9 +8,8 @@ import 'package:my_discord/service/hive_service/hive_service.dart';
 import 'package:my_discord/ui/dialogs/bottom_sheets/notice/notice_sheet.dart';
 import 'package:my_discord/ui/dialogs/add_user/add_user_dialog.dart';
 import 'package:my_discord/ui/dialogs/confirm_action/add_user_dialog.dart';
+import 'package:my_discord/ui/views/auth_view/auth_view.dart';
 import 'package:my_discord/ui/views/home/home_view.dart';
-import 'package:my_discord/ui/views/log_in/log_in_view.dart';
-import 'package:my_discord/ui/views/sign_in/sign_in_view.dart';
 import 'package:my_discord/ui/views/startup/startup_view.dart';
 import 'package:stacked/stacked_annotations.dart';
 import 'package:stacked_services/stacked_services.dart';
@@ -20,8 +19,7 @@ import 'package:stacked_services/stacked_services.dart';
   routes: [
     MaterialRoute(page: StartupView, initial: true),
     MaterialRoute(page: HomeView),
-    MaterialRoute(page: SignInView),
-    MaterialRoute(page: LogInView),
+    MaterialRoute(page: AuthView),
 
     // @stacked-route
   ],

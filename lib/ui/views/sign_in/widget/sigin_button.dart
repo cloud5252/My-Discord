@@ -4,7 +4,13 @@ import 'package:my_discord/ui/common/app_colors.dart';
 class SiginButton extends StatelessWidget {
   final String text;
   final void Function()? ontap;
-  const SiginButton({required this.ontap, required this.text, super.key});
+  final bool isBusy;
+  const SiginButton({
+    required this.ontap,
+    required this.text,
+    required this.isBusy,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -13,14 +19,25 @@ class SiginButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: blueColor,
+          color: loginButtonColor,
         ),
-        padding: const EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.all(10),
+        margin: const EdgeInsets.symmetric(horizontal: 1),
         child: Center(
-            child: Text(
-          text,
-          style: const TextStyle(fontSize: 18, color: whiteColor),
-        )),
+          child: isBusy
+              ? const SizedBox(
+                  height: 18,
+                  width: 18,
+                  child: CircularProgressIndicator(
+                    color: Colors.white,
+                    strokeWidth: 2,
+                  ),
+                )
+              : Text(
+                  text,
+                  style: const TextStyle(fontSize: 15),
+                ),
+        ),
       ),
     );
   }

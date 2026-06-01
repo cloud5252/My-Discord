@@ -7,14 +7,33 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/app/app_enums.dart';
 
-class SigInViewModel extends BaseViewModel {
-  final Emailcontroller = TextEditingController();
+class SigInViewModel extends BaseViewModel implements Initialisable {
+  final emailcontroller = TextEditingController();
   final passwordcontroller = TextEditingController();
-  final auth = locator<Authentication>();
+
   final _navigationService = locator<NavigationService>();
   final _snackbarService = locator<SnackbarService>();
   final fbauth = locator<Authentication>();
-  // final _chatService = locator<ChatService>();
+  final auth = locator<Authentication>();
+
+  final FocusNode passwordFocusNode = FocusNode();
+  final FocusNode emailFocusNode = FocusNode();
+
+  bool get isPasswordFocused => passwordFocusNode.hasFocus;
+  bool get isEmailFocused => emailFocusNode.hasFocus;
+
+  @override
+  void initialise() {
+    emailFocusNode.addListener(notifyListeners);
+    passwordFocusNode.addListener(notifyListeners);
+  }
+
+  @override
+  void dispose() {
+    emailcontroller.dispose();
+    passwordcontroller.dispose();
+    super.dispose();
+  }
 
   void navigateToRegister() {
     _navigationService.back();
@@ -24,7 +43,7 @@ class SigInViewModel extends BaseViewModel {
     _snackbarService.showCustomSnackBar(
       variant: SnackbarType.success,
       title: 'Success',
-      message: 'User has been ad successfully! ✅',
+      message: 'User has been ad successfully!',
       duration: const Duration(seconds: 3),
       onTap: (result) {
         print('Snackbar tapped!');
@@ -35,7 +54,7 @@ class SigInViewModel extends BaseViewModel {
   Future<void> signIn() async {
     setBusy(true);
     try {
-      await auth.signIn(Emailcontroller.text, passwordcontroller.text);
+      await auth.signIn(emailcontroller.text, passwordcontroller.text);
       final User? currentUser = fbauth.getCurrentuser();
       if (currentUser != null) {
         _navigationService.replaceWithHomeView();

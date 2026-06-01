@@ -34,12 +34,12 @@ class DropdownOverlay extends StatelessWidget {
       child: CompositedTransformFollower(
         link: link,
         showWhenUnlinked: false,
-        offset: const Offset(0, -185),
+        offset: const Offset(0, -255),
         child: RepaintBoundary(
           child: Material(
             color: Colors.transparent,
             child: Container(
-              height: 180,
+              height: 250,
               decoration: BoxDecoration(
                 color: const Color(0xFF3c3d45),
                 borderRadius: const BorderRadius.all(
@@ -68,7 +68,7 @@ class DropdownOverlay extends StatelessWidget {
                     child: ListView.builder(
                       controller: scrollController,
                       key: ValueKey(type),
-                      padding: const EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.only(right: 6),
                       itemCount: items.length,
                       itemExtent: 50,
                       cacheExtent: 500,
@@ -96,7 +96,7 @@ class DropdownOverlay extends StatelessWidget {
                                         ? const Color(0xFF575969)
                                             .withOpacity(0.3)
                                         : Colors.transparent,
-                                borderRadius: BorderRadius.circular(4),
+                                borderRadius: BorderRadius.circular(8),
                               ),
                               child: Padding(
                                 padding: const EdgeInsets.symmetric(

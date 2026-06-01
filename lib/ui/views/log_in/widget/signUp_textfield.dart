@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/common/app_colors.dart';
 
-class LoginTextfield extends StatelessWidget {
+class SignupTextfield extends StatelessWidget {
   final String hinttext;
   final String helpertext;
   final bool obsecurtext;
@@ -9,7 +9,7 @@ class LoginTextfield extends StatelessWidget {
   final FocusNode focusNode;
   final TextEditingController controller;
 
-  const LoginTextfield({
+  const SignupTextfield({
     required this.controller,
     required this.obsecurtext,
     required this.hinttext,
@@ -21,8 +21,6 @@ class LoginTextfield extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool showHelper = isFocused && helpertext.isNotEmpty;
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -60,28 +58,21 @@ class LoginTextfield extends StatelessWidget {
           ),
         ),
         AnimatedSize(
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-          child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 300),
-            transitionBuilder: (child, animation) {
-              return FadeTransition(
-                opacity: animation,
-                child: SlideTransition(
-                  position: Tween<Offset>(
-                    begin: const Offset(0, -0.3),
-                    end: Offset.zero,
-                  ).animate(CurvedAnimation(
-                    parent: animation,
-                    curve: Curves.easeOut,
-                  )),
-                  child: child,
-                ),
-              );
-            },
-            child: showHelper
-                ? Padding(
-                    key: const ValueKey('shown'),
+          duration: const Duration(milliseconds: 250),
+          curve: Curves.easeInOut,
+          child: isFocused && helpertext.isNotEmpty
+              ? TweenAnimationBuilder<double>(
+                  key: ValueKey(isFocused),
+                  tween: Tween(begin: 0.0, end: 1.0),
+                  duration: const Duration(milliseconds: 600),
+                  builder: (context, value, child) => Opacity(
+                    opacity: value,
+                    child: Transform.translate(
+                      offset: Offset(0, (1 - value) * 10),
+                      child: child,
+                    ),
+                  ),
+                  child: Padding(
                     padding: const EdgeInsets.only(top: 5),
                     child: Text(
                       helpertext,
@@ -91,13 +82,9 @@ class LoginTextfield extends StatelessWidget {
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                  )
-                : const SizedBox(
-                    key: ValueKey('hidden'),
-                    height: 0,
-                    width: double.infinity,
                   ),
-          ),
+                )
+              : const SizedBox.shrink(),
         ),
       ],
     );

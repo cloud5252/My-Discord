@@ -36,7 +36,7 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
 
   Future<void> logout() async {
     await _auth.logOut();
-    _navigationService.clearStackAndShow(Routes.logInView);
+    _navigationService.clearStackAndShow(Routes.authView);
   }
 
   void listenToContactsGlobal() {

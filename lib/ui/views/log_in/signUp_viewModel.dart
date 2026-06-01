@@ -6,7 +6,7 @@ import 'package:stacked_services/stacked_services.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/app/app.router.dart';
 
-class LogInViewModel extends BaseViewModel implements Initialisable {
+class SignupViewmodel extends BaseViewModel implements Initialisable {
   final TextEditingController Emailcontroller = TextEditingController();
   final TextEditingController displaynamecontroller = TextEditingController();
   final TextEditingController usernamecontroller = TextEditingController();
@@ -15,6 +15,16 @@ class LogInViewModel extends BaseViewModel implements Initialisable {
   final ScrollController monthScrollController = ScrollController();
   final ScrollController dayScrollController = ScrollController();
   final ScrollController yearScrollController = ScrollController();
+  final ScrollController signUpController = ScrollController();
+
+  final _navigationService = locator<NavigationService>();
+  final _dialogService = locator<DialogService>();
+  final _auth = locator<Authentication>();
+
+  final LayerLink monthLink = LayerLink();
+  final LayerLink dayLink = LayerLink();
+  final LayerLink yearLink = LayerLink();
+
   final FocusNode emailFocus = FocusNode();
   final FocusNode displaynameFocus = FocusNode();
   final FocusNode usernameFocus = FocusNode();
@@ -24,13 +34,6 @@ class LogInViewModel extends BaseViewModel implements Initialisable {
   bool get isDisplaynameFocused => displaynameFocus.hasFocus;
   bool get isUsernameFocused => usernameFocus.hasFocus;
   bool get isPasswordFocused => passwordFocus.hasFocus;
-
-  final _navigationService = locator<NavigationService>();
-  final _dialogService = locator<DialogService>();
-  final _auth = locator<Authentication>();
-  final LayerLink monthLink = LayerLink();
-  final LayerLink dayLink = LayerLink();
-  final LayerLink yearLink = LayerLink();
 
   @override
   void initialise() {
@@ -65,8 +68,21 @@ class LogInViewModel extends BaseViewModel implements Initialisable {
     notifyListeners();
   }
 
-  void navigateToLogin() {
-    _navigationService.navigateToSignInView();
+  void _closeDropdown() {
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    _isMonthOpen = false;
+    _isDayOpen = false;
+    _isYearOpen = false;
+    notifyListeners();
+  }
+
+  bool _isEmailOptIn = false;
+  bool get isEmailOptIn => _isEmailOptIn;
+
+  void toggleEmailOptIn(bool value) {
+    _isEmailOptIn = value;
+    notifyListeners();
   }
 
   Future<void> register() async {
@@ -164,15 +180,6 @@ class LogInViewModel extends BaseViewModel implements Initialisable {
     );
 
     overlay.insert(_overlayEntry!);
-  }
-
-  void _closeDropdown() {
-    _overlayEntry?.remove();
-    _overlayEntry = null;
-    _isMonthOpen = false;
-    _isDayOpen = false;
-    _isYearOpen = false;
-    notifyListeners();
   }
 
   final List<String> dayItems = List.generate(31, (i) => '${i + 1}');

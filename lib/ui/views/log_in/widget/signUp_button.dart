@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/common/app_colors.dart';
 
-class LoginButton extends StatelessWidget {
+class SignupButton extends StatelessWidget {
   final String text;
   final void Function()? ontap;
   final bool isBusy;
-  const LoginButton({
+  const SignupButton({
     required this.ontap,
     required this.text,
     required this.isBusy,
@@ -19,7 +19,7 @@ class LoginButton extends StatelessWidget {
       child: Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          color: greyColor,
+          color: loginButtonColor,
         ),
         padding: const EdgeInsets.all(10),
         margin: const EdgeInsets.symmetric(horizontal: 1),

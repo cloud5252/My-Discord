@@ -15,7 +15,7 @@ class ServerSidebarViewmodel extends BaseViewModel {
 
       _viewService.currentId = null;
 
-      locator<NavigationService>().clearStackAndShow(Routes.logInView);
+      locator<NavigationService>().clearStackAndShow(Routes.authView);
 
       print("Logout Successful!");
     } catch (e) {

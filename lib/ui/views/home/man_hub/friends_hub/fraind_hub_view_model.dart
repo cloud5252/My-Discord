@@ -90,6 +90,6 @@ class FraindHubViewModel extends BaseViewModel implements Initialisable {
 
   Future<void> logout() async {
     await _auth.logOut();
-    _navigationService.replaceWithSignInView();
+    _navigationService.replaceWithAuthView();
   }
 }

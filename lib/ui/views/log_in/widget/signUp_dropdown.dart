@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class LoginDropdown extends StatelessWidget {
+class SignupDropdown extends StatelessWidget {
   final String hint;
   final List<String> items;
   final String type;
@@ -9,7 +9,7 @@ class LoginDropdown extends StatelessWidget {
   final LayerLink layerLink;
   final Function(String, BuildContext, LayerLink, List<String>) onToggle;
 
-  const LoginDropdown({
+  const SignupDropdown({
     super.key,
     required this.hint,
     required this.items,
