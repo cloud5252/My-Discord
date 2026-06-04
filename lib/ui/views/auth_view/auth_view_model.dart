@@ -6,6 +6,7 @@ class AuthViewModel extends BaseViewModel {
 
   void toggleMode() {
     _isRegisterMode = !_isRegisterMode;
+
     notifyListeners();
   }
 }

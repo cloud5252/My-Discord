@@ -23,7 +23,7 @@ const Color navigationIconbackgroundColor = Color(0xFF10362b);
 const Color navigationBackgroundColor = Color(0xFF0b1014);
 
 const Color backgroundLightMode = Color(0xFFECE5DD);
-const Color backgroundDartMode = Color(0xFF0b1014);
+const Color backgroundDartMode = Colors.transparent;
 const Color userTileColor = Color(0xFF0D1418);
 const Color messagsendUserColor = Color(0xFF134d37);
 const Color messagreceiverUserColor = Color(0xFF1f272a);

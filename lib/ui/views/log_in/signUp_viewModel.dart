@@ -85,6 +85,14 @@ class SignupViewmodel extends BaseViewModel implements Initialisable {
     notifyListeners();
   }
 
+  bool _isTermsAccepted = false;
+  bool get isTermsAccepted => _isTermsAccepted;
+
+  void toggleTermsAccepted(bool value) {
+    _isTermsAccepted = value;
+    notifyListeners();
+  }
+
   Future<void> register() async {
     if (passwordcontroller.text.isEmpty) return;
     setBusy(true);

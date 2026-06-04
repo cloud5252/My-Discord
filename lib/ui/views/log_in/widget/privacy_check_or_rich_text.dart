@@ -36,60 +36,77 @@ class PrivacyCheckOrRichText extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 12),
-        RichText(
-          text: TextSpan(
-            style: const TextStyle(
-              color: Color(0xFFB5BAC1),
-              fontSize: 12,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 20,
+              height: 20,
+              child: CustomCheckbox(
+                value: viewModel.isTermsAccepted,
+                onChanged: viewModel.toggleTermsAccepted,
+              ),
             ),
-            children: [
-              const TextSpan(
-                text: 'By clicking "Create Account", you agree to Discord\'s ',
-              ),
-              WidgetSpan(
-                child: HoverBuilder(
-                  builder: (isHovered) => MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: Text(
-                      'Terms of Service',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        decoration: isHovered
-                            ? TextDecoration.underline
-                            : TextDecoration.none,
-                        decorationColor: Colors.blue,
-                        decorationThickness: 1.5,
+            const SizedBox(width: 8),
+            Expanded(
+              child: RichText(
+                text: TextSpan(
+                  style: const TextStyle(
+                    color: Color(0xFFB5BAC1),
+                    fontSize: 12,
+                  ),
+                  children: [
+                    const TextSpan(
+                      text:
+                          'By clicking "Create Account", you agree to Discord\'s ',
+                    ),
+                    WidgetSpan(
+                      child: HoverBuilder(
+                        builder: (isHovered) => MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: Text(
+                            'Terms of Service',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              decoration: isHovered
+                                  ? TextDecoration.underline
+                                  : TextDecoration.none,
+                              decorationColor: Colors.blue,
+                              decorationThickness: 1.5,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
-              ),
-              const TextSpan(text: ' and have read our '),
-              WidgetSpan(
-                child: HoverBuilder(
-                  builder: (isHovered) => MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: Text(
-                      'Privacy Policy',
-                      style: TextStyle(
-                        color: Colors.blue,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        decoration: isHovered
-                            ? TextDecoration.underline
-                            : TextDecoration.none,
-                        decorationColor: Colors.blue,
-                        decorationThickness: 1.5,
+                    const TextSpan(text: ' and have read our '),
+                    WidgetSpan(
+                      child: HoverBuilder(
+                        builder: (isHovered) => MouseRegion(
+                          cursor: SystemMouseCursors.click,
+                          child: Text(
+                            'Privacy Policy',
+                            style: TextStyle(
+                              color: Colors.blue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              decoration: isHovered
+                                  ? TextDecoration.underline
+                                  : TextDecoration.none,
+                              decorationColor: Colors.blue,
+                              decorationThickness: 1.5,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
-                  ),
+                    const TextSpan(text: '.'),
+                  ],
                 ),
               ),
-              const TextSpan(text: '.'),
-            ],
-          ),
+            ),
+          ],
         ),
       ],
     );

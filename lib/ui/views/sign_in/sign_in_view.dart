@@ -18,8 +18,9 @@ class SignInView extends StatelessWidget {
       viewModelBuilder: () => SigInViewModel(),
       builder: (context, viewmodel, child) {
         return Padding(
-          padding: const EdgeInsets.only(left: 15, right: 15),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
           child: Column(
+            mainAxisSize: MainAxisSize.min,
             key: const Key('signInView'),
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -79,7 +80,7 @@ class SignInView extends StatelessWidget {
                 height: 44,
                 child: SiginButton(
                   ontap: viewmodel.signIn,
-                  text: 'Log In',
+                  text: 'Sign In',
                   isBusy: viewmodel.isBusy,
                 ),
               ),

@@ -6,11 +6,11 @@ import 'package:my_discord/app/app.router.dart';
 
 class StartupViewModel extends BaseViewModel {
   final _navigationService = locator<NavigationService>();
+
   Future<void> runStartupLogic() async {
-    await Future.delayed(const Duration(milliseconds: 300));
+    await Future.delayed(const Duration(seconds: 2));
 
     final user = FirebaseAuth.instance.currentUser;
-
     if (user != null) {
       _navigationService.replaceWithHomeView();
     } else {

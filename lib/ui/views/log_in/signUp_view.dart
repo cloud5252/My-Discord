@@ -21,8 +21,9 @@ class SignupView extends StackedView<SignupViewmodel> {
   Widget builder(
       BuildContext context, SignupViewmodel viewmodel, Widget? child) {
     return SingleChildScrollView(
-      padding: const EdgeInsets.only(left: 15, right: 15),
+      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         key: const Key('signupView'),
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -146,6 +147,7 @@ class SignupView extends StackedView<SignupViewmodel> {
             text: 'Create Account',
             ontap: () => viewmodel.register(),
             isBusy: viewmodel.isBusy,
+            isEnabled: viewmodel.isTermsAccepted,
           ),
           const SizedBox(height: 12),
           HoverBuilder(
