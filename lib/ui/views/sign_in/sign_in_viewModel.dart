@@ -51,7 +51,11 @@ class SigInViewModel extends BaseViewModel implements Initialisable {
     );
   }
 
+  String? _authError;
+  String? get authError => _authError;
+
   Future<void> signIn() async {
+    _authError = null;
     setBusy(true);
     try {
       await auth.signIn(emailcontroller.text, passwordcontroller.text);
@@ -60,7 +64,8 @@ class SigInViewModel extends BaseViewModel implements Initialisable {
         _navigationService.replaceWithHomeView();
       }
     } catch (e) {
-      _snackbarService.showSnackbar(message: e.toString());
+      _authError = 'Invalid email or password';
+      notifyListeners();
     } finally {
       setBusy(false);
     }

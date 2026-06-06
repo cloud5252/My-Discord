@@ -25,19 +25,70 @@ class SiginButton extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 1),
         child: Center(
           child: isBusy
-              ? const SizedBox(
-                  height: 18,
-                  width: 18,
-                  child: CircularProgressIndicator(
-                    color: Colors.white,
-                    strokeWidth: 2,
-                  ),
-                )
+              ? const _ThreeDotsIndicator()
               : Text(
                   text,
                   style: const TextStyle(fontSize: 15),
                 ),
         ),
+      ),
+    );
+  }
+}
+
+class _ThreeDotsIndicator extends StatefulWidget {
+  const _ThreeDotsIndicator();
+
+  @override
+  State<_ThreeDotsIndicator> createState() => _ThreeDotsIndicatorState();
+}
+
+class _ThreeDotsIndicatorState extends State<_ThreeDotsIndicator>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: 18,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(3, (index) {
+              final delay = index / 3;
+              final value = (_controller.value - delay) % 1.0;
+              final opacity = value < 0.5 ? value * 2 : (1.0 - value) * 2;
+
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 3),
+                child: Opacity(
+                  opacity: opacity.clamp(0.2, 1.0),
+                  child: const CircleAvatar(
+                    radius: 3,
+                    backgroundColor: Colors.white,
+                  ),
+                ),
+              );
+            }),
+          );
+        },
       ),
     );
   }

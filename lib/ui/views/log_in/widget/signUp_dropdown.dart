@@ -33,7 +33,9 @@ class SignupDropdown extends StatelessWidget {
             color: const Color(0xFF35353c),
             borderRadius: BorderRadius.circular(10),
             border: Border.all(
-              color: isOpen ? const Color(0xFF5865F2) : Colors.transparent,
+              color: (selected != null || isOpen)
+                  ? const Color(0xFF5865F2)
+                  : Colors.transparent,
               width: 1.5,
             ),
           ),

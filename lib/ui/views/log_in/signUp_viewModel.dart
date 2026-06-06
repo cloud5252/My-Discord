@@ -30,6 +30,16 @@ class SignupViewmodel extends BaseViewModel implements Initialisable {
   final FocusNode usernameFocus = FocusNode();
   final FocusNode passwordFocus = FocusNode();
 
+  bool _emailTouched = false;
+  bool _usernameTouched = false;
+  bool _passwordTouched = false;
+
+  bool get showEmailError => _emailTouched && Emailcontroller.text.isEmpty;
+  bool get showUsernameError =>
+      _usernameTouched && usernamecontroller.text.isEmpty;
+  bool get showPasswordError =>
+      _passwordTouched && passwordcontroller.text.isEmpty;
+
   bool get isEmailFocused => emailFocus.hasFocus;
   bool get isDisplaynameFocused => displaynameFocus.hasFocus;
   bool get isUsernameFocused => usernameFocus.hasFocus;
@@ -41,6 +51,24 @@ class SignupViewmodel extends BaseViewModel implements Initialisable {
     displaynameFocus.addListener(notifyListeners);
     usernameFocus.addListener(notifyListeners);
     passwordFocus.addListener(notifyListeners);
+    Emailcontroller.addListener(_onEmailChanged);
+    usernamecontroller.addListener(_onUsernameChanged);
+    passwordcontroller.addListener(_onPasswordChanged);
+  }
+
+  void _onEmailChanged() {
+    if (Emailcontroller.text.isNotEmpty) _emailTouched = true;
+    notifyListeners();
+  }
+
+  void _onUsernameChanged() {
+    if (usernamecontroller.text.isNotEmpty) _usernameTouched = true;
+    notifyListeners();
+  }
+
+  void _onPasswordChanged() {
+    if (passwordcontroller.text.isNotEmpty) _passwordTouched = true;
+    notifyListeners();
   }
 
   @override
@@ -64,7 +92,13 @@ class SignupViewmodel extends BaseViewModel implements Initialisable {
     if (type == 'month') selectedMonth = item;
     if (type == 'day') selectedDay = item;
     if (type == 'year') selectedYear = item;
-    _closeDropdown();
+
+    _overlayEntry?.remove();
+    _overlayEntry = null;
+    _isMonthOpen = false;
+    _isDayOpen = false;
+    _isYearOpen = false;
+
     notifyListeners();
   }
 
@@ -74,7 +108,6 @@ class SignupViewmodel extends BaseViewModel implements Initialisable {
     _isMonthOpen = false;
     _isDayOpen = false;
     _isYearOpen = false;
-    notifyListeners();
   }
 
   bool _isEmailOptIn = false;

@@ -54,6 +54,7 @@ class SignInView extends StatelessWidget {
                 helpertext: '',
                 isFocused: viewmodel.isEmailFocused,
                 focusNode: viewmodel.emailFocusNode,
+                showError: viewmodel.authError != null,
               ),
               const SizedBox(height: 16),
               const SignInLabel(text: 'Password ', staric: '*'),
@@ -65,13 +66,25 @@ class SignInView extends StatelessWidget {
                 helpertext: '',
                 isFocused: viewmodel.isPasswordFocused,
                 focusNode: viewmodel.passwordFocusNode,
+                showError: viewmodel.authError != null,
               ),
-              const SizedBox(height: 8),
-              const Text(
-                'Forgot your password?',
-                style: TextStyle(
-                  color: Color(0xFF00A8FC),
-                  fontSize: 13,
+              const SizedBox(height: 6),
+              HoverBuilder(
+                builder: (bool isHovered) => GestureDetector(
+                  child: MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: Text(
+                      'Forgot your password?',
+                      style: TextStyle(
+                        color: const Color(0xFF00A8FC),
+                        fontSize: 13,
+                        decoration: isHovered
+                            ? TextDecoration.underline
+                            : TextDecoration.none,
+                        decorationColor: Colors.blue,
+                      ),
+                    ),
+                  ),
                 ),
               ),
               const SizedBox(height: 20),
@@ -84,7 +97,7 @@ class SignInView extends StatelessWidget {
                   isBusy: viewmodel.isBusy,
                 ),
               ),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               HoverBuilder(
                 builder: (isHovered) => GestureDetector(
                   onTap: onSwitch,

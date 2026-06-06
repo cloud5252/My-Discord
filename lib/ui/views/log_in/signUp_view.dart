@@ -50,6 +50,7 @@ class SignupView extends StackedView<SignupViewmodel> {
             helpertext: '',
             isFocused: viewmodel.isEmailFocused,
             focusNode: viewmodel.emailFocus,
+            showError: viewmodel.showEmailError,
           ),
           const SizedBox(height: 16),
           const SignupLabel(
@@ -80,6 +81,7 @@ class SignupView extends StackedView<SignupViewmodel> {
                 'Please only use letters, numbers, underscores _, or periods.',
             focusNode: viewmodel.usernameFocus,
             isFocused: viewmodel.isUsernameFocused,
+            showError: viewmodel.showUsernameError,
           ),
           const SizedBox(height: 16),
           const SignupLabel(
@@ -94,6 +96,7 @@ class SignupView extends StackedView<SignupViewmodel> {
             helpertext: '',
             isFocused: viewmodel.isPasswordFocused,
             focusNode: viewmodel.passwordFocus,
+            showError: viewmodel.showPasswordError,
           ),
           const SizedBox(height: 16),
           const SignupLabel(

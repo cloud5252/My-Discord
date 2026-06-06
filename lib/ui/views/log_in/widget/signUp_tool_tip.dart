@@ -104,10 +104,10 @@ class _TooltipBox extends StatelessWidget {
         child: Text(
           message,
           style: const TextStyle(
-            color: Colors.white,
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.2,
+            color: Colors.white70,
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            letterSpacing: 0.5,
           ),
           softWrap: false,
         ),

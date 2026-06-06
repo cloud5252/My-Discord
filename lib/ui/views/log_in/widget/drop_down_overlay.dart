@@ -41,7 +41,7 @@ class DropdownOverlay extends StatelessWidget {
             child: Container(
               height: 250,
               decoration: BoxDecoration(
-                color: const Color(0xFF3c3d45),
+                color: const Color(0xFF2B2D31),
                 borderRadius: const BorderRadius.all(
                   Radius.circular(10),
                 ),

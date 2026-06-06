@@ -58,8 +58,8 @@ class SignupButton extends StatelessWidget {
           ),
         ).signUptooltip(
           !isEnabled
-              ? ''
-              : '      You need agree to our \n terms of Service to continue',
+              ? '      You need agree to our \n terms of Service to continue'
+              : '',
           preferBelow: false,
         );
       },

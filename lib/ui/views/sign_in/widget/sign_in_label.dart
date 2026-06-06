@@ -14,7 +14,7 @@ class SignInLabel extends StatelessWidget {
             Text(
               text,
               style: const TextStyle(
-                color: Color(0xFFB5BAC1),
+                color: Colors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.bold,
                 letterSpacing: 0.5,

@@ -7,6 +7,7 @@ class SignInTextfield extends StatelessWidget {
   final bool obsecurtext;
   final bool isFocused;
   final FocusNode focusNode;
+  final bool showError;
   final TextEditingController controller;
 
   const SignInTextfield({
@@ -16,6 +17,7 @@ class SignInTextfield extends StatelessWidget {
     required this.helpertext,
     required this.isFocused,
     required this.focusNode,
+    this.showError = false,
     super.key,
   });
 
@@ -24,47 +26,21 @@ class SignInTextfield extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        TextField(
+        _TextFieldWithHover(
           focusNode: focusNode,
-          cursorWidth: 1,
-          cursorHeight: 20,
-          cursorColor: whiteColor,
-          style: const TextStyle(fontSize: 18, color: whiteColor),
           controller: controller,
-          obscureText: obsecurtext,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 10,
-            ),
-            hoverColor: Colors.transparent,
-            enabledBorder: OutlineInputBorder(
-              borderSide: const BorderSide(color: greyColor),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: const BorderSide(
-                color: focusBordercolor,
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            fillColor: textfieldfilledColor,
-            filled: true,
-            hintText: hinttext,
-            hintStyle: TextStyle(
-              color: Theme.of(context).colorScheme.inversePrimary,
-            ),
-          ),
+          obsecurtext: obsecurtext,
+          hinttext: hinttext,
+          showError: showError,
         ),
         AnimatedSize(
           duration: const Duration(milliseconds: 250),
           curve: Curves.easeInOut,
-          child: isFocused && helpertext.isNotEmpty
+          child: showError
               ? TweenAnimationBuilder<double>(
-                  key: ValueKey(isFocused),
+                  key: ValueKey(showError),
                   tween: Tween(begin: 0.0, end: 1.0),
-                  duration: const Duration(milliseconds: 600),
+                  duration: const Duration(milliseconds: 400),
                   builder: (context, value, child) => Opacity(
                     opacity: value,
                     child: Transform.translate(
@@ -72,21 +48,100 @@ class SignInTextfield extends StatelessWidget {
                       child: child,
                     ),
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 5),
-                    child: Text(
-                      helpertext,
-                      style: const TextStyle(
-                        color: Color(0xFFB5BAC1),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  child: const Padding(
+                    padding: EdgeInsets.only(top: 5),
+                    child: Row(
+                      children: [
+                        Icon(Icons.error_sharp,
+                            color: Color(0xFFf56f5b), size: 18),
+                        SizedBox(width: 4),
+                        Text(
+                          'Invalid email or password',
+                          style: TextStyle(
+                            color: Color(0xFFf56f5b),
+                            fontSize: 12,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 )
               : const SizedBox.shrink(),
         ),
       ],
+    );
+  }
+}
+
+class _TextFieldWithHover extends StatefulWidget {
+  final FocusNode focusNode;
+  final TextEditingController controller;
+  final bool obsecurtext;
+  final String hinttext;
+  final bool showError;
+
+  const _TextFieldWithHover({
+    required this.focusNode,
+    required this.controller,
+    required this.obsecurtext,
+    required this.hinttext,
+    required this.showError,
+  });
+
+  @override
+  State<_TextFieldWithHover> createState() => _TextFieldWithHoverState();
+}
+
+class _TextFieldWithHoverState extends State<_TextFieldWithHover> {
+  bool _isHovered = false;
+
+  Color get _borderColor {
+    if (widget.showError) return const Color(0xFFf56f5b);
+    if (_isHovered) return const Color(0xFF6d6f78);
+    return greyColor;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: TextField(
+        focusNode: widget.focusNode,
+        onTapOutside: (event) {},
+        cursorWidth: 1,
+        cursorHeight: 20,
+        cursorColor: whiteColor,
+        style: const TextStyle(fontSize: 18, color: whiteColor),
+        controller: widget.controller,
+        obscureText: widget.obsecurtext,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: 10,
+            vertical: 10,
+          ),
+          hoverColor: Colors.transparent,
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: _borderColor),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+              color:
+                  widget.showError ? const Color(0xFFf56f5b) : focusBordercolor,
+              width: 1.80,
+            ),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          fillColor: textfieldfilledColor,
+          filled: true,
+          hintText: widget.hinttext,
+          hintStyle: TextStyle(
+            color: Theme.of(context).colorScheme.inversePrimary,
+          ),
+        ),
+      ),
     );
   }
 }
