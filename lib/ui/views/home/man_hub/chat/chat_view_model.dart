@@ -3,12 +3,13 @@ import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/service/FB_Auth/Authentication.dart';
 import 'package:my_discord/service/chat_service/chat_service.dart';
+import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatViewModel extends BaseViewModel {
   final _auth = locator<Authentication>();
   final _chatService = locator<ChatService>();
-
+  final viewService = locator<ViewService>();
   final String receiverId;
   final String receiverName;
 
@@ -18,13 +19,21 @@ class ChatViewModel extends BaseViewModel {
     required this.receiverId,
     required this.receiverName,
   });
+
+  @override
+  void dispose() {
+    messageController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
+
   final ScrollController scrollController = ScrollController();
   String get myUid => _auth.getCurrentuser()?.uid ?? '';
   String get myEmail => _auth.getCurrentuser()?.email ?? '';
 
-  // Stream<List<MessageModel>> get messagesStream =>
-  //     _chatService.getMessages(receiverId);
-  Stream<List<MessageModel>>? get messagesStream => null;
+  Stream<List<MessageModel>> get messagesStream =>
+      _chatService.getMessages(receiverId);
+  // Stream<List<MessageModel>>? get messagesStream => null;
   @override
   // ignore: override_on_non_overriding_member
   void initialise() {
@@ -51,13 +60,6 @@ class ChatViewModel extends BaseViewModel {
   }
 
   bool get isSendButtonActive => messageController.text.trim().isNotEmpty;
-
-  @override
-  void dispose() {
-    messageController.dispose();
-    scrollController.dispose();
-    super.dispose();
-  }
 
   String? _hoveredMessageId;
   String? get hoveredMessageId => _hoveredMessageId;

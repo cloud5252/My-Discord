@@ -1,9 +1,9 @@
-// ignore_for_file: unnecessary_string_interpolations, camel_case_types, unreachable_switch_case
+// ignore_for_file: deprecated_member_use, unnecessary_string_interpolations, camel_case_types, unreachable_switch_case
 
 import 'package:flutter/material.dart';
-import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
 import 'package:my_discord/ui/common/hover_builder.dart';
+import 'package:my_discord/ui/views/home/man_hub/active_or_profile/active_panel/active_panel_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/add%20fraind/add_fraind_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/all%20fraind/all_fraind_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/online/online_view.dart';
@@ -11,8 +11,6 @@ import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/pending/pendin
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/common/filter_tab_bar.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/common/search_bar.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/fraind_hub_view_model.dart';
-import 'package:my_discord/ui/views/home/man_hub/panel_hub/active_panel/active_panel_view.dart';
-import 'package:my_discord/ui/views/home/man_hub/panel_hub/profile_panel/profile_panel_view.dart';
 import 'package:stacked/stacked.dart';
 
 class FraindHubView extends StackedView<FraindHubViewModel> {
@@ -23,7 +21,6 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
       BuildContext context, FraindHubViewModel viewModel, Widget? child) {
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1a1a1e),
         border: Border(
           left: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
         ),
@@ -33,9 +30,12 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
           Container(
             height: 48,
             padding: const EdgeInsets.symmetric(horizontal: 16),
-            decoration: const BoxDecoration(
+            decoration: BoxDecoration(
               border: Border(
-                bottom: BorderSide(color: Color(0xFF2c2c30), width: 1.0),
+                bottom: BorderSide(
+                  color: Colors.grey.shade600,
+                  width: 0.2,
+                ),
               ),
             ),
             child: Row(
@@ -51,20 +51,14 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Container(
-                  width: 1,
-                  height: 20,
-                  margin: const EdgeInsets.symmetric(horizontal: 12),
-                  color: const Color(0xFF3F4147),
+                const SizedBox(width: 10),
+                CircleAvatar(
+                  radius: 2,
+                  backgroundColor: Colors.grey.shade500,
                 ),
                 Expanded(child: FilterTabBar(viewModel: viewModel)),
                 _FriendHeaderIcon(
-                  icon: Icons.inbox,
-                  tooltip: 'New Group DM',
-                  onTap: () {},
-                ),
-                _FriendHeaderIcon(
-                  icon: Icons.help_outline,
+                  icon: Icons.messenger_outline_outlined,
                   tooltip: 'Help',
                   onTap: () {},
                 ),
@@ -91,12 +85,7 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
                   ),
                 ),
                 if (viewModel.selectedFilter != FriendFilter.addfraind)
-                  switch (viewModel.viewService.rightPanel) {
-                    RightPanel.profile => ProfilePanel(
-                        userId: viewModel.viewService.currentId ?? ''),
-                    RightPanel.activeNow => const ActiveNowPanel(),
-                    RightPanel.none => const SizedBox.shrink(),
-                  },
+                  const ActiveNowPanel()
               ],
             ),
           ),
@@ -143,14 +132,14 @@ class _FriendHeaderIcon extends StatelessWidget {
         child: Container(
           width: 32,
           height: 32,
-          margin: const EdgeInsets.symmetric(horizontal: 4),
+          margin: const EdgeInsets.symmetric(horizontal: 0),
           decoration: BoxDecoration(
-            color: isHovered ? const Color(0xFF35373C) : Colors.transparent,
-            borderRadius: BorderRadius.circular(4),
+            color: isHovered ? const Color(0xFF3b1f8c) : Colors.transparent,
+            borderRadius: BorderRadius.circular(10),
           ),
           child: Center(
             child: AnimatedScale(
-              scale: isHovered ? 1.15 : 1.0,
+              scale: 1.0, //isHovered ? 1.15 : 1.0,
               duration: const Duration(milliseconds: 100),
               child: Icon(
                 icon,

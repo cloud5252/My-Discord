@@ -4,7 +4,8 @@ import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/chat_top_header.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/message_bubble_widget.dart';
-import 'package:my_discord/ui/views/home/man_hub/panel_hub/profile_panel/profile_panel_view.dart';
+import 'package:my_discord/ui/views/home/man_hub/active_or_profile/profile_panel/profile_panel_view.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/widget/user_type_text_field.dart';
 import 'package:stacked/stacked.dart';
 
 class ChatView extends StackedView<ChatViewModel> {
@@ -20,76 +21,82 @@ class ChatView extends StackedView<ChatViewModel> {
   @override
   Widget builder(BuildContext context, ChatViewModel viewModel, Widget? child) {
     return Container(
-      color: const Color(0xFF1a1a1e),
+      decoration: BoxDecoration(
+        border: Border(
+          left: BorderSide(color: Colors.grey.shade500, width: 0.2),
+          top: BorderSide(color: Colors.grey.shade500, width: 0.2),
+        ),
+      ),
       child: Column(
         children: [
-          ChatTopHeader(chatWithName: chatWithName),
-          const Divider(color: Color(0xFF1E1F22), height: 1),
+          ChatTopHeader(
+            chatWithName: chatWithName,
+            viewService: viewModel.viewService,
+          ),
           Expanded(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Expanded(
                   child: Column(
                     children: [
                       Expanded(
-                          child: StreamBuilder<List<MessageModel>>(
-                        key: ValueKey(viewModel.receiverId),
-                        stream: viewModel.messagesStream,
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState ==
-                              ConnectionState.waiting) {
-                            return const Center(
-                              child: CircularProgressIndicator(
-                                  color: Color(0xFF5865F2)),
-                            );
-                          }
-
-                          final messages =
-                              snapshot.data?.reversed.toList() ?? [];
-
-                          return ListView.builder(
-                            reverse: true,
-                            cacheExtent: 1000,
-                            controller: viewModel.scrollController,
-                            itemCount: messages.length + 1,
-                            itemBuilder: (context, index) {
-                              if (index == messages.length) {
-                                return Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    const SizedBox(height: 40),
-                                    _buildUserProfileHeader(),
-                                    const SizedBox(height: 20),
-                                    const Divider(color: Colors.white10),
-                                    const SizedBox(height: 10),
-                                    if (messages.isEmpty)
-                                      const Padding(
-                                        padding: EdgeInsets.all(20),
-                                        child: Text('No messages yet!',
+                        child: StreamBuilder<List<MessageModel>>(
+                          key: ValueKey(viewModel.receiverId),
+                          stream: viewModel.messagesStream,
+                          builder: (context, snapshot) {
+                            if (!snapshot.hasData) {
+                              return const SizedBox.shrink();
+                            }
+                            final messages =
+                                snapshot.data?.reversed.toList() ?? [];
+                            return ListView.builder(
+                              reverse: true,
+                              cacheExtent: 1000,
+                              padding: EdgeInsets.zero,
+                              controller: viewModel.scrollController,
+                              itemCount: messages.length + 1,
+                              itemBuilder: (context, index) {
+                                if (index == messages.length) {
+                                  return Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      const SizedBox(height: 40),
+                                      _buildUserProfileHeader(),
+                                      const SizedBox(height: 20),
+                                      const Divider(color: Colors.white10),
+                                      const SizedBox(height: 10),
+                                      if (messages.isEmpty)
+                                        const Text('No messages yet!',
                                             style: TextStyle(
                                                 color: Color(0xFF80848E))),
-                                      ),
-                                  ],
+                                    ],
+                                  );
+                                }
+                                final message = messages[index];
+                                return MessageBubbleWidget(
+                                  message: message,
+                                  key: ValueKey(
+                                      message.firebaseId ?? index.toString()),
                                 );
-                              }
-
-                              final message = messages[index];
-                              return MessageBubbleWidget(
-                                message: message,
-                                key: ValueKey(
-                                    message.firebaseId ?? index.toString()),
-                              );
-                            },
-                          );
-                        },
-                      )),
+                              },
+                            );
+                          },
+                        ),
+                      ),
                       _buildMessageInput(viewModel),
                     ],
                   ),
                 ),
-                ProfilePanel(userId: chatWithId),
+                ValueListenableBuilder<bool>(
+                  valueListenable: viewModel.viewService.showProfileNotifier,
+                  builder: (context, showProfile, _) {
+                    return showProfile
+                        ? ProfilePanel(userId: chatWithId)
+                        : const SizedBox.shrink();
+                  },
+                ),
               ],
             ),
           ),
@@ -150,47 +157,10 @@ class ChatView extends StackedView<ChatViewModel> {
             );
           },
         },
-        child: TextField(
+        child: ChatInputField(
           controller: viewModel.messageController,
-          style: const TextStyle(color: Colors.white),
-          cursorColor: Colors.white,
-          autofocus: false,
-          textAlignVertical: TextAlignVertical.center,
-          maxLines: null,
-          decoration: InputDecoration(
-            hintText: 'Message @$chatWithName',
-            hoverColor: Colors.transparent,
-            hintStyle: const TextStyle(color: Color(0xFF80848E)),
-            fillColor: const Color(0xFF222327),
-            filled: true,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
-            prefixIcon: const Icon(Icons.add_circle, color: Color(0xFFB5BAC1)),
-            suffixIcon: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.card_giftcard, color: Color(0xFFB5BAC1), size: 20),
-                SizedBox(width: 8),
-                Icon(Icons.gif_box_outlined,
-                    color: Color(0xFFB5BAC1), size: 20),
-                SizedBox(width: 8),
-                Icon(Icons.emoji_emotions_outlined,
-                    color: Color(0xFFB5BAC1), size: 20),
-                SizedBox(width: 12),
-              ],
-            ),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide:
-                  const BorderSide(color: Color(0xFF48484b), width: 1.0),
-            ),
-          ),
+          chatWithName: chatWithName,
+          onSend: viewModel.sendMessage,
         ),
       ),
     );

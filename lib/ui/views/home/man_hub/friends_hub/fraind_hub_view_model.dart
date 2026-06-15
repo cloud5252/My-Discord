@@ -19,7 +19,6 @@ class FraindHubViewModel extends BaseViewModel implements Initialisable {
   String _searchQuery = '';
 
   ViewService get viewService => _viewService;
-  RightPanel get rightPanel => _viewService.rightPanel;
   String? get currentId => _viewService.currentId;
 
   final List<ContactModel> _allContacts = [];

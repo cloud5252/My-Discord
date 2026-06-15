@@ -11,11 +11,9 @@ class ServerSidebar extends StatelessWidget {
       viewModelBuilder: () => ServerSidebarViewmodel(),
       builder: (context, viewModel, child) {
         return Container(
-          color: const Color(0xFF121214),
           child: Column(
             children: [
               const SizedBox(height: 12),
-
               GestureDetector(
                 onTap: () async {
                   await viewModel.logoutTesting();

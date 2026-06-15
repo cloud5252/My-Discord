@@ -49,7 +49,6 @@ class AllFraindView extends StackedView<AllFraindViewModel> {
   Widget builduserlistitem(
       UserModel user, BuildContext context, AllFraindViewModel viewmodel) {
     return Material(
-      color: Colors.transparent,
       child: Usertile(
         text: user.displayName.isNotEmpty ? user.displayName : user.username,
         ontap: () {

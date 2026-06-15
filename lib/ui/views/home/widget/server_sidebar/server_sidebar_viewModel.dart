@@ -1,3 +1,4 @@
+import 'package:hive_ce/hive.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/app/app.router.dart';
 import 'package:my_discord/service/FB_Auth/Authentication.dart';
@@ -11,8 +12,9 @@ class ServerSidebarViewmodel extends BaseViewModel {
   Future<void> logoutTesting() async {
     setBusy(true);
     try {
+      await Hive.box('prefs_box').clear();
       await _auth.logOut();
-
+      _viewService.resetToDefault();
       _viewService.currentId = null;
 
       locator<NavigationService>().clearStackAndShow(Routes.authView);

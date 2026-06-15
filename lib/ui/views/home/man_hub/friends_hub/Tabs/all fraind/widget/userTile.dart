@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
 
@@ -34,7 +36,7 @@ class Usertile extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: isHovered
-                        ? const Color(0xFF242428)
+                        ? const Color(0xFF5865F2).withOpacity(0.55)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                   ),

@@ -22,8 +22,6 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
 
   String? get currentId => _viewService.currentId;
 
-  RightPanel get rightPanel => _viewService.rightPanel;
-
   final _firestore = FirebaseFirestore.instance;
 
   @override

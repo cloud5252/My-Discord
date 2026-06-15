@@ -1,3 +1,7 @@
+// ignore_for_file: deprecated_member_use
+
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/dm_side_view_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/widget/dm_side_fraind_widget.dart';
@@ -13,7 +17,6 @@ class DmSideView extends StackedView<DmSideViewModel> {
       BuildContext context, DmSideViewModel viewModel, Widget? child) {
     return Container(
       decoration: BoxDecoration(
-          color: const Color(0xFF121214),
           borderRadius: BorderRadius.circular(4),
           border: Border(
               left: BorderSide(
@@ -25,21 +28,22 @@ class DmSideView extends StackedView<DmSideViewModel> {
           const SizedBox(height: 5),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Container(
-              height: 34,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  border: Border.all(color: Colors.grey.shade900),
-                  color: const Color(0xFF1d1d1e),
-                  borderRadius: BorderRadius.circular(10)),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                child: Center(
-                  child: Text(
-                    'Find or start a conversation',
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.bold,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
+                child: Container(
+                  height: 35,
+                  color: Colors.white.withOpacity(0.1),
+                  width: double.infinity,
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
+                    child: Center(
+                      child: Text(
+                        'Find or start a conversation',
+                        style: TextStyle(
+                            fontSize: 13, fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),
@@ -141,15 +145,13 @@ class _SidebarTab extends StatelessWidget {
           builder: (isPressed) => Container(
             decoration: BoxDecoration(
               color: isPressed
-                  ? const Color(0xFF2d2d30)
+                  ? const Color(0xFF7585ff).withOpacity(0.33)
                   : isActive
-                      ? isHovered
-                          ? const Color(0xFF1d1d1e)
-                          : const Color(0xFF2d2d30)
+                      ? const Color(0xFF5865F2).withOpacity(0.3)
                       : isHovered
-                          ? const Color(0xFF1d1d1e)
+                          ? const Color(0xFF5865F2).withOpacity(0.15)
                           : Colors.transparent,
-              borderRadius: BorderRadius.circular(4),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
@@ -207,7 +209,7 @@ class _BottomUserBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 52,
-      color: const Color(0xFF232428),
+      // color: const Color(0xFF232428),
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(
         children: [

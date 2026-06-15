@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:my_discord/models/hive_user_model.dart';
@@ -66,13 +68,11 @@ class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
             color: isPressed
-                ? const Color(0xFF2d2d30)
+                ? const Color(0xFF7585ff).withOpacity(0.33)
                 : isActive
-                    ? isHovered
-                        ? const Color(0xFF1d1d1e)
-                        : const Color(0xFF2d2d30)
+                    ? const Color(0xFF5865F2).withOpacity(0.3)
                     : isHovered
-                        ? const Color(0xFF1d1d1e)
+                        ? const Color(0xFF5865F2).withOpacity(0.15)
                         : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),

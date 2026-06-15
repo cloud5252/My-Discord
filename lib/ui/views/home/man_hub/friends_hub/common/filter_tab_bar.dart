@@ -16,10 +16,11 @@ class FilterTabBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       height: 44,
-      color: const Color(0xFF1a1a1e),
+      // color: const Color(0xFF1a1a1e),
       child: ListView(
+        key: const Key('filter_tab_bar_list'),
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         children: [
@@ -80,7 +81,7 @@ class _TabChip extends StatelessWidget {
                   isHovered: isHovered,
                   isPressed: isPressed,
                 ),
-                borderRadius: BorderRadius.circular(6),
+                borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 label,

@@ -1,9 +1,9 @@
 // ignore_for_file: deprecated_member_use
 import 'package:flutter/material.dart';
 import 'package:my_discord/models/messsage_model.dart';
-import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
 import 'package:my_discord/ui/common/hover_builder.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/widget/tool_tip_extention.dart';
 import 'package:stacked/stacked.dart';
 
 class MessageBubbleWidget extends StatelessWidget {
@@ -14,28 +14,34 @@ class MessageBubbleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return HoverBuilder(
-      builder: (isHovered) => Container(
-        decoration: BoxDecoration(
-          color: isHovered ? const Color(0xFF2E3035) : Colors.transparent,
-        ),
-        margin: const EdgeInsets.only(right: 20),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-        child: Stack(
-          clipBehavior: Clip.none,
+    return RepaintBoundary(
+      child: HoverBuilder(
+        key: Key(message.firebaseId.toString()),
+        builder: (isHovered) => Stack(
           children: [
-            _buildMessageLayout(),
-            Positioned(
-              top: -20,
-              right: 0,
-              child: Opacity(
-                opacity: isHovered ? 1.0 : 0.0,
-                child: IgnorePointer(
-                  ignoring: !isHovered,
-                  child: _buildHoverToolbar(context),
+            Padding(
+              padding: const EdgeInsets.only(right: 20),
+              child: ColoredBox(
+                color: isHovered
+                    ? const Color(0xFF5865F2).withOpacity(0.75)
+                    : Colors.transparent,
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+                  child: RepaintBoundary(
+                    child: _buildMessageLayout(),
+                  ),
                 ),
               ),
             ),
+            if (isHovered)
+              Positioned(
+                right: 30,
+                top: 0,
+                child: RepaintBoundary(
+                  child: _buildHoverToolbar(context),
+                ),
+              ),
           ],
         ),
       ),
@@ -90,7 +96,8 @@ class MessageBubbleWidget extends StatelessWidget {
 
   String _formatTimestamp(dynamic timestamp) {
     if (timestamp == null) return '';
-    final dt = timestamp.toDate();
+    final dt =
+        timestamp is DateTime ? timestamp : (timestamp as dynamic).toDate();
     final hour = dt.hour.toString().padLeft(2, '0');
     final min = dt.minute.toString().padLeft(2, '0');
     return 'Today at $hour:$min';
@@ -99,62 +106,57 @@ class MessageBubbleWidget extends StatelessWidget {
   Widget _buildHoverToolbar(BuildContext context) {
     final chatViewModel = getParentViewModel<ChatViewModel>(context);
 
-    return HoverBuilder(
-      builder: (isHovered) => Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF2B2D31),
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-            color:
-                isHovered ? const Color(0xFF404249) : const Color(0xFF1E1F22),
-            width: 1,
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFF1e1f7b).withOpacity(0.95),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: const Color(0xFF5865F2).withOpacity(0.4),
+          width: 0.8,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.5),
+            offset: const Offset(0, 2),
+            blurRadius: 6,
           ),
-          boxShadow: isHovered
-              ? [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.4),
-                    offset: const Offset(0, 4),
-                    blurRadius: 8,
-                    spreadRadius: 0,
-                  ),
-                ]
-              : [],
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const _HoverEmoji(emoji: '❤️', tooltip: 'Heart'),
-            const _HoverEmoji(emoji: '🔖', tooltip: 'Bookmark'),
-            const _HoverEmoji(emoji: '👍', tooltip: 'Thumbs Up'),
-            const _HoverEmoji(emoji: '😊', tooltip: 'Smile'),
-            Container(
-              width: 1,
-              margin: const EdgeInsets.symmetric(vertical: 6),
-              color: const Color(0xFF1E1F22),
-            ),
-            _HoverIcon(
-              icon: Icons.add_reaction_outlined,
-              tooltip: 'Add Reaction',
-              onTap: () {},
-            ),
-            _HoverIcon(
-              icon: Icons.reply,
-              tooltip: 'Reply',
-              onTap: () => chatViewModel.onReplyMessage(message),
-            ),
-            _HoverIcon(
-              icon: Icons.reply,
-              tooltip: 'Forward',
-              onTap: () {},
-              isMirrored: true,
-            ),
-            _HoverIcon(
-              icon: Icons.more_horiz,
-              tooltip: 'More',
-              onTap: () => chatViewModel.showOptions(message),
-            ),
-          ],
-        ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const _HoverEmoji(emoji: '❤️', tooltip: 'Heart'),
+          const _HoverEmoji(emoji: '🔖', tooltip: 'Bookmark'),
+          const _HoverEmoji(emoji: '👍', tooltip: 'Thumbs Up'),
+          const _HoverEmoji(emoji: '😊', tooltip: 'Smile'),
+          Container(
+            width: 1,
+            height: 16,
+            margin: const EdgeInsets.symmetric(vertical: 4),
+            color: const Color(0xFF5865F2).withOpacity(0.4),
+          ),
+          _HoverIcon(
+            icon: Icons.add_reaction_outlined,
+            tooltip: 'Add Reaction',
+            onTap: () {},
+          ),
+          _HoverIcon(
+            icon: Icons.reply,
+            tooltip: 'Reply',
+            onTap: () => chatViewModel.onReplyMessage(message),
+          ),
+          _HoverIcon(
+            icon: Icons.reply,
+            tooltip: 'Forward',
+            onTap: () {},
+            isMirrored: true,
+          ),
+          _HoverIcon(
+            icon: Icons.more_horiz,
+            tooltip: 'More',
+            onTap: () => chatViewModel.showOptions(message),
+          ),
+        ],
       ),
     );
   }
@@ -170,18 +172,28 @@ class _HoverEmoji extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HoverBuilder(
+      key: Key(emoji),
       builder: (isHovered) => InkWell(
         borderRadius: BorderRadius.circular(4),
         onTap: () {},
-        child: Padding(
-          padding: const EdgeInsets.all(6),
-          child: AnimatedScale(
-            scale: isHovered ? 1.3 : 1.0,
-            duration: const Duration(milliseconds: 100),
-            child: Text(emoji, style: const TextStyle(fontSize: 15)),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+          decoration: BoxDecoration(
+            color: isHovered
+                ? const Color(0xFFc6c5c1).withOpacity(0.15)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: AnimatedScale(
+              scale: isHovered ? 1.4 : 1.3,
+              duration: const Duration(milliseconds: 80),
+              child: Text(emoji, style: const TextStyle(fontSize: 15)),
+            ),
           ),
         ),
-      ).withDiscordTooltip(tooltip),
+      ).discordTooltip(tooltip, showReact: true),
     );
   }
 }
@@ -205,24 +217,36 @@ class _HoverIcon extends StatelessWidget {
     return HoverBuilder(
       builder: (isHovered) => GestureDetector(
         onTap: onTap,
-        child: Padding(
-          padding: const EdgeInsets.all(7),
-          child: AnimatedScale(
-            scale: isHovered ? 1.25 : 1.0,
-            duration: const Duration(milliseconds: 100),
-            child: Transform(
-              alignment: Alignment.center,
-              transform:
-                  isMirrored ? Matrix4.rotationY(3.14159) : Matrix4.identity(),
-              child: Icon(
-                icon,
-                size: 18,
-                color: isHovered ? Colors.white : const Color(0xFF8A8E94),
+        child: Container(
+          margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
+          decoration: BoxDecoration(
+            color: isHovered
+                ? const Color(0xFFc6c5c1).withOpacity(0.15)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(6),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(4),
+            child: AnimatedScale(
+              scale: isHovered ? 1.4 : 1.3,
+              duration: const Duration(milliseconds: 80),
+              child: Transform(
+                alignment: Alignment.center,
+                transform: isMirrored
+                    ? Matrix4.rotationY(3.14159)
+                    : Matrix4.identity(),
+                child: Icon(
+                  icon,
+                  size: 18,
+                  color: isHovered ? Colors.white : const Color(0xFF8A8E94),
+                ),
               ),
             ),
           ),
         ),
-      ).withDiscordTooltip(tooltip),
+      ).discordTooltip(
+        tooltip,
+      ),
     );
   }
 }

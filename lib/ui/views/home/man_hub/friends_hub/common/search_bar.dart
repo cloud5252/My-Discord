@@ -18,26 +18,26 @@ class FriendsSearchBar extends StatelessWidget {
         decoration: InputDecoration(
           hoverColor: Colors.transparent,
           filled: true,
-          fillColor: const Color(0xFF17171a),
+          fillColor: Colors.transparent,
           hintText: 'Search',
-          hintStyle: const TextStyle(color: Color(0xFF72767D), fontSize: 14),
+          hintStyle: const TextStyle(color: Color(0xFFffffff), fontSize: 14),
           prefixIcon:
-              const Icon(Icons.search, color: Color(0xFF72767D), size: 18),
+              const Icon(Icons.search, color: Color(0xFFffffff), size: 18),
           contentPadding:
               const EdgeInsets.symmetric(vertical: 0, horizontal: 12),
           border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: BorderSide(color: Colors.grey.shade700, width: 0.3),
+            borderRadius: BorderRadius.circular(6),
+            borderSide: const BorderSide(color: Color(0xFF00A8FC), width: 0.3),
           ),
           enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
-            borderSide: BorderSide(color: Colors.grey.shade700, width: 0.3),
+            borderRadius: BorderRadius.circular(6),
+            borderSide: const BorderSide(color: Color(0xFF00A8FC), width: 0.8),
           ),
           focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(4),
+            borderRadius: BorderRadius.circular(6),
             borderSide: const BorderSide(
-              color: Color(0xFF5865F2),
-              width: 1.5,
+              color: Color(0xFF00A8FC),
+              width: 2.0,
             ),
           ),
         ),

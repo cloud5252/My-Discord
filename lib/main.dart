@@ -10,6 +10,7 @@ import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/app/app.router.dart';
 import 'package:my_discord/firebase_options.dart';
 import 'package:my_discord/models/hive_user_model.dart';
+import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/ui/common/app_colors.dart';
 import 'package:stacked_services/stacked_services.dart';
 
@@ -18,9 +19,12 @@ Future<void> main() async {
   Hive.init('');
 
   Hive.registerAdapter(HiveUserModelAdapter());
+  Hive.registerAdapter(MessageModelAdapter());
 
   await Hive.openBox<HiveUserModel>('friends_box');
   await Hive.openBox<HiveUserModel>('current_user_box');
+  await Hive.openBox<MessageModel>('messages_box');
+  await Hive.openBox('prefs_box');
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,

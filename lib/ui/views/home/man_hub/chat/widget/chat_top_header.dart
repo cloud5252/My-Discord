@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
 import 'package:my_discord/ui/common/hover_builder.dart';
 
 class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
   final String chatWithName;
-
-  const ChatTopHeader({Key? key, required this.chatWithName}) : super(key: key);
+  final ViewService viewService;
+  const ChatTopHeader(
+      {Key? key, required this.chatWithName, required this.viewService})
+      : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(48);
@@ -15,10 +18,13 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
     return Container(
       height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: const BoxDecoration(
-        color: Color(0xFF1a1a1e),
+      decoration: BoxDecoration(
+        // color: Color(0xFF1a1a1e),
         border: Border(
-          bottom: BorderSide(color: Color(0xFF202225), width: 1),
+          bottom: BorderSide(
+            color: Colors.grey.shade600,
+            width: 0.2,
+          ),
         ),
       ),
       child: Row(
@@ -46,16 +52,17 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
             icon: Icons.push_pin,
             tooltip: 'Pinned Messages',
             onTap: () {},
+            rotate: true,
           ),
           _HeaderIcon(
-            icon: Icons.person_add,
+            icon: Icons.person_add_alt_1,
             tooltip: 'Add Friends to DM',
             onTap: () {},
           ),
           _HeaderIcon(
             icon: Icons.account_circle,
             tooltip: 'User Profile Toggle',
-            onTap: () {},
+            onTap: () => viewService.toggleProfile(),
           ),
           const SizedBox(width: 8),
           _SearchBar(),
@@ -69,11 +76,13 @@ class _HeaderIcon extends StatelessWidget {
   final IconData icon;
   final String tooltip;
   final VoidCallback onTap;
+  final bool rotate;
 
   const _HeaderIcon({
     required this.icon,
     required this.tooltip,
     required this.onTap,
+    this.rotate = false,
   });
 
   @override
@@ -87,11 +96,21 @@ class _HeaderIcon extends StatelessWidget {
             width: 32,
             height: 32,
             child: Center(
-              child: Icon(
-                icon,
-                color: isHovered ? Colors.white : const Color(0xFFB5BAC1),
-                size: 20,
-              ),
+              child: rotate
+                  ? Transform.rotate(
+                      angle: 0.7,
+                      child: Icon(
+                        icon,
+                        color:
+                            isHovered ? Colors.white : const Color(0xFFB5BAC1),
+                        size: 20,
+                      ),
+                    )
+                  : Icon(
+                      icon,
+                      color: isHovered ? Colors.white : const Color(0xFFB5BAC1),
+                      size: 20,
+                    ),
             ),
           ),
         ),
@@ -102,39 +121,37 @@ class _HeaderIcon extends StatelessWidget {
 
 class _SearchBar extends StatelessWidget {
   @override
+  // HoverBuilder hata do — koi isHovered use nahi ho raha
   Widget build(BuildContext context) {
-    return HoverBuilder(
-      builder: (isHovered) => Container(
-        width: 250,
-        height: 32,
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        decoration: BoxDecoration(
-          color: const Color(0xFF17171a),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(
-            color: const Color(0xFF2c2d32),
-            width: 1,
-          ),
+    return Container(
+      width: 250,
+      height: 32,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(
+          color: Colors.grey.shade500,
+          width: 1,
         ),
-        child: const Row(
-          children: [
-            Expanded(
-              child: TextField(
-                cursorWidth: 0.9,
-                cursorColor: Colors.white,
-                style: TextStyle(color: Colors.white, fontSize: 12),
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  hintStyle: TextStyle(color: Color(0xFF949BA4), fontSize: 12),
-                  border: InputBorder.none,
-                  isDense: true,
-                  contentPadding: EdgeInsets.zero,
-                ),
+      ),
+      child: const Row(
+        children: [
+          Expanded(
+            child: TextField(
+              cursorWidth: 0.9,
+              cursorColor: Colors.white,
+              style: TextStyle(color: Colors.white, fontSize: 12),
+              decoration: InputDecoration(
+                hintText: 'Search',
+                hintStyle: TextStyle(color: Color(0xFF949BA4), fontSize: 12),
+                border: InputBorder.none,
+                isDense: true,
+                contentPadding: EdgeInsets.zero,
               ),
             ),
-            Icon(Icons.search, color: Color(0xFF949BA4), size: 16),
-          ],
-        ),
+          ),
+          Icon(Icons.search, color: Color(0xFF949BA4), size: 16),
+        ],
       ),
     );
   }

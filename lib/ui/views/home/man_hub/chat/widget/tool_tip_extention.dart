@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
-extension DiscordTooltipExtension on Widget {
-  Widget withDiscordTooltip(String message, {bool preferBelow = true}) {
+extension ToolTipExtention on Widget {
+  Widget discordTooltip(String message,
+      {bool preferBelow = true, bool showReact = false}) {
     return DiscordTooltipPortal(
       message: message,
       preferBelow: preferBelow,
+      showReact: showReact,
       child: this,
     );
   }
@@ -14,11 +16,13 @@ class DiscordTooltipPortal extends StatefulWidget {
   final Widget child;
   final String message;
   final bool preferBelow;
+  final bool showReact;
 
   const DiscordTooltipPortal({
     Key? key,
     required this.child,
     required this.message,
+    this.showReact = false,
     this.preferBelow = true,
   }) : super(key: key);
 
@@ -41,11 +45,12 @@ class _DiscordTooltipPortalState extends State<DiscordTooltipPortal> {
               widget.preferBelow ? Alignment.bottomCenter : Alignment.topCenter,
           followerAnchor:
               widget.preferBelow ? Alignment.topCenter : Alignment.bottomCenter,
-          offset: Offset(0, widget.preferBelow ? 5 : -5),
+          offset: Offset(0, widget.preferBelow ? -70 : -5),
           child: RepaintBoundary(
             child: Align(
               alignment: Alignment.topCenter,
-              child: _TooltipBox(message: widget.message),
+              child: _TooltipBox(
+                  message: widget.message, showReact: widget.showReact),
             ),
           ),
         ),
@@ -83,35 +88,50 @@ class _DiscordTooltipPortalState extends State<DiscordTooltipPortal> {
 
 class _TooltipBox extends StatelessWidget {
   final String message;
-  const _TooltipBox({required this.message});
+  final bool showReact;
+  const _TooltipBox({required this.message, required this.showReact});
 
   @override
   Widget build(BuildContext context) {
     return Material(
+      color: Colors.transparent,
       child: Container(
-        height: 35,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-          color: Colors.transparent,
+          color: const Color(0xFF1E1F22),
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.grey.shade500, width: 0.8),
           boxShadow: const [
-            // BoxShadow(
-            //   color: Color(0x88000000),
-            //   blurRadius: 6,
-            //   offset: Offset(0, 2),
-            // ),
+            BoxShadow(
+              color: Color(0x88000000),
+              blurRadius: 6,
+              offset: Offset(0, 2),
+            ),
           ],
         ),
-        child: Text(
-          message,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 11,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.2,
-          ),
-          softWrap: false,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(
+              ':$message:',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 11,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.2,
+              ),
+              softWrap: false,
+            ),
+            // if (showReact)
+            //   const Text(
+            //     'Click to react',
+            //     style: TextStyle(
+            //       color: Colors.white,
+            //       fontSize: 11,
+            //     ),
+            //   ),
+          ],
         ),
       ),
     );
