@@ -45,7 +45,7 @@ class _DiscordTooltipPortalState extends State<DiscordTooltipPortal> {
               widget.preferBelow ? Alignment.bottomCenter : Alignment.topCenter,
           followerAnchor:
               widget.preferBelow ? Alignment.topCenter : Alignment.bottomCenter,
-          offset: Offset(0, widget.preferBelow ? -70 : -5),
+          offset: Offset(0, widget.preferBelow ? 5 : -5),
           child: RepaintBoundary(
             child: Align(
               alignment: Alignment.topCenter,
@@ -94,19 +94,17 @@ class _TooltipBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
-      color: Colors.transparent,
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
-          color: const Color(0xFF1E1F22),
+          color: Colors.transparent,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: Colors.grey.shade500, width: 0.8),
           boxShadow: const [
-            BoxShadow(
-              color: Color(0x88000000),
-              blurRadius: 6,
-              offset: Offset(0, 2),
-            ),
+            // BoxShadow(
+            //   blurRadius: 6,
+            //   offset: Offset(0, 2),
+            // ),
           ],
         ),
         child: Column(
@@ -123,14 +121,6 @@ class _TooltipBox extends StatelessWidget {
               ),
               softWrap: false,
             ),
-            // if (showReact)
-            //   const Text(
-            //     'Click to react',
-            //     style: TextStyle(
-            //       color: Colors.white,
-            //       fontSize: 11,
-            //     ),
-            //   ),
           ],
         ),
       ),

@@ -19,7 +19,6 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
       height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
-        // color: Color(0xFF1a1a1e),
         border: Border(
           bottom: BorderSide(
             color: Colors.grey.shade600,
@@ -27,46 +26,61 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
           ),
         ),
       ),
-      child: Row(
-        children: [
-          Text(
-            chatWithName,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
-          ),
-          const Spacer(),
-          _HeaderIcon(
-            icon: Icons.phone_in_talk,
-            tooltip: 'Start Voice Call',
-            onTap: () {},
-          ),
-          _HeaderIcon(
-            icon: Icons.videocam,
-            tooltip: 'Start Video Call',
-            onTap: () {},
-          ),
-          _HeaderIcon(
-            icon: Icons.push_pin,
-            tooltip: 'Pinned Messages',
-            onTap: () {},
-            rotate: true,
-          ),
-          _HeaderIcon(
-            icon: Icons.person_add_alt_1,
-            tooltip: 'Add Friends to DM',
-            onTap: () {},
-          ),
-          _HeaderIcon(
-            icon: Icons.account_circle,
-            tooltip: 'User Profile Toggle',
-            onTap: () => viewService.toggleProfile(),
-          ),
-          const SizedBox(width: 8),
-          _SearchBar(),
-        ],
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Available width ke hisaab se search bar ka max size decide karo
+          final isNarrow = constraints.maxWidth < 500;
+          // final showSearch = searchMaxWidth > 30;
+          return Row(
+            children: [
+              Expanded(
+                child: Text(
+                  chatWithName,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 15,
+                  ),
+                ),
+              ),
+              _HeaderIcon(
+                icon: Icons.phone_in_talk,
+                tooltip: 'Start Voice Call',
+                onTap: () {},
+              ),
+              _HeaderIcon(
+                icon: Icons.videocam,
+                tooltip: 'Start Video Call',
+                onTap: () {},
+              ),
+              _HeaderIcon(
+                icon: Icons.push_pin,
+                tooltip: 'Pinned Messages',
+                onTap: () {},
+                rotate: true,
+              ),
+              _HeaderIcon(
+                icon: Icons.person_add_alt_1,
+                tooltip: 'Add Friends to DM',
+                onTap: () {},
+              ),
+              _HeaderIcon(
+                icon: Icons.account_circle,
+                tooltip: 'User Profile Toggle',
+                onTap: () => viewService.toggleProfile(),
+              ),
+              const SizedBox(width: 8),
+              ConstrainedBox(
+                constraints: BoxConstraints(
+                  maxWidth: isNarrow ? 80 : 200,
+                  minWidth: 80,
+                ),
+                child: _SearchBar(),
+              ),
+            ],
+          );
+        },
       ),
     );
   }
@@ -121,10 +135,8 @@ class _HeaderIcon extends StatelessWidget {
 
 class _SearchBar extends StatelessWidget {
   @override
-  // HoverBuilder hata do — koi isHovered use nahi ho raha
   Widget build(BuildContext context) {
     return Container(
-      width: 250,
       height: 32,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
@@ -143,6 +155,7 @@ class _SearchBar extends StatelessWidget {
               style: TextStyle(color: Colors.white, fontSize: 12),
               decoration: InputDecoration(
                 hintText: 'Search',
+                hintMaxLines: 1,
                 hintStyle: TextStyle(color: Color(0xFF949BA4), fontSize: 12),
                 border: InputBorder.none,
                 isDense: true,

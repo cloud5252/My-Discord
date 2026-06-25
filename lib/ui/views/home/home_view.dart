@@ -14,6 +14,9 @@ class HomeView extends StackedView<HomeViewModel> {
 
   @override
   Widget builder(BuildContext context, HomeViewModel viewModel, Widget? child) {
+    final width = MediaQuery.of(context).size.width;
+
+    viewModel.updateScreenWidth(width);
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -49,11 +52,12 @@ class HomeView extends StackedView<HomeViewModel> {
             end: Alignment.bottomRight,
             colors: [
               Color(0xFF1e1f7b),
-              Color(0xFF5865f2),
-              Color(0xFF3b1f8c),
               Color(0xFF1a1b2e),
             ],
-            stops: [0.0, 0.4, 0.7, 1.0],
+            stops: [
+              0.0,
+              0.8,
+            ],
           ),
         ),
         child: Row(

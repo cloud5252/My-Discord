@@ -16,9 +16,6 @@ class FriendsSearchBar extends StatelessWidget {
         onChanged: viewModel.onSearchChanged,
         textAlignVertical: TextAlignVertical.center,
         decoration: InputDecoration(
-          hoverColor: Colors.transparent,
-          filled: true,
-          fillColor: Colors.transparent,
           hintText: 'Search',
           hintStyle: const TextStyle(color: Color(0xFFffffff), fontSize: 14),
           prefixIcon:

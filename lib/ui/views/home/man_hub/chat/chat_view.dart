@@ -92,9 +92,14 @@ class ChatView extends StackedView<ChatViewModel> {
                 ValueListenableBuilder<bool>(
                   valueListenable: viewModel.viewService.showProfileNotifier,
                   builder: (context, showProfile, _) {
-                    return showProfile
-                        ? ProfilePanel(userId: chatWithId)
-                        : const SizedBox.shrink();
+                    if (viewModel.viewService.isCompact) {
+                      return const SizedBox.shrink();
+                    }
+                    if (showProfile) {
+                      return ProfilePanel(userId: chatWithId);
+                    } else {
+                      return const SizedBox.shrink();
+                    }
                   },
                 ),
               ],

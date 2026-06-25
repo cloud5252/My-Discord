@@ -43,6 +43,7 @@ class ChatInputField extends StatelessWidget {
           hintStyle: const TextStyle(color: Color(0xFFd5d7de)),
           fillColor: Colors.transparent,
           filled: true,
+          hintMaxLines: 1,
           contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,

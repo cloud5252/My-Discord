@@ -41,21 +41,20 @@ class AddFraindView extends StackedView<AddFraindViewModel> {
                 textAlignVertical: TextAlignVertical.center,
                 decoration: InputDecoration(
                   hoverColor: Colors.transparent,
-                  fillColor: const Color(0xFF1E1F22),
-                  filled: true,
                   hintText: 'You can add friends with their Discord usernames.',
                   hintStyle:
                       const TextStyle(color: Color(0xFF72767D), fontSize: 14),
                   contentPadding: const EdgeInsets.only(
                       left: 12, right: 100, top: 20, bottom: 20),
-                  border: OutlineInputBorder(
+                  enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+                    borderSide:
+                        const BorderSide(color: Color(0xFF00A8FC), width: 0.5),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide:
-                        const BorderSide(color: Color(0xFF00A8FC), width: 1.0),
+                        const BorderSide(color: Color(0xFF00A8FC), width: 1.8),
                   ),
                 ),
               ),

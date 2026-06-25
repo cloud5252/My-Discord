@@ -85,7 +85,15 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
                   ),
                 ),
                 if (viewModel.selectedFilter != FriendFilter.addfraind)
-                  const ActiveNowPanel()
+                  ValueListenableBuilder<bool>(
+                    valueListenable: viewModel.viewService.showProfileNotifier,
+                    builder: (context, showProfile, _) {
+                      if (viewModel.viewService.isCompact) {
+                        return const SizedBox.shrink();
+                      }
+                      return const ActiveNowPanel();
+                    },
+                  ),
               ],
             ),
           ),
@@ -134,7 +142,7 @@ class _FriendHeaderIcon extends StatelessWidget {
           height: 32,
           margin: const EdgeInsets.symmetric(horizontal: 0),
           decoration: BoxDecoration(
-            color: isHovered ? const Color(0xFF3b1f8c) : Colors.transparent,
+            color: isHovered ? const Color(0xFF35373C) : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
           ),
           child: Center(

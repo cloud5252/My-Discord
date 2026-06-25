@@ -80,4 +80,28 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
   }
 
   void onMenuSelected(String value) {}
+  static const double responsiveBreakpoint = 1250.0;
+
+  double _screenWidth = 0.0;
+  bool _isCompactSize = false;
+
+  bool get isCompactSize => _isCompactSize;
+
+  void updateScreenWidth(double width) {
+    if (_screenWidth == width) return;
+    _screenWidth = width;
+
+    final currentCompact = width < responsiveBreakpoint;
+
+    if (_isCompactSize != currentCompact) {
+      _isCompactSize = currentCompact;
+
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _viewService.isCompact = currentCompact;
+        _viewService.setProfileVisibility(!currentCompact,
+            isResponsiveTrigger: true);
+        notifyListeners();
+      });
+    }
+  }
 }

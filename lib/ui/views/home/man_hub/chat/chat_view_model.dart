@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/service/FB_Auth/Authentication.dart';
@@ -6,7 +7,7 @@ import 'package:my_discord/service/chat_service/chat_service.dart';
 import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:stacked/stacked.dart';
 
-class ChatViewModel extends BaseViewModel {
+class ChatViewModel extends ReactiveViewModel implements Initialisable {
   final _auth = locator<Authentication>();
   final _chatService = locator<ChatService>();
   final viewService = locator<ViewService>();
@@ -19,7 +20,8 @@ class ChatViewModel extends BaseViewModel {
     required this.receiverId,
     required this.receiverName,
   });
-
+  @override
+  List<ListenableServiceMixin> get listenableServices => [viewService];
   @override
   void dispose() {
     messageController.dispose();
@@ -35,7 +37,6 @@ class ChatViewModel extends BaseViewModel {
       _chatService.getMessages(receiverId);
   // Stream<List<MessageModel>>? get messagesStream => null;
   @override
-  // ignore: override_on_non_overriding_member
   void initialise() {
     messageController.addListener(notifyListeners);
   }
@@ -75,5 +76,13 @@ class ChatViewModel extends BaseViewModel {
 
   void showOptions(MessageModel message) {
     print("Options for message ID: ${message.firebaseId}");
+  }
+
+  void deleteMessage(MessageModel message) {
+    print("Deleting message: ${message.firebaseId}");
+  }
+
+  void copyMessage(MessageModel message) {
+    Clipboard.setData(ClipboardData(text: message.messageText ?? ''));
   }
 }

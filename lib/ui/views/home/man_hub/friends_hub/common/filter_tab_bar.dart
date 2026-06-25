@@ -18,32 +18,35 @@ class FilterTabBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 44,
-      // color: const Color(0xFF1a1a1e),
-      child: ListView(
-        key: const Key('filter_tab_bar_list'),
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        children: [
-          _TabChip(
-              label: 'Online',
-              filter: FriendFilter.online,
-              viewModel: viewModel),
-          _TabChip(
-              label: 'All', filter: FriendFilter.all, viewModel: viewModel),
-          _TabChip(
-              label: 'Pending',
-              filter: FriendFilter.pending,
-              viewModel: viewModel),
-          _TabChip(
-              label: 'Blocked',
-              filter: FriendFilter.blocked,
-              viewModel: viewModel),
-          _TabChip(
-              label: 'Add Friend',
-              filter: FriendFilter.addfraind,
-              viewModel: viewModel),
-          const SizedBox(width: 10),
-        ],
+      child: Align(
+        alignment: Alignment.centerLeft,
+        child: ListView(
+          key: const Key('filter_tab_bar_list'),
+          scrollDirection: Axis.horizontal,
+          shrinkWrap: true,
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+          children: [
+            _TabChip(
+                label: 'Online',
+                filter: FriendFilter.online,
+                viewModel: viewModel),
+            _TabChip(
+                label: 'All', filter: FriendFilter.all, viewModel: viewModel),
+            _TabChip(
+                label: 'Pending',
+                filter: FriendFilter.pending,
+                viewModel: viewModel),
+            _TabChip(
+                label: 'Blocked',
+                filter: FriendFilter.blocked,
+                viewModel: viewModel),
+            _TabChip(
+                label: 'Add Friend',
+                filter: FriendFilter.addfraind,
+                viewModel: viewModel),
+            const SizedBox(width: 10),
+          ],
+        ),
       ),
     );
   }
