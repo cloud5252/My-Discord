@@ -30,7 +30,7 @@ class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
           );
         }
 
-        if (friends.isEmpty) {
+        if (friends.isEmpty) {  
           return const Center(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 20),

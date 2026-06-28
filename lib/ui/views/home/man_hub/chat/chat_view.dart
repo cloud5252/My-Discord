@@ -76,6 +76,7 @@ class ChatView extends StackedView<ChatViewModel> {
                                 }
                                 final message = messages[index];
                                 return MessageBubbleWidget(
+                                  chatViewModel: viewModel,
                                   message: message,
                                   key: ValueKey(
                                       message.firebaseId ?? index.toString()),
@@ -142,32 +143,63 @@ class ChatView extends StackedView<ChatViewModel> {
   }
 
   Widget _buildMessageInput(ChatViewModel viewModel) {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: CallbackShortcuts(
-        bindings: {
-          const SingleActivator(LogicalKeyboardKey.enter): () {
-            if (viewModel.messageController.text.trim().isNotEmpty) {
-              viewModel.sendMessage();
-            }
-          },
-          const SingleActivator(LogicalKeyboardKey.enter, shift: true): () {
-            final controller = viewModel.messageController;
-            final selection = controller.selection;
-            final newText = controller.text
-                .replaceRange(selection.start, selection.end, '\n');
-            controller.value = TextEditingValue(
-              text: newText,
-              selection: TextSelection.collapsed(offset: selection.start + 1),
-            );
-          },
-        },
-        child: ChatInputField(
-          controller: viewModel.messageController,
-          chatWithName: chatWithName,
-          onSend: viewModel.sendMessage,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (viewModel.replyingTo != null)
+          Container(
+            color: const Color(0xFF2B2D31),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              children: [
+                const Icon(Icons.reply, color: Color(0xFF5865F2), size: 16),
+                const SizedBox(width: 8),
+                Text(
+                  'Replying to ${viewModel.replyingTo!.senderEmail ?? ""}',
+                  style: const TextStyle(
+                    color: Color(0xFF5865F2),
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                GestureDetector(
+                  onTap: () => viewModel.cancelReply(),
+                  child: const Icon(Icons.close,
+                      color: Color(0xFF80848E), size: 16),
+                ),
+              ],
+            ),
+          ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: CallbackShortcuts(
+            bindings: {
+              const SingleActivator(LogicalKeyboardKey.enter): () {
+                if (viewModel.messageController.text.trim().isNotEmpty) {
+                  viewModel.sendMessage();
+                }
+              },
+              const SingleActivator(LogicalKeyboardKey.enter, shift: true): () {
+                final controller = viewModel.messageController;
+                final selection = controller.selection;
+                final newText = controller.text
+                    .replaceRange(selection.start, selection.end, '\n');
+                controller.value = TextEditingValue(
+                  text: newText,
+                  selection:
+                      TextSelection.collapsed(offset: selection.start + 1),
+                );
+              },
+            },
+            child: ChatInputField(
+              controller: viewModel.messageController,
+              chatWithName: chatWithName,
+              onSend: viewModel.sendMessage,
+            ),
+          ),
         ),
-      ),
+      ],
     );
   }
 

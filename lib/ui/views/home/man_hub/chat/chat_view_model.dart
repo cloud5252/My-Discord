@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:my_discord/app/app.locator.dart';
@@ -15,6 +17,7 @@ class ChatViewModel extends ReactiveViewModel implements Initialisable {
   final String receiverName;
 
   final TextEditingController messageController = TextEditingController();
+  final TextEditingController edittextController = TextEditingController();
 
   ChatViewModel({
     required this.receiverId,
@@ -26,6 +29,7 @@ class ChatViewModel extends ReactiveViewModel implements Initialisable {
   void dispose() {
     messageController.dispose();
     scrollController.dispose();
+    edittextController.dispose();
     super.dispose();
   }
 
@@ -49,7 +53,13 @@ class ChatViewModel extends ReactiveViewModel implements Initialisable {
     await _chatService.sendMessage(
       receiverId: receiverId,
       messageText: text,
+      replyToMessageId: replyingTo?.firebaseId,
+      replyToText: replyingTo?.messageText,
+      replyToSender: replyingTo?.senderEmail,
     );
+
+    replyingTo = null; // ← send ke baad clear
+    notifyListeners();
 
     if (scrollController.hasClients) {
       scrollController.animateTo(
@@ -70,16 +80,64 @@ class ChatViewModel extends ReactiveViewModel implements Initialisable {
     notifyListeners();
   }
 
+  MessageModel? replyingTo;
+
   void onReplyMessage(MessageModel message) {
-    print("Replying to: ${message.messageText}");
+    replyingTo = message;
+    notifyListeners();
+  }
+
+  void cancelReply() {
+    replyingTo = null;
+    notifyListeners();
+  }
+
+  MessageModel? editingMessage;
+
+  void startEditing(MessageModel message) {
+    editingMessage = message;
+    edittextController.text = message.messageText ?? ''; // ✅
+    notifyListeners();
+  }
+
+  void cancelEditing() {
+    editingMessage = null;
+    edittextController.clear();
+    notifyListeners();
+  }
+
+  Future<void> sendOrEditMessage() async {
+    if (editingMessage != null) {
+      final newText = edittextController.text.trim();
+      if (newText.isEmpty) return;
+
+      // ← PEHLE LOCAL UPDATE — instant UI
+      editingMessage!.messageText = newText;
+      editingMessage!.isEdited = true;
+      await editingMessage!.save(); // Hive update
+      _chatService.emitMessages(editingMessage!.chatRoomId!); // UI refresh
+
+      final messageToEdit = editingMessage!;
+      editingMessage = null; // ← editing mode band karo
+      edittextController.clear();
+      notifyListeners(); // ← UI turant update
+
+      // ← BAAD MEIN FIREBASE — background mein
+      await _chatService.editMessage(
+        message: messageToEdit,
+        newText: newText,
+      );
+    } else {
+      await sendMessage();
+    }
   }
 
   void showOptions(MessageModel message) {
     print("Options for message ID: ${message.firebaseId}");
   }
 
-  void deleteMessage(MessageModel message) {
-    print("Deleting message: ${message.firebaseId}");
+  void deleteMessage(MessageModel message) async {
+    await _chatService.deleteMessage(message);
   }
 
   void copyMessage(MessageModel message) {

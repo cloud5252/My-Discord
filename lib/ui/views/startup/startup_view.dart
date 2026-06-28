@@ -30,24 +30,27 @@ class StartupView extends StackedView<StartupViewModel> {
             stops: [0.0, 0.4, 0.7, 1.0],
           ),
         ),
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(
+              const Text(
                 'STACKED',
                 style: TextStyle(fontSize: 40, fontWeight: FontWeight.w900),
               ),
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('Loading ...', style: TextStyle(fontSize: 16)),
+                  Text(
+                    viewModel.loadingText, // ← dynamic text
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
                   horizontalSpaceSmall,
-                  SizedBox(
+                  const SizedBox(
                     width: 16,
                     height: 16,
                     child: CircularProgressIndicator(
-                      color: Colors.black,
+                      color: Colors.white,
                       strokeWidth: 6,
                     ),
                   ),

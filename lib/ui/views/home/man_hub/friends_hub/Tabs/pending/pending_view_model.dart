@@ -60,40 +60,48 @@ class PendingViewModel extends BaseViewModel implements Initialisable {
 
   Future<void> acceptRequest(String docId, String fromUid) async {
     if (myUid == null) return;
+
     final batch = _firestore.batch();
 
-    // 1. Request status accepted karo
+    // 1. Request accepted karo
     batch.update(
       _firestore.collection('friend_requests').doc(docId),
       {'status': 'accepted'},
     );
 
-    // Request ka data nikalen taake sahi names mil sakein
     final requestDoc =
         incomingRequests.firstWhere((r) => r['id'] == docId, orElse: () => {});
+    if (requestDoc.isEmpty) return;
+
     final fromName = requestDoc['fromName'] ?? '';
     final toName = requestDoc['toName'] ?? '';
+    final fromEmail = requestDoc['fromEmail'] ?? '';
+    final toEmail = requestDoc['toEmail'] ?? '';
 
-    // 2. Cloud ke contacts mein Junaid ko add karo
     batch.set(
-      _firestore.collection('Contacts').doc(),
+      _firestore
+          .collection('Users')
+          .doc(myUid)
+          .collection('friends')
+          .doc(fromUid),
       {
-        'ownerId': myUid, // Cloud
-        'contactId': fromUid, // Junaid
-        'contactName': fromName, // Junaid ka naam
-        'status': 'online',
+        'friendId': fromUid,
+        'friendName': fromName,
+        'friendEmail': fromEmail,
         'addedAt': FieldValue.serverTimestamp(),
       },
     );
 
-    // 3. Junaid ke contacts mein Cloud ko add karo
     batch.set(
-      _firestore.collection('Contacts').doc(),
+      _firestore
+          .collection('Users')
+          .doc(fromUid)
+          .collection('friends')
+          .doc(myUid),
       {
-        'ownerId': fromUid, // Junaid
-        'contactId': myUid, // Cloud
-        'contactName': toName, // Cloud ka naam
-        'status': 'online',
+        'friendId': myUid,
+        'friendName': toName,
+        'friendEmail': toEmail,
         'addedAt': FieldValue.serverTimestamp(),
       },
     );

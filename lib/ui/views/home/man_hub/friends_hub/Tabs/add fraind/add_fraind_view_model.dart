@@ -20,6 +20,7 @@ class AddFraindViewModel extends BaseViewModel {
   }
 
   Future<void> sendFriendRequest() async {
+    if (isBusy) return;
     setBusy(true);
     feedbackMessage = null;
 
@@ -76,6 +77,8 @@ class AddFraindViewModel extends BaseViewModel {
         'toUid': targetUid,
         'fromName': myDoc.data()?['displayName'] ?? 'Unknown',
         'toName': targetUser.data()['displayName'] ?? 'Unknown',
+        'fromEmail': myDoc.data()?['email'] ?? '',
+        'toEmail': targetUser.data()['email'] ?? '',
         'status': 'pending',
         'sentAt': FieldValue.serverTimestamp(),
       });

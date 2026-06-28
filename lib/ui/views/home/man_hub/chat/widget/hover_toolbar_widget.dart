@@ -4,14 +4,14 @@ import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/hover_emoji_widget.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/hover_icon_widget.dart';
-import 'package:my_discord/ui/views/home/man_hub/chat/widget/popup_manu/show_manu.dart';
-import 'package:my_discord/ui/views/home/man_hub/chat/widget/popup_manu/ui_manu_item.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/context_manu/show_manu.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/context_manu/ui_manu_item.dart';
 import 'package:stacked/stacked.dart';
 
 class HoverToolbarWidget extends StatefulWidget {
   final MessageModel message;
 
-  HoverToolbarWidget({
+  const HoverToolbarWidget({
     Key? key,
     required this.message,
   }) : super(key: key);
@@ -90,7 +90,7 @@ class _HoverToolbarWidgetState extends State<HoverToolbarWidget> {
     final buttonSize = renderBox.size;
 
     const double leftShift = 40.0;
-    const double topShift = -40.0;
+    const double topShift = -35.0;
 
     final menuPosition = Offset(
       buttonPosition.dx + buttonSize.width - leftShift,
@@ -100,68 +100,84 @@ class _HoverToolbarWidgetState extends State<HoverToolbarWidget> {
     DiscordContextMenu.show(
       context: context,
       position: menuPosition,
+      messageId: widget.message.firebaseId ?? 'sdhkfhoiew9073434i34',
       items: [
         ContextMenuItem(
           label: 'Add Reaction',
-          icon: Icons.add_reaction_outlined,
+          hasSubmenu: true,
+          icon: Icons.arrow_back_ios_new,
+          iconRotation: 3.14159,
           onTap: () => chatViewModel.onReplyMessage(widget.message),
         ),
+        ContextMenuItem.divider(),
         ContextMenuItem(
           label: 'Edit Message',
-          icon: Icons.add_reaction_outlined,
-          onTap: () => chatViewModel.onReplyMessage(widget.message),
+          icon: Icons.edit,
+          iconRotation: 0.0,
+          onTap: () => chatViewModel.startEditing(widget.message),
         ),
         ContextMenuItem(
           label: 'Reply',
-          icon: Icons.add_reaction_outlined,
+          icon: Icons.reply,
+          iconRotation: 0.0,
           onTap: () => chatViewModel.onReplyMessage(widget.message),
         ),
         ContextMenuItem(
-          label: 'Forword',
-          icon: Icons.add_reaction_outlined,
+          label: 'Forward',
+          icon: Icons.reply,
+          iconMirror: true,
+          iconRotation: 3.14159,
           onTap: () => chatViewModel.onReplyMessage(widget.message),
         ),
+        ContextMenuItem.divider(),
         ContextMenuItem(
           label: 'Copy Text',
           icon: Icons.copy,
+          iconRotation: 0.0,
           onTap: () => chatViewModel.copyMessage(widget.message),
         ),
         ContextMenuItem(
           label: 'Pin Message',
-          icon: Icons.reply,
+          icon: Icons.push_pin,
+          iconRotation: 0.785398,
           onTap: () => chatViewModel.onReplyMessage(widget.message),
         ),
         ContextMenuItem(
           label: 'Apps',
-          icon: Icons.reply,
+          icon: Icons.apps,
+          iconRotation: 0.0,
           onTap: () => chatViewModel.onReplyMessage(widget.message),
         ),
         ContextMenuItem(
           label: 'Mark Unread',
-          icon: Icons.reply,
+          icon: Icons.mark_as_unread,
+          iconRotation: 0.0,
           onTap: () => chatViewModel.onReplyMessage(widget.message),
         ),
         ContextMenuItem(
           label: 'Copy Message Link',
-          icon: Icons.reply,
+          icon: Icons.link,
+          iconRotation: 0.0,
           onTap: () => chatViewModel.onReplyMessage(widget.message),
         ),
         ContextMenuItem(
           label: 'Speak Message',
-          icon: Icons.reply,
+          icon: Icons.volume_up,
+          iconRotation: 0.0,
           onTap: () => chatViewModel.onReplyMessage(widget.message),
         ),
         ContextMenuItem.divider(),
         ContextMenuItem(
           label: 'Delete Message',
-          icon: Icons.delete_outline,
+          icon: Icons.delete,
+          iconRotation: 0.0,
           color: const Color(0xFFED4245),
           onTap: () => chatViewModel.deleteMessage(widget.message),
         ),
         ContextMenuItem(
           label: 'Copy Message ID',
-          icon: Icons.delete_outline,
-          color: const Color(0xFFED4245),
+          icon: Icons.numbers,
+          iconRotation: 0.0,
           onTap: () => chatViewModel.deleteMessage(widget.message),
         ),
       ],

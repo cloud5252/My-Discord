@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/views/home/man_hub/friends_hub/Tabs/add%20fraind/add_fraind_view_model.dart';
 import 'package:stacked/stacked.dart';
@@ -63,9 +65,10 @@ class AddFraindView extends StackedView<AddFraindViewModel> {
                 child: SizedBox(
                   height: 32,
                   child: ElevatedButton(
-                    onPressed: (viewModel.inputValue.isEmpty)
-                        ? null
-                        : viewModel.sendFriendRequest,
+                    onPressed:
+                        (viewModel.inputValue.isEmpty || viewModel.isBusy)
+                            ? null
+                            : viewModel.sendFriendRequest,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFF5865F2),
                       disabledBackgroundColor:

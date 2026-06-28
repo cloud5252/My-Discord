@@ -18,7 +18,7 @@ class MessageModel extends HiveObject {
   final String? receiverId;
 
   @HiveField(4)
-  final String? messageText;
+  String? messageText;
 
   @HiveField(5)
   final DateTime? timestamp;
@@ -38,6 +38,17 @@ class MessageModel extends HiveObject {
   @HiveField(10)
   bool? isPending;
 
+  @HiveField(11)
+  bool? isEdited;
+  @HiveField(12)
+  String? replyToMessageId;
+
+  @HiveField(13)
+  String? replyToText;
+
+  @HiveField(14)
+  String? replyToSender;
+
   MessageModel({
     required this.chatRoomId,
     required this.senderId,
@@ -48,8 +59,12 @@ class MessageModel extends HiveObject {
     required this.isRead,
     required this.isVoiceMessage,
     required this.profileUrl,
+    required this.replyToMessageId,
+    required this.replyToText,
+    required this.replyToSender,
     this.firebaseId,
     this.isPending = false,
+    this.isEdited = false,
   });
 
   factory MessageModel.fromMap(Map<String, dynamic> map) {
@@ -65,6 +80,10 @@ class MessageModel extends HiveObject {
       profileUrl: map['profileUrl'],
       firebaseId: map['firebaseId'],
       isPending: map['isPending'] ?? false,
+      isEdited: map['isEdited'] ?? false,
+      replyToMessageId: map['replyToMessageId'],
+      replyToText: map['replyToText'],
+      replyToSender: map['replyToSender'],
     );
   }
 
@@ -80,6 +99,10 @@ class MessageModel extends HiveObject {
       'isVoiceMessage': isVoiceMessage,
       'profileUrl': profileUrl,
       'isPending': isPending,
+      'isEdited': isEdited,
+      'replyToMessageId': replyToMessageId,
+      'replyToText': replyToText,
+      'replyToSender': replyToSender,
     };
   }
 }

@@ -1,10 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:my_discord/ui/views/home/man_hub/chat/widget/popup_manu/ui_manu_item.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/context_manu/ui_manu_item.dart';
 
 class DiscordContextMenu {
   static OverlayEntry? _overlayEntry;
   static PointerRoute? _globalClickListener;
+  static String? _currentMessageId;
 
   static bool get isOpen => _overlayEntry != null;
 
@@ -13,12 +14,31 @@ class DiscordContextMenu {
     required Offset position,
     required List<ContextMenuItem> items,
     VoidCallback? onDismiss,
+    required String messageId,
   }) {
     if (_overlayEntry != null) {
-      _remove(onDismiss: onDismiss);
+      if (_currentMessageId == messageId) {
+        _remove(onDismiss: onDismiss);
+        return;
+      }
+
+      _overlayEntry?.remove();
+      _overlayEntry = null;
+      _currentMessageId = messageId;
+
+      final overlay = Overlay.of(context);
+      _overlayEntry = OverlayEntry(
+        builder: (ctx) => ContextMenuOverlay(
+          position: position,
+          items: items,
+          onDismiss: () => _remove(onDismiss: onDismiss),
+        ),
+      );
+      overlay.insert(_overlayEntry!);
       return;
     }
 
+    _currentMessageId = messageId;
     final overlay = Overlay.of(context);
 
     _overlayEntry = OverlayEntry(
@@ -49,7 +69,8 @@ class DiscordContextMenu {
     if (_overlayEntry != null) {
       _overlayEntry?.remove();
       _overlayEntry = null;
-      onDismiss?.call();
     }
+    _currentMessageId = null;
+    onDismiss?.call();
   }
 }

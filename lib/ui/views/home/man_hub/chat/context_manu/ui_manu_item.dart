@@ -1,6 +1,8 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/context_manu/sub_manu/emoji_submanu_controller.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/context_manu/widget/hover_emoji_widget.dart';
 
 class ContextMenuItem {
   final String label;
@@ -8,21 +10,30 @@ class ContextMenuItem {
   final Color? color;
   final VoidCallback onTap;
   final bool isDivider;
+  final double iconRotation;
+  final bool iconMirror;
+  final bool hasSubmenu;
 
   ContextMenuItem({
     this.label = '',
     this.icon = Icons.circle,
+    this.hasSubmenu = false,
     this.color,
     VoidCallback? onTap,
+    this.iconRotation = 0.0,
     this.isDivider = false,
+    this.iconMirror = false,
   }) : onTap = onTap ?? (() {});
 
   ContextMenuItem.divider()
       : label = '',
         icon = Icons.circle,
+        hasSubmenu = false,
         color = null,
         onTap = (() {}),
-        isDivider = true;
+        isDivider = true,
+        iconRotation = 0.0,
+        iconMirror = false;
 }
 
 class ContextMenuOverlay extends StatefulWidget {
@@ -63,7 +74,6 @@ class _ContextMenuOverlayState extends State<ContextMenuOverlay>
     _scale = CurvedAnimation(parent: _controller, curve: Curves.easeOutCubic);
     _opacity = CurvedAnimation(parent: _controller, curve: Curves.easeOut);
     _controller.forward();
-
     _calculatePosition();
   }
 
@@ -94,12 +104,11 @@ class _ContextMenuOverlayState extends State<ContextMenuOverlay>
       if (localLeft < 8) localLeft = 8;
 
       const double bottomSafeArea = 70.0;
-
       if (localTop + menuHeight > screenSize.height - bottomSafeArea) {
         localTop = (screenSize.height - bottomSafeArea) - menuHeight;
       }
 
-      const double topSafeArea = 56.0;
+      const double topSafeArea = 10.0;
       if (localTop < topSafeArea) localTop = topSafeArea;
 
       setState(() {
@@ -156,21 +165,38 @@ class _ContextMenuOverlayState extends State<ContextMenuOverlay>
                     ),
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: widget.items.map((item) {
-                        if (item.isDivider) {
-                          return const Padding(
+                      children: [
+                        const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              HoverEmojiWidget(emoji: '❤️', tooltip: 'Heart'),
+                              HoverEmojiWidget(
+                                  emoji: '🔖', tooltip: 'Bookmark'),
+                              HoverEmojiWidget(
+                                  emoji: '👍', tooltip: 'Thumbs Up'),
+                              HoverEmojiWidget(emoji: '😊', tooltip: 'Smile'),
+                            ],
+                          ),
+                        ),
+                        ...widget.items.map((item) {
+                          if (item.isDivider) {
+                            return const Padding(
                               padding: EdgeInsets.symmetric(vertical: 4),
                               child:
-                                  Divider(height: 1, color: Color(0xFF2B305B)));
-                        }
-                        return _MenuTile(
-                          item: item,
-                          onTap: () {
-                            widget.onDismiss();
-                            item.onTap();
-                          },
-                        );
-                      }).toList(),
+                                  Divider(height: 1, color: Color(0xFF2B305B)),
+                            );
+                          }
+                          return _MenuTile(
+                            item: item,
+                            onTap: () {
+                              widget.onDismiss();
+                              item.onTap();
+                            },
+                          );
+                        }).toList(),
+                      ],
                     ),
                   ),
                 ),
@@ -196,20 +222,34 @@ class _MenuTile extends StatefulWidget {
 class _MenuTileState extends State<_MenuTile> {
   bool _hovered = false;
 
+  // Key Container pe hai — renderBox sahi milega
+  final GlobalKey _containerKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     final color = widget.item.color ?? const Color(0xFFDCDDDE);
 
     return MouseRegion(
-      onEnter: (_) => setState(() => _hovered = true),
+      onEnter: (_) {
+        setState(() => _hovered = true);
+        if (widget.item.hasSubmenu) {
+          final renderBox =
+              _containerKey.currentContext!.findRenderObject() as RenderBox;
+          final position = renderBox.localToGlobal(Offset.zero);
+          EmojiSubmenuController.show(context, position);
+        } else {
+          EmojiSubmenuController.hide();
+        }
+      },
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(
+          key: _containerKey,
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
           decoration: BoxDecoration(
             color: _hovered
-                ? const Color(0xFF5865F2).withOpacity(0.05)
+                ? const Color(0xFFc6c5c1).withOpacity(0.05)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(4),
           ),
@@ -224,11 +264,24 @@ class _MenuTileState extends State<_MenuTile> {
                 ),
               ),
               const Spacer(),
-              Icon(
-                widget.item.icon,
-                size: 16,
-                color: color,
-              ),
+              if (widget.item.hasSubmenu)
+                const Icon(
+                  Icons.chevron_right,
+                  size: 20,
+                  color: Color(0xFFDCDDDE),
+                )
+              else
+                Transform(
+                  alignment: Alignment.center,
+                  transform: widget.item.iconMirror
+                      ? Matrix4.rotationY(3.14159)
+                      : Matrix4.rotationZ(widget.item.iconRotation),
+                  child: Icon(
+                    widget.item.icon,
+                    size: 20,
+                    color: color,
+                  ),
+                ),
             ],
           ),
         ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:my_discord/ui/common/hover_builder.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/tool_tip_extention.dart';
 
-class HoverIconWidget extends StatelessWidget {
+class HoverIconWidget extends StatefulWidget {
   final IconData icon;
   final String tooltip;
   final VoidCallback onTap;
@@ -18,10 +18,15 @@ class HoverIconWidget extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<HoverIconWidget> createState() => _HoverIconWidgetState();
+}
+
+class _HoverIconWidgetState extends State<HoverIconWidget> {
+  @override
   Widget build(BuildContext context) {
     return HoverBuilder(
       builder: (isHovered) => GestureDetector(
-        onTap: onTap,
+        onTap: () => widget.onTap(),
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
           decoration: BoxDecoration(
@@ -37,11 +42,11 @@ class HoverIconWidget extends StatelessWidget {
               duration: const Duration(milliseconds: 80),
               child: Transform(
                 alignment: Alignment.center,
-                transform: isMirrored
+                transform: widget.isMirrored
                     ? Matrix4.rotationY(3.14159)
                     : Matrix4.identity(),
                 child: Icon(
-                  icon,
+                  widget.icon,
                   size: 18,
                   color: isHovered ? Colors.white : const Color(0xFF8A8E94),
                 ),
@@ -49,7 +54,7 @@ class HoverIconWidget extends StatelessWidget {
             ),
           ),
         ),
-      ).discordTooltip(tooltip),
+      ).discordTooltip(widget.tooltip),
     );
   }
 }

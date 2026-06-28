@@ -12,6 +12,8 @@ import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class HomeViewModel extends ReactiveViewModel implements Initialisable {
+  final friendsBox = Hive.box<HiveUserModel>('friends_box');
+
   final _auth = locator<Authentication>();
   final _bottomSheetService = locator<BottomSheetService>();
   final _navigationService = locator<NavigationService>();
@@ -42,31 +44,28 @@ class HomeViewModel extends ReactiveViewModel implements Initialisable {
     if (myUid == null) return;
 
     _firestore
-        .collection('Contacts')
-        .where('ownerId', isEqualTo: myUid)
+        .collection('Users')
+        .doc(myUid)
+        .collection('friends')
         .snapshots()
         .listen((snapshot) async {
-      final friendsBox = Hive.box<HiveUserModel>('friends_box');
       await friendsBox.clear();
 
       for (var doc in snapshot.docs) {
         final mapData = doc.data();
-        final contactId = mapData['contactId'] ?? '';
-        final ownerId = mapData['ownerId'] ?? '';
-
-        if (contactId == myUid || ownerId != myUid) continue;
 
         HiveUserModel contactUser = HiveUserModel(
-          uid: contactId,
-          username: mapData['contactName'] ?? '',
-          displayName: mapData['contactName'] ?? 'Unknown',
-          email: mapData['email'] ?? '',
+          uid: doc.id,
+          username: mapData['friendName'] ?? '',
+          displayName: mapData['friendName'] ?? 'Unknown',
+          email: mapData['friendEmail'] ?? '',
           createdAt: DateTime.now(),
-          status: mapData['status'] ?? 'offline',
+          status: mapData['status'] ?? 'online',
         );
 
         await friendsBox.put(contactUser.uid, contactUser);
       }
+
       notifyListeners();
     });
   }

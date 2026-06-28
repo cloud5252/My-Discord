@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-extension ToolTipExtention on Widget {
-  Widget discordTooltip(String message,
+extension ToolTipContextManu on Widget {
+  Widget contextmanuTooltip(String message,
       {bool preferBelow = true, bool showReact = false}) {
     return DiscordTooltipPortal(
       message: message,
@@ -45,7 +45,7 @@ class _DiscordTooltipPortalState extends State<DiscordTooltipPortal> {
               widget.preferBelow ? Alignment.bottomCenter : Alignment.topCenter,
           followerAnchor:
               widget.preferBelow ? Alignment.topCenter : Alignment.bottomCenter,
-          offset: Offset(0, widget.preferBelow ? -70 : -5),
+          offset: Offset(0, widget.preferBelow ? -90 : -5),
           child: RepaintBoundary(
             child: Align(
               alignment: Alignment.topCenter,

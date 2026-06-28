@@ -17,14 +17,12 @@ class ChatService {
     _box = Hive.box<MessageModel>('messages_box');
   }
 
-  // Per chatRoom ek controller
   StreamController<List<MessageModel>> _getController(String chatRoomId) {
     if (!_controllers.containsKey(chatRoomId)) {
       _controllers[chatRoomId] =
           StreamController<List<MessageModel>>.broadcast();
 
-      // broadcast stream subscribe hone ka wait karo
-      Future.delayed(Duration.zero, () => _emitMessages(chatRoomId)); // ✅
+      Future.delayed(Duration.zero, () => emitMessages(chatRoomId));
 
       _firestore
           .collection('chat_rooms')
@@ -33,34 +31,54 @@ class ChatService {
           .orderBy('timestamp', descending: false)
           .snapshots()
           .listen((snap) {
-        for (final doc in snap.docs) {
-          final msg = MessageModel.fromMap(doc.data());
-          if (_box.containsKey(msg.firebaseId)) {
-            final existing = _box.get(msg.firebaseId)!;
-            if (existing.isPending == true) {
-              existing.isPending = false;
-              existing.save();
+        // ↓ YAHAN CHANGE HAI — docChanges use kar rahe hain
+        for (final change in snap.docChanges) {
+          final data = change.doc.data();
+          if (data == null) continue;
+
+          final msg = MessageModel.fromMap(data);
+
+          // Naya message aaya
+          if (change.type == DocumentChangeType.added) {
+            if (_box.containsKey(msg.firebaseId)) {
+              // Pehle se hai — sirf isPending update karo
+              final existing = _box.get(msg.firebaseId)!;
+              if (existing.isPending == true) {
+                existing.isPending = false;
+                existing.save();
+              }
+            } else {
+              // Bilkul naya — Hive mein daalo
+              _box.put(msg.firebaseId, msg);
             }
-          } else {
+          }
+
+          // Message edit/update hua
+          else if (change.type == DocumentChangeType.modified) {
             _box.put(msg.firebaseId, msg);
           }
+
+          // Message delete hua ← YE NAYA HAI
+          else if (change.type == DocumentChangeType.removed) {
+            _box.delete(msg.firebaseId); // Hive se bhi hatao ✅
+          }
         }
-        _emitMessages(chatRoomId);
+
+        emitMessages(chatRoomId);
       });
     }
     return _controllers[chatRoomId]!;
   }
 
-  // chat_service.dart mein ye add karo
   final Map<String, List<MessageModel>> _lastEmitted = {};
 
-  void _emitMessages(String chatRoomId) {
+  void emitMessages(String chatRoomId) {
     final messages = _box.values
         .where((m) => m.chatRoomId == chatRoomId)
         .toList()
       ..sort((a, b) => a.timestamp!.compareTo(b.timestamp ?? DateTime.now()));
 
-    _lastEmitted[chatRoomId] = messages; // cache karo
+    _lastEmitted[chatRoomId] = messages;
     _controllers[chatRoomId]?.add(messages);
   }
 
@@ -70,13 +88,10 @@ class ChatService {
 
     _getController(chatRoomId);
 
-    // Last cached value + new updates
     return Stream<List<MessageModel>>.multi((controller) {
-      // Turant last value do
       if (_lastEmitted.containsKey(chatRoomId)) {
         controller.add(_lastEmitted[chatRoomId]!);
       }
-      // Phir live stream se updates do
       _controllers[chatRoomId]!.stream.listen(
             controller.add,
             onError: controller.addError,
@@ -88,6 +103,9 @@ class ChatService {
   Future<void> sendMessage({
     required String receiverId,
     required String messageText,
+    String? replyToMessageId,
+    String? replyToText,
+    String? replyToSender,
   }) async {
     final myUid = _auth.getCurrentuser()!.uid;
     final myEmail = _auth.getCurrentuser()!.email ?? '';
@@ -107,13 +125,14 @@ class ChatService {
       isVoiceMessage: false,
       profileUrl: '',
       isPending: true,
+      replyToMessageId: replyToMessageId,
+      replyToText: replyToText,
+      replyToSender: replyToSender,
     );
 
-    // 1. Hive mein save + stream update (grey)
     await _box.put(id, message);
-    _emitMessages(chatRoomId);
+    emitMessages(chatRoomId);
 
-    // 2. Firestore background upload
     try {
       await _firestore
           .collection('chat_rooms')
@@ -131,6 +150,9 @@ class ChatService {
         'isRead': 0,
         'isVoiceMessage': false,
         'profileUrl': '',
+        'replyToMessageId': replyToMessageId, // ← naya
+        'replyToText': replyToText, // ← naya
+        'replyToSender': replyToSender,
       });
 
       await _firestore.collection('chat_rooms').doc(chatRoomId).set({
@@ -139,20 +161,67 @@ class ChatService {
         'lastMessageTime': Timestamp.fromDate(now),
       }, SetOptions(merge: true));
 
-      // 3. Firestore done — isPending false (white)
-      // Note: Firestore listener khud handle kar lega via snapshots()
-      // lekin agar turant chahiye:
       message.isPending = false;
       await message.save();
-      _emitMessages(chatRoomId);
+      emitMessages(chatRoomId);
     } catch (e) {
-      // Failed — pending hi rehne do ya error state add karo
+      print('❌ Send error: $e');
     }
   }
 
   void disposeRoom(String chatRoomId) {
     _controllers[chatRoomId]?.close();
     _controllers.remove(chatRoomId);
+  }
+
+  Future<void> deleteMessage(MessageModel message) async {
+    try {
+      // Firebase se delete
+      await _firestore
+          .collection('chat_rooms')
+          .doc(message.chatRoomId)
+          .collection('messages')
+          .doc(message.firebaseId)
+          .delete();
+
+      // Hive se bhi delete — docChanges bhi karega
+      // lekin ye instant UI update ke liye
+      await _box.delete(message.firebaseId);
+      emitMessages(message.chatRoomId!);
+
+      print("✅ Deleted successfully");
+    } catch (e) {
+      print("❌ Error: $e");
+    }
+  }
+
+  Future<void> editMessage({
+    required MessageModel message,
+    required String newText,
+  }) async {
+    try {
+      // Firebase update
+      await _firestore
+          .collection('chat_rooms')
+          .doc(message.chatRoomId)
+          .collection('messages')
+          .doc(message.firebaseId)
+          .update({
+        'messageText': newText,
+        'isEdited': true,
+      });
+
+      // Instant UI update — docChanges bhi karega
+      // lekin ye turant dikhaye
+      message.messageText = newText;
+      message.isEdited = true;
+      await message.save();
+      emitMessages(message.chatRoomId!);
+
+      print("✅ Edited successfully");
+    } catch (e) {
+      print("❌ Edit error: $e");
+    }
   }
 }
 

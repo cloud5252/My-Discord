@@ -33,13 +33,11 @@ class SignupViewmodel extends BaseViewModel implements Initialisable {
   bool _emailTouched = false;
   bool _usernameTouched = false;
   bool _passwordTouched = false;
-
   bool get showEmailError => _emailTouched && Emailcontroller.text.isEmpty;
   bool get showUsernameError =>
       _usernameTouched && usernamecontroller.text.isEmpty;
   bool get showPasswordError =>
       _passwordTouched && passwordcontroller.text.isEmpty;
-
   bool get isEmailFocused => emailFocus.hasFocus;
   bool get isDisplaynameFocused => displaynameFocus.hasFocus;
   bool get isUsernameFocused => usernameFocus.hasFocus;
