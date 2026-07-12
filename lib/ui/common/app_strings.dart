@@ -1,3 +1,3 @@
-const String ksHomeBottomSheetTitle = 'Build Great Apps!';
+const String ksHomeBottomSheetTitle = 'Pin It. Pin It Good.';
 const String ksHomeBottomSheetDescription =
-    'Stacked is built to help you build better apps. Give us a chance and we\'ll prove it to you. Check out stacked.filledstacks.com to learn more';
+    'Hey, just double checking that you want to pin this message to the current channel for posterity and greatness?';

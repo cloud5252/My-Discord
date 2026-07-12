@@ -1,14 +1,18 @@
 // ignore_for_file: deprecated_member_use
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/context_manu/sub_manu/emoji_submanu_controller.dart';
 
 class EmojiSubmenuWidget extends StatefulWidget {
   final Offset position;
   final VoidCallback onDismiss;
+  final ValueChanged<String> onEmojiSelected;
 
   const EmojiSubmenuWidget({
     Key? key,
     required this.position,
     required this.onDismiss,
+    required this.onEmojiSelected,
   }) : super(key: key);
 
   @override
@@ -19,6 +23,7 @@ class _EmojiSubmenuWidgetState extends State<EmojiSubmenuWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _opacity;
+  final ScrollController _scrollController = ScrollController();
 
   static const List<Map<String, String>> _emojis = [
     {'emoji': '🎁', 'label': 'Gift Heart'},
@@ -57,7 +62,7 @@ class _EmojiSubmenuWidgetState extends State<EmojiSubmenuWidget>
     const submenuWidth = 200.0;
     const submenuHeight = 280.0;
 
-    double localLeft = widget.position.dx + 225;
+    double localLeft = widget.position.dx + 220;
     double localTop = widget.position.dy;
 
     if (localLeft + submenuWidth > screen.width) {
@@ -78,7 +83,13 @@ class _EmojiSubmenuWidgetState extends State<EmojiSubmenuWidget>
   @override
   void dispose() {
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _handleEmojiTap(String emoji) {
+    widget.onEmojiSelected(emoji);
+    widget.onDismiss();
   }
 
   @override
@@ -90,65 +101,100 @@ class _EmojiSubmenuWidgetState extends State<EmojiSubmenuWidget>
       top: top,
       child: FadeTransition(
         opacity: _opacity,
-        child: Material(
-          color: Colors.transparent,
-          child: Container(
-            width: 200,
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1B1E3F),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: const Color(0xFF2B305B)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.4),
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GridView.count(
-                  crossAxisCount: 6,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  mainAxisSpacing: 4,
-                  crossAxisSpacing: 4,
-                  children: _emojis.map((e) {
-                    return _EmojiCell(
-                      emoji: e['emoji']!,
-                      label: e['label']!,
-                      onTap: widget.onDismiss,
-                    );
-                  }).toList(),
-                ),
-                const Divider(height: 8, color: Color(0xFF2B305B)),
-                const MouseRegion(
-                  cursor: SystemMouseCursors.click,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                    child: Row(
-                      children: [
-                        Text(
-                          'View More',
-                          style: TextStyle(
-                            color: Color(0xFFDCDDDE),
-                            fontSize: 13,
-                          ),
-                        ),
-                        Spacer(),
-                        Icon(
-                          Icons.sentiment_satisfied_alt,
-                          size: 16,
-                          color: Color(0xFFDCDDDE),
-                        ),
-                      ],
+        child: MouseRegion(
+          onEnter: (_) => EmojiSubmenuController.cancelHide(),
+          onExit: (_) => EmojiSubmenuController.scheduleHide(),
+          child: Material(
+            color: Colors.transparent,
+            child: Container(
+              width: 200,
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF28282d),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.grey.shade700),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.4),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: SizedBox(
+                height: 280,
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(
+                    scrollbars: false,
+                    dragDevices: {
+                      PointerDeviceKind.touch,
+                      PointerDeviceKind.mouse,
+                    },
+                  ),
+                  child: Scrollbar(
+                    controller: _scrollController,
+                    thumbVisibility: true,
+                    trackVisibility: false,
+                    interactive: true,
+                    thickness: 4,
+                    radius: const Radius.circular(4),
+                    child: ListView.builder(
+                      controller: _scrollController,
+                      padding: const EdgeInsets.only(right: 8),
+                      itemCount: _emojis.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == _emojis.length) {
+                          return Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Divider(
+                                height: 8,
+                                color: Colors.grey.shade700,
+                              ),
+                              MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: widget.onDismiss,
+                                  child: const Padding(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: 1,
+                                      vertical: 6,
+                                    ),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          'View More',
+                                          style: TextStyle(
+                                            color: Color(0xFFDCDDDE),
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                        Spacer(),
+                                        Icon(
+                                          Icons.sentiment_satisfied_alt,
+                                          size: 16,
+                                          color: Color(0xFFDCDDDE),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        }
+
+                        final e = _emojis[index];
+                        return _EmojiCell(
+                          emoji: e['emoji']!,
+                          label: e['label']!,
+                          onTap: () => _handleEmojiTap(e['emoji']!),
+                        );
+                      },
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ),
@@ -184,17 +230,32 @@ class _EmojiCellState extends State<_EmojiCell> {
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
           decoration: BoxDecoration(
             color: _hovered
-                ? const Color(0xFF5865F2).withOpacity(0.2)
+                ? const Color(0xFFc6c5c1).withOpacity(0.05)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(4),
           ),
-          child: Center(
-            child: Text(
-              widget.emoji,
-              style: const TextStyle(fontSize: 18),
-            ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  widget.label,
+                  style: const TextStyle(
+                    color: Color(0xFFDCDDDE),
+                    fontSize: 13,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                widget.emoji,
+                style: const TextStyle(fontSize: 18),
+              ),
+            ],
           ),
         ),
       ),

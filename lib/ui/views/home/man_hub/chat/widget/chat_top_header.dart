@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:my_discord/service/chat_service/viewService.dart';
 import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
 import 'package:my_discord/ui/common/hover_builder.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/popup_menu/pinned_message_controller.dart';
+import 'package:stacked/stacked.dart';
 
 class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
   final String chatWithName;
@@ -15,6 +18,8 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey _pinButtonKey = GlobalKey();
+    final chatViewModel = getParentViewModel<ChatViewModel>(context);
     return Container(
       height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -55,9 +60,21 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
                 onTap: () {},
               ),
               _HeaderIcon(
+                key: _pinButtonKey,
                 icon: Icons.push_pin,
                 tooltip: 'Pinned Messages',
-                onTap: () {},
+                onTap: () {
+                  final renderBox = _pinButtonKey.currentContext!
+                      .findRenderObject() as RenderBox;
+                  final position = renderBox.localToGlobal(Offset.zero);
+                  final size = renderBox.size;
+
+                  PinnedMessagesController.show(
+                    context,
+                    Offset(position.dx, position.dy + size.height + 8),
+                    chatViewModel,
+                  );
+                },
                 rotate: true,
               ),
               _HeaderIcon(
@@ -93,11 +110,12 @@ class _HeaderIcon extends StatelessWidget {
   final bool rotate;
 
   const _HeaderIcon({
+    Key? key, // 👈 add karo
     required this.icon,
     required this.tooltip,
     required this.onTap,
     this.rotate = false,
-  });
+  }) : super(key: key); // 👈 add karo
 
   @override
   Widget build(BuildContext context) {

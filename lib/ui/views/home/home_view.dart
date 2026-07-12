@@ -46,20 +46,20 @@ class HomeView extends StackedView<HomeViewModel> {
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Color(0xFF1e1f7b),
-              Color(0xFF1a1b2e),
-            ],
-            stops: [
-              0.0,
-              0.8,
-            ],
-          ),
-        ),
+        decoration: const BoxDecoration(color: Color(0XFF121214)
+            // gradient: LinearGradient(
+            //   begin: Alignment.topLeft,
+            //   end: Alignment.bottomRight,
+            //   colors: [
+            //     Color(0xFF1e1f7b),
+            //     Color(0xFF1a1b2e),
+            //   ],
+            //   stops: [
+            //     0.0,
+            //     0.8,
+            //   ],
+            // ),
+            ),
         child: Row(
           children: [
             const SizedBox(width: 50, child: ServerSidebar()),

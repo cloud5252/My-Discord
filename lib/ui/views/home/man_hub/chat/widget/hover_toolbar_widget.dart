@@ -26,13 +26,12 @@ class _HoverToolbarWidgetState extends State<HoverToolbarWidget> {
   @override
   Widget build(BuildContext context) {
     final chatViewModel = getParentViewModel<ChatViewModel>(context);
-
     return Container(
       decoration: BoxDecoration(
-        color: const Color(0xFF1e1f7b).withOpacity(0.95),
+        color: const Color(0xFF242429).withOpacity(0.95),
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
-          color: const Color(0xFF5865F2).withOpacity(0.4),
+          color: Colors.grey.shade800,
           width: 0.8,
         ),
         boxShadow: [
@@ -43,42 +42,62 @@ class _HoverToolbarWidgetState extends State<HoverToolbarWidget> {
           ),
         ],
       ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const HoverEmojiWidget(emoji: '❤️', tooltip: 'Heart'),
-          const HoverEmojiWidget(emoji: '🔖', tooltip: 'Bookmark'),
-          const HoverEmojiWidget(emoji: '👍', tooltip: 'Thumbs Up'),
-          const HoverEmojiWidget(emoji: '😊', tooltip: 'Smile'),
-          Container(
-            width: 1,
-            height: 16,
-            margin: const EdgeInsets.symmetric(vertical: 4),
-            color: const Color(0xFF5865F2).withOpacity(0.4),
-          ),
-          HoverIconWidget(
-            icon: Icons.add_reaction_outlined,
-            tooltip: 'Add Reaction',
-            onTap: () {},
-          ),
-          HoverIconWidget(
-            icon: Icons.reply,
-            tooltip: 'Reply',
-            onTap: () => chatViewModel.onReplyMessage(widget.message),
-          ),
-          HoverIconWidget(
-            icon: Icons.reply,
-            tooltip: 'Forward',
-            onTap: () {},
-            isMirrored: true,
-          ),
-          HoverIconWidget(
-            key: _moreButtonKey,
-            icon: Icons.more_horiz,
-            tooltip: 'More',
-            onTap: () => _showMoreOptions(context, chatViewModel),
-          ),
-        ],
+      child: SizedBox(
+        height: 28,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            HoverEmojiWidget(
+              emoji: '❤️',
+              tooltip: 'Heart',
+              onTap: () => chatViewModel.toggleReaction(widget.message, '❤️'),
+            ),
+            HoverEmojiWidget(
+              emoji: '🔖',
+              tooltip: 'Bookmark',
+              onTap: () => chatViewModel.toggleReaction(widget.message, '🔖'),
+            ),
+            HoverEmojiWidget(
+              emoji: '👍',
+              tooltip: 'Thumbs Up',
+              onTap: () => chatViewModel.toggleReaction(widget.message, '👍'),
+            ),
+            HoverEmojiWidget(
+              emoji: '😊',
+              tooltip: 'Smile',
+              onTap: () => chatViewModel.toggleReaction(widget.message, '😊'),
+            ),
+            Container(
+              width: 1,
+              height: 15,
+              margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+              color: Colors.grey.shade500.withOpacity(0.5),
+            ),
+            HoverIconWidget(
+              icon: Icons.add_reaction_outlined,
+              tooltip: 'Add Reaction',
+              onTap: () {},
+            ),
+            HoverIconWidget(
+              icon: Icons.reply,
+              tooltip: 'Reply',
+              onTap: () => chatViewModel.onReplyMessage(widget.message),
+            ),
+            HoverIconWidget(
+              icon: Icons.reply,
+              tooltip: 'Forward',
+              onTap: () {},
+              isMirrored: true,
+            ),
+            HoverIconWidget(
+              key: _moreButtonKey,
+              icon: Icons.more_horiz,
+              tooltip: 'More',
+              onTap: () => _showMoreOptions(context, chatViewModel),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -101,14 +120,19 @@ class _HoverToolbarWidgetState extends State<HoverToolbarWidget> {
       context: context,
       position: menuPosition,
       messageId: widget.message.firebaseId ?? 'sdhkfhoiew9073434i34',
+      onEmojiSelected: (emoji) {
+        chatViewModel.insertEmojiIntoInput(emoji);
+        DiscordContextMenu.hide();
+      },
       items: [
         ContextMenuItem(
-          label: 'Add Reaction',
-          hasSubmenu: true,
-          icon: Icons.arrow_back_ios_new,
-          iconRotation: 3.14159,
-          onTap: () => chatViewModel.onReplyMessage(widget.message),
-        ),
+            label: 'Add Reaction',
+            hasSubmenu: true,
+            icon: Icons.arrow_back_ios_new,
+            iconRotation: 3.14159,
+            onTap: () {}
+            // => chatViewModel.onReplyMessage(widget.message),
+            ),
         ContextMenuItem.divider(),
         ContextMenuItem(
           label: 'Edit Message',
@@ -140,7 +164,7 @@ class _HoverToolbarWidgetState extends State<HoverToolbarWidget> {
           label: 'Pin Message',
           icon: Icons.push_pin,
           iconRotation: 0.785398,
-          onTap: () => chatViewModel.onReplyMessage(widget.message),
+          onTap: () => chatViewModel.showPinMessageDialog(widget.message),
         ),
         ContextMenuItem(
           label: 'Apps',

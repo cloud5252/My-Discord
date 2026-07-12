@@ -21,6 +21,7 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
       BuildContext context, FraindHubViewModel viewModel, Widget? child) {
     return Container(
       decoration: BoxDecoration(
+        color: const Color(0xFF1a1a1e),
         border: Border(
           left: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
         ),

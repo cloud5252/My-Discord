@@ -43,7 +43,7 @@ class StartupView extends StackedView<StartupViewModel> {
                 children: [
                   Text(
                     viewModel.loadingText, // ← dynamic text
-                    style: TextStyle(fontSize: 16, color: Colors.white),
+                    style: const TextStyle(fontSize: 16, color: Colors.white),
                   ),
                   horizontalSpaceSmall,
                   const SizedBox(

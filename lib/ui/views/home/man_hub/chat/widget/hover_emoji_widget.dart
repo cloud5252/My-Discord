@@ -6,11 +6,13 @@ import 'package:my_discord/ui/views/home/man_hub/chat/widget/tool_tip_extention.
 class HoverEmojiWidget extends StatelessWidget {
   final String emoji;
   final String tooltip;
+  final VoidCallback onTap;
 
   const HoverEmojiWidget({
     Key? key,
     required this.emoji,
     required this.tooltip,
+    required this.onTap,
   }) : super(key: key);
 
   @override
@@ -19,7 +21,7 @@ class HoverEmojiWidget extends StatelessWidget {
       key: Key(emoji),
       builder: (isHovered) => InkWell(
         borderRadius: BorderRadius.circular(4),
-        onTap: () {},
+        onTap: onTap,
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 2, vertical: 2),
           decoration: BoxDecoration(
@@ -33,7 +35,23 @@ class HoverEmojiWidget extends StatelessWidget {
             child: AnimatedScale(
               scale: isHovered ? 1.4 : 1.3,
               duration: const Duration(milliseconds: 80),
-              child: Text(emoji, style: const TextStyle(fontSize: 15)),
+              child: SizedBox(
+                height: 15,
+                width: 15,
+                child: Center(
+                  child: Text(
+                    emoji,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      height: 1.0,
+                    ),
+                    strutStyle: const StrutStyle(
+                      height: 1.0,
+                      forceStrutHeight: true,
+                    ),
+                  ),
+                ),
+              ),
             ),
           ),
         ),

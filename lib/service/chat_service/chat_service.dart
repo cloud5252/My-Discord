@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive_ce/hive.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/models/messsage_model.dart';
@@ -222,6 +223,36 @@ class ChatService {
     } catch (e) {
       print("❌ Edit error: $e");
     }
+  }
+
+  void syncReactionToFirestore({
+    required MessageModel message,
+    required Map<String, List<String>> reactions,
+  }) {
+    // Note: 'await' nahi lagaya, ye fire-and-forget hai
+    FirebaseFirestore.instance
+        .collection('chat_rooms')
+        .doc(message.chatRoomId)
+        .collection('messages')
+        .doc(message.firebaseId)
+        .set({'reactions': reactions}, SetOptions(merge: true)).catchError((e) {
+      debugPrint('⚠️ Firestore reaction sync failed: $e');
+      // Yahan chahen to retry-logic ya error-snackbar bhi laga sakte hain
+    });
+  }
+
+  void syncPinToFirestore({
+    required MessageModel message,
+    required bool isPinned,
+  }) {
+    FirebaseFirestore.instance
+        .collection('chat_rooms')
+        .doc(message.chatRoomId)
+        .collection('messages')
+        .doc(message.firebaseId)
+        .set({'isPinned': isPinned}, SetOptions(merge: true)).catchError((e) {
+      debugPrint('⚠️ Firestore pin sync failed: $e');
+    });
   }
 }
 

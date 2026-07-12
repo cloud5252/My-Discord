@@ -17,6 +17,7 @@ class DmSideView extends StackedView<DmSideViewModel> {
       BuildContext context, DmSideViewModel viewModel, Widget? child) {
     return Container(
       decoration: BoxDecoration(
+          color: const Color(0xFF121214),
           borderRadius: BorderRadius.circular(4),
           border: Border(
               left: BorderSide(
@@ -145,11 +146,11 @@ class _SidebarTab extends StatelessWidget {
           builder: (isPressed) => Container(
             decoration: BoxDecoration(
               color: isPressed
-                  ? const Color(0xFF7585ff).withOpacity(0.33)
+                  ? const Color(0xFF363638)
                   : isActive
-                      ? const Color(0xFF5865F2).withOpacity(0.3)
+                      ? const Color(0xFF2c2c30)
                       : isHovered
-                          ? const Color(0xFF5865F2).withOpacity(0.15)
+                          ? const Color(0xFF1e1e1f)
                           : Colors.transparent,
               borderRadius: BorderRadius.circular(8),
             ),

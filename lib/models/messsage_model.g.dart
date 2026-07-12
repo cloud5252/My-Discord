@@ -32,13 +32,14 @@ class MessageModelAdapter extends TypeAdapter<MessageModel> {
       firebaseId: fields[9] as String?,
       isPending: fields[10] as bool?,
       isEdited: fields[11] as bool?,
-    );
+      isPinned: fields[16] as bool?,
+    )..reactionsJson = fields[15] as String?;
   }
 
   @override
   void write(BinaryWriter writer, MessageModel obj) {
     writer
-      ..writeByte(15)
+      ..writeByte(17)
       ..writeByte(0)
       ..write(obj.chatRoomId)
       ..writeByte(1)
@@ -68,7 +69,11 @@ class MessageModelAdapter extends TypeAdapter<MessageModel> {
       ..writeByte(13)
       ..write(obj.replyToText)
       ..writeByte(14)
-      ..write(obj.replyToSender);
+      ..write(obj.replyToSender)
+      ..writeByte(15)
+      ..write(obj.reactionsJson)
+      ..writeByte(16)
+      ..write(obj.isPinned);
   }
 
   @override

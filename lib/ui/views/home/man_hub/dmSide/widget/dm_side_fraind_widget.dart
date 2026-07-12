@@ -30,7 +30,7 @@ class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
           );
         }
 
-        if (friends.isEmpty) {  
+        if (friends.isEmpty) {
           return const Center(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 20),
@@ -68,16 +68,16 @@ class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
           margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
           decoration: BoxDecoration(
             color: isPressed
-                ? const Color(0xFF7585ff).withOpacity(0.33)
+                ? const Color(0xFF363638)
                 : isActive
-                    ? const Color(0xFF5865F2).withOpacity(0.3)
+                    ? const Color(0xFF262629)
                     : isHovered
-                        ? const Color(0xFF5865F2).withOpacity(0.15)
+                        ? const Color(0xFF2f2f30).withOpacity(0.5)
                         : Colors.transparent,
             borderRadius: BorderRadius.circular(8),
           ),
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             child: Row(
               children: [
                 Stack(
@@ -108,7 +108,7 @@ class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
-                    friend.displayName, // Direct String value from Model
+                    friend.displayName,
                     style: TextStyle(
                       color: isActive || isHovered || isPressed
                           ? Colors.white

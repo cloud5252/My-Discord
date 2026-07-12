@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
+import 'package:my_discord/ui/views/home/man_hub/chat/widget/chat_message_list.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/chat_top_header.dart';
-import 'package:my_discord/ui/views/home/man_hub/chat/widget/message_bubble_widget.dart';
 import 'package:my_discord/ui/views/home/man_hub/active_or_profile/profile_panel/profile_panel_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/user_type_text_field.dart';
 import 'package:stacked/stacked.dart';
@@ -22,6 +21,7 @@ class ChatView extends StackedView<ChatViewModel> {
   Widget builder(BuildContext context, ChatViewModel viewModel, Widget? child) {
     return Container(
       decoration: BoxDecoration(
+        color: const Color(0xFF1a1a1e),
         border: Border(
           left: BorderSide(color: Colors.grey.shade500, width: 0.2),
           top: BorderSide(color: Colors.grey.shade500, width: 0.2),
@@ -41,49 +41,9 @@ class ChatView extends StackedView<ChatViewModel> {
                   child: Column(
                     children: [
                       Expanded(
-                        child: StreamBuilder<List<MessageModel>>(
-                          key: ValueKey(viewModel.receiverId),
-                          stream: viewModel.messagesStream,
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return const SizedBox.shrink();
-                            }
-                            final messages =
-                                snapshot.data?.reversed.toList() ?? [];
-                            return ListView.builder(
-                              reverse: true,
-                              cacheExtent: 1000,
-                              padding: EdgeInsets.zero,
-                              controller: viewModel.scrollController,
-                              itemCount: messages.length + 1,
-                              itemBuilder: (context, index) {
-                                if (index == messages.length) {
-                                  return Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      const SizedBox(height: 40),
-                                      _buildUserProfileHeader(),
-                                      const SizedBox(height: 20),
-                                      const Divider(color: Colors.white10),
-                                      const SizedBox(height: 10),
-                                      if (messages.isEmpty)
-                                        const Text('No messages yet!',
-                                            style: TextStyle(
-                                                color: Color(0xFF80848E))),
-                                    ],
-                                  );
-                                }
-                                final message = messages[index];
-                                return MessageBubbleWidget(
-                                  chatViewModel: viewModel,
-                                  message: message,
-                                  key: ValueKey(
-                                      message.firebaseId ?? index.toString()),
-                                );
-                              },
-                            );
-                          },
+                        child: ChatMessageList(
+                          viewModel: viewModel,
+                          chatWithName: chatWithName,
                         ),
                       ),
                       _buildMessageInput(viewModel),
@@ -111,66 +71,10 @@ class ChatView extends StackedView<ChatViewModel> {
     );
   }
 
-  Widget _buildUserProfileHeader() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const CircleAvatar(
-            radius: 40,
-            backgroundColor: Color(0xFF5865F2),
-            child: Icon(Icons.person, color: Colors.white, size: 40),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            chatWithName,
-            style: const TextStyle(
-                color: Colors.white, fontSize: 32, fontWeight: FontWeight.bold),
-          ),
-          Text(
-            chatWithName.toLowerCase(),
-            style: const TextStyle(color: Color(0xFFB5BAC1), fontSize: 20),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'This is the beginning of your direct message history with @$chatWithName.',
-            style: const TextStyle(color: Color(0xFFB5BAC1), fontSize: 14),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildMessageInput(ChatViewModel viewModel) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (viewModel.replyingTo != null)
-          Container(
-            color: const Color(0xFF2B2D31),
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-            child: Row(
-              children: [
-                const Icon(Icons.reply, color: Color(0xFF5865F2), size: 16),
-                const SizedBox(width: 8),
-                Text(
-                  'Replying to ${viewModel.replyingTo!.senderEmail ?? ""}',
-                  style: const TextStyle(
-                    color: Color(0xFF5865F2),
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Spacer(),
-                GestureDetector(
-                  onTap: () => viewModel.cancelReply(),
-                  child: const Icon(Icons.close,
-                      color: Color(0xFF80848E), size: 16),
-                ),
-              ],
-            ),
-          ),
         Padding(
           padding: const EdgeInsets.all(16),
           child: CallbackShortcuts(
@@ -196,6 +100,13 @@ class ChatView extends StackedView<ChatViewModel> {
               controller: viewModel.messageController,
               chatWithName: chatWithName,
               onSend: viewModel.sendMessage,
+              replyingTo: viewModel.replyingTo,
+              onCancelReply: viewModel.cancelReply,
+              onTapReplyPreview: () {
+                if (viewModel.replyingTo?.firebaseId != null) {
+                  viewModel.scrollToMessage(viewModel.replyingTo!.firebaseId!);
+                }
+              },
             ),
           ),
         ),

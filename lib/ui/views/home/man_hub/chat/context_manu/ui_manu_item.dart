@@ -40,12 +40,13 @@ class ContextMenuOverlay extends StatefulWidget {
   final Offset position;
   final List<ContextMenuItem> items;
   final VoidCallback onDismiss;
-
+  final ValueChanged<String>? onEmojiSelected;
   const ContextMenuOverlay({
     super.key,
     required this.position,
     required this.items,
     required this.onDismiss,
+    this.onEmojiSelected,
   });
 
   @override
@@ -103,7 +104,7 @@ class _ContextMenuOverlayState extends State<ContextMenuOverlay>
       }
       if (localLeft < 8) localLeft = 8;
 
-      const double bottomSafeArea = 70.0;
+      const double bottomSafeArea = 105.0;
       if (localTop + menuHeight > screenSize.height - bottomSafeArea) {
         localTop = (screenSize.height - bottomSafeArea) - menuHeight;
       }
@@ -149,11 +150,11 @@ class _ContextMenuOverlayState extends State<ContextMenuOverlay>
                     width: 220.0,
                     padding: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF1B1E3F),
+                      color: const Color(0xFF28282d),
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(
-                        color: const Color(0xFF2B305B),
-                        width: 1,
+                        color: Colors.grey.shade700,
+                        width: 0.5,
                       ),
                       boxShadow: [
                         BoxShadow(
@@ -166,27 +167,52 @@ class _ContextMenuOverlayState extends State<ContextMenuOverlay>
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
+                        Padding(
+                          // const hataya
+                          padding: const EdgeInsets.symmetric(vertical: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              HoverEmojiWidget(emoji: '❤️', tooltip: 'Heart'),
                               HoverEmojiWidget(
-                                  emoji: '🔖', tooltip: 'Bookmark'),
+                                emoji: '❤️',
+                                tooltip: 'Heart',
+                                onTap: () {
+                                  widget.onEmojiSelected?.call('❤️');
+                                  widget.onDismiss();
+                                },
+                              ),
                               HoverEmojiWidget(
-                                  emoji: '👍', tooltip: 'Thumbs Up'),
-                              HoverEmojiWidget(emoji: '😊', tooltip: 'Smile'),
+                                emoji: '🔖',
+                                tooltip: 'Bookmark',
+                                onTap: () {
+                                  widget.onEmojiSelected?.call('🔖');
+                                  widget.onDismiss();
+                                },
+                              ),
+                              HoverEmojiWidget(
+                                emoji: '👍',
+                                tooltip: 'Thumbs Up',
+                                onTap: () {
+                                  widget.onEmojiSelected?.call('👍');
+                                  widget.onDismiss();
+                                },
+                              ),
+                              HoverEmojiWidget(
+                                emoji: '😊',
+                                tooltip: 'Smile',
+                                onTap: () {
+                                  widget.onEmojiSelected?.call('😊');
+                                  widget.onDismiss();
+                                },
+                              ),
                             ],
                           ),
                         ),
                         ...widget.items.map((item) {
                           if (item.isDivider) {
-                            return const Padding(
-                              padding: EdgeInsets.symmetric(vertical: 4),
-                              child:
-                                  Divider(height: 1, color: Color(0xFF2B305B)),
-                            );
+                            return Divider(
+                                thickness: 0.5,
+                                color: Colors.grey.withOpacity(0.5));
                           }
                           return _MenuTile(
                             item: item,
@@ -194,6 +220,7 @@ class _ContextMenuOverlayState extends State<ContextMenuOverlay>
                               widget.onDismiss();
                               item.onTap();
                             },
+                            onEmojiSelected: widget.onEmojiSelected,
                           );
                         }).toList(),
                       ],
@@ -212,8 +239,9 @@ class _ContextMenuOverlayState extends State<ContextMenuOverlay>
 class _MenuTile extends StatefulWidget {
   final ContextMenuItem item;
   final VoidCallback onTap;
-
-  const _MenuTile({required this.item, required this.onTap});
+  final ValueChanged<String>? onEmojiSelected;
+  const _MenuTile(
+      {required this.item, required this.onTap, this.onEmojiSelected});
 
   @override
   State<_MenuTile> createState() => _MenuTileState();
@@ -222,7 +250,6 @@ class _MenuTile extends StatefulWidget {
 class _MenuTileState extends State<_MenuTile> {
   bool _hovered = false;
 
-  // Key Container pe hai — renderBox sahi milega
   final GlobalKey _containerKey = GlobalKey();
 
   @override
@@ -233,15 +260,23 @@ class _MenuTileState extends State<_MenuTile> {
       onEnter: (_) {
         setState(() => _hovered = true);
         if (widget.item.hasSubmenu) {
+          EmojiSubmenuController.cancelHide();
           final renderBox =
               _containerKey.currentContext!.findRenderObject() as RenderBox;
           final position = renderBox.localToGlobal(Offset.zero);
-          EmojiSubmenuController.show(context, position);
+          EmojiSubmenuController.show(context, position, (String value) {
+            widget.onEmojiSelected?.call(value);
+          });
         } else {
-          EmojiSubmenuController.hide();
+          EmojiSubmenuController.scheduleHide();
         }
       },
-      onExit: (_) => setState(() => _hovered = false),
+      onExit: (_) {
+        setState(() => _hovered = false);
+        if (widget.item.hasSubmenu) {
+          EmojiSubmenuController.scheduleHide();
+        }
+      },
       child: GestureDetector(
         onTap: widget.onTap,
         child: Container(

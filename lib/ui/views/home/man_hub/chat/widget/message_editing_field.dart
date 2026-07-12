@@ -29,12 +29,23 @@ class MessageEditingField extends StatelessWidget {
             },
             child: TextField(
               controller: chatViewModel.edittextController,
-              autofocus: true,
-              style: const TextStyle(color: Color(0xFFDBDEE1), fontSize: 15),
-              decoration: const InputDecoration(
-                border: InputBorder.none,
+              style: const TextStyle(color: Colors.white, fontSize: 14),
+              cursorColor: Colors.white,
+              textAlignVertical: TextAlignVertical.center,
+              decoration: InputDecoration(
+                hoverColor: Colors.transparent,
                 contentPadding:
-                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      const BorderSide(color: Color(0xFF4E5058), width: 0.5),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide:
+                      const BorderSide(color: Color(0xFF4E5058), width: 1.8),
+                ),
               ),
               onSubmitted: (_) => chatViewModel.sendOrEditMessage(),
             ),

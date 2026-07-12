@@ -8,6 +8,7 @@ import 'package:my_discord/service/hive_service/hive_service.dart';
 import 'package:my_discord/ui/dialogs/bottom_sheets/notice/notice_sheet.dart';
 import 'package:my_discord/ui/dialogs/add_user/add_user_dialog.dart';
 import 'package:my_discord/ui/dialogs/confirm_action/add_user_dialog.dart';
+import 'package:my_discord/ui/dialogs/pin_messages/pin_messag_dialog.dart';
 import 'package:my_discord/ui/views/auth_view/auth_view.dart';
 import 'package:my_discord/ui/views/home/home_view.dart';
 import 'package:my_discord/ui/views/startup/startup_view.dart';
@@ -45,6 +46,7 @@ import 'package:stacked_services/stacked_services.dart';
   dialogs: [
     StackedDialog(classType: InfoAlertDialog),
     StackedDialog(classType: AddUserDialog),
+    StackedDialog(classType: PinMessageDialog),
 
     // @stacked-dialog
   ],

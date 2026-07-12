@@ -18,10 +18,10 @@ class FilterTabStyle {
       return const Color(0xFF4E5DFF);
     }
 
-    if (isPressed) return const Color(0xFF7585ff).withOpacity(0.2);
-    if (isActive) return const Color(0xFF7585ff).withOpacity(0.33);
-    if (isHovered) return const Color(0xFF7585ff).withOpacity(0.33);
-    return const Color(0xFF5865F2).withOpacity(0.12);
+    if (isPressed) return const Color(0xFF333338);
+    if (isActive) return const Color(0xFF333338).withOpacity(0.55);
+    if (isHovered) return const Color(0xFF333338).withOpacity(0.33);
+    return const Color(0xFF121214).withOpacity(0.12);
   }
 
   static Color getTextColor({

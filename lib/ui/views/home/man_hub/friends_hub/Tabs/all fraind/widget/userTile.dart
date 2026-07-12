@@ -36,7 +36,7 @@ class Usertile extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     color: isHovered
-                        ? const Color(0xFF5865F2).withOpacity(0.55)
+                        ? const Color(0xFF333338).withOpacity(0.22)
                         : Colors.transparent,
                     borderRadius: BorderRadius.circular(8),
                   ),

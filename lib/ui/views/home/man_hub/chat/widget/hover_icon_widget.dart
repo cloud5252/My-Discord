@@ -47,7 +47,7 @@ class _HoverIconWidgetState extends State<HoverIconWidget> {
                     : Matrix4.identity(),
                 child: Icon(
                   widget.icon,
-                  size: 18,
+                  size: 15,
                   color: isHovered ? Colors.white : const Color(0xFF8A8E94),
                 ),
               ),

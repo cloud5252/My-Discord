@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive_ce/hive.dart';
 
@@ -48,6 +50,21 @@ class MessageModel extends HiveObject {
 
   @HiveField(14)
   String? replyToSender;
+  @HiveField(15)
+  String? reactionsJson;
+  @HiveField(16)
+  bool? isPinned;
+  Map<String, List<String>> get reactions {
+    if (reactionsJson == null || reactionsJson!.isEmpty) return {};
+    final decoded = jsonDecode(reactionsJson!) as Map<String, dynamic>;
+    return decoded.map(
+      (key, value) => MapEntry(key, List<String>.from(value)),
+    );
+  }
+
+  set reactions(Map<String, List<String>> value) {
+    reactionsJson = jsonEncode(value);
+  }
 
   MessageModel({
     required this.chatRoomId,
@@ -65,10 +82,11 @@ class MessageModel extends HiveObject {
     this.firebaseId,
     this.isPending = false,
     this.isEdited = false,
+    this.isPinned = false,
   });
 
   factory MessageModel.fromMap(Map<String, dynamic> map) {
-    return MessageModel(
+    final message = MessageModel(
       chatRoomId: map['chatRoomId'],
       senderId: map['senderId'],
       senderEmail: map['senderEmail'],
@@ -84,9 +102,16 @@ class MessageModel extends HiveObject {
       replyToMessageId: map['replyToMessageId'],
       replyToText: map['replyToText'],
       replyToSender: map['replyToSender'],
+      isPinned: map['isPinned'] ?? false,
     );
-  }
 
+    final rawReactions = map['reactions'] as Map<String, dynamic>? ?? {};
+    message.reactions = rawReactions.map(
+      (key, value) => MapEntry(key, List<String>.from(value)),
+    );
+
+    return message;
+  }
   Map<String, dynamic> toJson() {
     return {
       'chatRoomId': chatRoomId,
@@ -103,6 +128,8 @@ class MessageModel extends HiveObject {
       'replyToMessageId': replyToMessageId,
       'replyToText': replyToText,
       'replyToSender': replyToSender,
+      'reactions': reactions,
+      'isPinned': isPinned,
     };
   }
 }
