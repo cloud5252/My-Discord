@@ -19,6 +19,7 @@ import '../service/chat_service/chatting_friend_svc.dart';
 import '../service/chat_service/user_service.dart';
 import '../service/chat_service/viewService.dart';
 import '../service/hive_service/hive_service.dart';
+import '../ui/dialogs/unpin_message/unpin_message_dialog_model.dart';
 
 final locator = StackedLocator.instance;
 
@@ -42,4 +43,5 @@ Future<void> setupLocator({
   locator.registerLazySingleton(() => HiveService());
   locator.registerLazySingleton(() => ChattingFriendService());
   locator.registerLazySingleton(() => AddOrFetchFriendsService());
+  locator.registerLazySingleton(() => UnpinMessageDialogModel());
 }

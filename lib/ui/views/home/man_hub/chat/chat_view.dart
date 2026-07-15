@@ -23,8 +23,7 @@ class ChatView extends StackedView<ChatViewModel> {
       decoration: BoxDecoration(
         color: const Color(0xFF1a1a1e),
         border: Border(
-          left: BorderSide(color: Colors.grey.shade500, width: 0.2),
-          top: BorderSide(color: Colors.grey.shade500, width: 0.2),
+          top: BorderSide(color: Colors.grey.shade700, width: 0.2),
         ),
       ),
       child: Column(
@@ -57,7 +56,11 @@ class ChatView extends StackedView<ChatViewModel> {
                       return const SizedBox.shrink();
                     }
                     if (showProfile) {
-                      return ProfilePanel(userId: chatWithId);
+                      return Padding(
+                        padding: const EdgeInsets.only(
+                            right: 10, top: 10, bottom: 10),
+                        child: ProfilePanel(userId: chatWithId),
+                      );
                     } else {
                       return const SizedBox.shrink();
                     }
@@ -76,7 +79,7 @@ class ChatView extends StackedView<ChatViewModel> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
           child: CallbackShortcuts(
             bindings: {
               const SingleActivator(LogicalKeyboardKey.enter): () {

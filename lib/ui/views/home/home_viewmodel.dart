@@ -14,17 +14,15 @@ import 'package:stacked_services/stacked_services.dart';
 class HomeViewModel extends ReactiveViewModel implements Initialisable {
   final friendsBox = Hive.box<HiveUserModel>('friends_box');
 
-  final _auth = locator<Authentication>();
   final _bottomSheetService = locator<BottomSheetService>();
   final _navigationService = locator<NavigationService>();
+  final _firestore = FirebaseFirestore.instance;
+  final _auth = locator<Authentication>();
   final _viewService = locator<ViewService>();
 
   Widget get currentView => _viewService.currentView;
   String get appBarTitle => _viewService.currentTitle;
-
   String? get currentId => _viewService.currentId;
-
-  final _firestore = FirebaseFirestore.instance;
 
   @override
   List<ListenableServiceMixin> get listenableServices => [_viewService];

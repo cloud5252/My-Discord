@@ -6,16 +6,16 @@ import 'package:my_discord/ui/common/app_colors.dart';
 import 'package:my_discord/ui/common/helper.dart';
 import 'package:my_discord/ui/common/hover_builder.dart';
 import 'package:my_discord/ui/common/ui_helpers.dart';
-import 'package:my_discord/ui/dialogs/pin_messages/pin_messag_dialog_model.dart';
 import 'package:my_discord/ui/dialogs/unpin_message/widget/dialog_action_button.dart';
+import 'package:my_discord/ui/dialogs/unpin_message/unpin_message_dialog_model.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
-class PinMessageDialog extends StackedView<PinMessageDialogModel> {
+class UnpinMessageDialog extends StackedView<UnpinMessageDialogModel> {
   final DialogRequest request;
   final Function(DialogResponse) completer;
 
-  const PinMessageDialog({
+  const UnpinMessageDialog({
     Key? key,
     required this.request,
     required this.completer,
@@ -24,7 +24,7 @@ class PinMessageDialog extends StackedView<PinMessageDialogModel> {
   @override
   Widget builder(
     BuildContext context,
-    PinMessageDialogModel viewModel,
+    UnpinMessageDialogModel viewModel,
     Widget? child,
   ) {
     final message = request.data as MessageModel?;
@@ -49,7 +49,7 @@ class PinMessageDialog extends StackedView<PinMessageDialogModel> {
                   children: [
                     Expanded(
                       child: Text(
-                        request.title ?? '',
+                        request.title ?? 'Unpin Message',
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w800,
@@ -84,15 +84,15 @@ class PinMessageDialog extends StackedView<PinMessageDialogModel> {
                 verticalSpaceSmall,
 
                 // Description
-                if (request.description != null)
-                  Text(
-                    request.description!,
-                    style: const TextStyle(
-                      fontSize: 15,
-                      color: Color(0xFFB5BAC1),
-                      height: 1.4,
-                    ),
+                Text(
+                  request.description ??
+                      'You sure you want to remove this pinned message?',
+                  style: const TextStyle(
+                    fontSize: 15,
+                    color: Color(0xFFB5BAC1),
+                    height: 1.4,
                   ),
+                ),
                 verticalSpaceMedium,
 
                 // Message preview card
@@ -164,6 +164,39 @@ class PinMessageDialog extends StackedView<PinMessageDialogModel> {
 
                 verticalSpaceMedium,
 
+                // PROTIP section
+                RichText(
+                  text: const TextSpan(
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: Color(0xFFB5BAC1),
+                      height: 1.5,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'PROTIP: ',
+                        style: TextStyle(
+                          color: Color(0xFF3BA55D),
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      TextSpan(text: 'You can hold down '),
+                      TextSpan(
+                        text: 'shift',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: ' when clicking '),
+                      TextSpan(
+                        text: 'unpin message',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      TextSpan(text: ' to bypass this confirmation entirely.'),
+                    ],
+                  ),
+                ),
+
+                verticalSpaceMedium,
+
                 // Buttons
                 Row(
                   children: [
@@ -178,8 +211,8 @@ class PinMessageDialog extends StackedView<PinMessageDialogModel> {
                     horizontalSpaceSmall,
                     Expanded(
                       child: DialogActionButton(
-                        label: request.mainButtonTitle ?? 'Oh yeah. Pin it',
-                        backgroundColor: const Color(0xFF5865F2),
+                        label: request.mainButtonTitle ?? 'Remove it please!',
+                        backgroundColor: const Color(0xFFED4245),
                         fontWeight: FontWeight.w600,
                         onTap: () => completer(DialogResponse(confirmed: true)),
                       ),
@@ -204,8 +237,8 @@ class PinMessageDialog extends StackedView<PinMessageDialogModel> {
   }
 
   @override
-  PinMessageDialogModel viewModelBuilder(BuildContext context) =>
-      PinMessageDialogModel();
+  UnpinMessageDialogModel viewModelBuilder(BuildContext context) =>
+      UnpinMessageDialogModel();
 }
 
 Widget _buildReactionsPreview(MessageModel message) {

@@ -24,6 +24,7 @@ class FraindHubView extends StackedView<FraindHubViewModel> {
         color: const Color(0xFF1a1a1e),
         border: Border(
           left: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
+          top: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
         ),
       ),
       child: Column(

@@ -9,6 +9,8 @@ import 'package:my_discord/ui/dialogs/bottom_sheets/notice/notice_sheet.dart';
 import 'package:my_discord/ui/dialogs/add_user/add_user_dialog.dart';
 import 'package:my_discord/ui/dialogs/confirm_action/add_user_dialog.dart';
 import 'package:my_discord/ui/dialogs/pin_messages/pin_messag_dialog.dart';
+import 'package:my_discord/ui/dialogs/unpin_message/unpin_message_dialog.dart';
+import 'package:my_discord/ui/dialogs/unpin_message/unpin_message_dialog_model.dart';
 import 'package:my_discord/ui/views/auth_view/auth_view.dart';
 import 'package:my_discord/ui/views/home/home_view.dart';
 import 'package:my_discord/ui/views/startup/startup_view.dart';
@@ -36,6 +38,7 @@ import 'package:stacked_services/stacked_services.dart';
     LazySingleton(classType: HiveService),
     LazySingleton(classType: ChattingFriendService),
     LazySingleton(classType: AddOrFetchFriendsService),
+    LazySingleton(classType: UnpinMessageDialogModel),
 
     // @stacked-service
   ],
@@ -47,6 +50,7 @@ import 'package:stacked_services/stacked_services.dart';
     StackedDialog(classType: InfoAlertDialog),
     StackedDialog(classType: AddUserDialog),
     StackedDialog(classType: PinMessageDialog),
+    StackedDialog(classType: UnpinMessageDialog),
 
     // @stacked-dialog
   ],

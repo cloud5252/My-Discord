@@ -1,7 +1,5 @@
 // ignore_for_file: deprecated_member_use
 
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/dm_side_view_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/widget/dm_side_fraind_widget.dart';
@@ -16,45 +14,50 @@ class DmSideView extends StackedView<DmSideViewModel> {
   Widget builder(
       BuildContext context, DmSideViewModel viewModel, Widget? child) {
     return Container(
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
           color: const Color(0xFF121214),
-          borderRadius: BorderRadius.circular(4),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(15),
+          ),
           border: Border(
-              left: BorderSide(
-            color: Colors.grey.shade700,
-            width: 0.1,
-          ))),
+            top: BorderSide(
+              color: Colors.grey.shade700,
+              width: 0.2,
+            ),
+            left: BorderSide(
+              color: Colors.grey.shade700,
+              width: 0.2,
+            ),
+          )),
       child: Column(
         children: [
-          const SizedBox(height: 5),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
+            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: BackdropFilter(
-                filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
-                child: Container(
-                  height: 35,
-                  color: Colors.white.withOpacity(0.1),
-                  width: double.infinity,
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10, vertical: 3),
-                    child: Center(
-                      child: Text(
-                        'Find or start a conversation',
-                        style: TextStyle(
-                            fontSize: 13, fontWeight: FontWeight.bold),
-                      ),
-                    ),
+              child: Container(
+                height: 35,
+                width: double.infinity,
+                color: Colors.white.withOpacity(0.1),
+                alignment: Alignment.center,
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: const Text(
+                  'Find or start a conversation',
+                  style: TextStyle(
+                    fontSize: 13,
+                    fontWeight: FontWeight.bold,
                   ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
           ),
-          Divider(
-            thickness: 0.4,
+          Container(
+            height: 0.5,
             color: Colors.grey.shade700,
           ),
+          const SizedBox(height: 6),
           _SidebarTab(
             icon: Icons.people,
             label: 'Friends',

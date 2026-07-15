@@ -10,9 +10,11 @@ class ProfilePanel extends StatelessWidget {
     return Container(
       width: 340,
       height: double.infinity,
+      clipBehavior: Clip.antiAlias,
       decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
         border: Border(
-          left: BorderSide(color: Colors.grey.shade700, width: 0.5),
+          left: BorderSide(color: Colors.grey.shade700, width: 0.1),
         ),
       ),
       child: Column(

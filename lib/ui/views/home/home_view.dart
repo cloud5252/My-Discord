@@ -1,4 +1,4 @@
-// ignore_for_file: camel_case_types
+// ignore_for_file: deprecated_member_use, camel_case_types
 
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
@@ -46,20 +46,13 @@ class HomeView extends StackedView<HomeViewModel> {
         ),
       ),
       body: Container(
-        decoration: const BoxDecoration(color: Color(0XFF121214)
-            // gradient: LinearGradient(
-            //   begin: Alignment.topLeft,
-            //   end: Alignment.bottomRight,
-            //   colors: [
-            //     Color(0xFF1e1f7b),
-            //     Color(0xFF1a1b2e),
-            //   ],
-            //   stops: [
-            //     0.0,
-            //     0.8,
-            //   ],
-            // ),
-            ),
+        decoration: BoxDecoration(
+          color: const Color(0XFF121214),
+          border: Border(
+            left: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
+            top: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
+          ),
+        ),
         child: Row(
           children: [
             const SizedBox(width: 50, child: ServerSidebar()),

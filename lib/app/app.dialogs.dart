@@ -10,11 +10,13 @@ import 'app.locator.dart';
 import '../ui/dialogs/add_user/add_user_dialog.dart';
 import '../ui/dialogs/confirm_action/add_user_dialog.dart';
 import '../ui/dialogs/pin_messages/pin_messag_dialog.dart';
+import '../ui/dialogs/unpin_message/unpin_message_dialog.dart';
 
 enum DialogType {
   infoAlert,
   addUser,
   pinMessage,
+  unpinMessage,
 }
 
 void setupDialogUi() {
@@ -27,6 +29,8 @@ void setupDialogUi() {
         AddUserDialog(request: request, completer: completer),
     DialogType.pinMessage: (context, request, completer) =>
         PinMessageDialog(request: request, completer: completer),
+    DialogType.unpinMessage: (context, request, completer) =>
+        UnpinMessageDialog(request: request, completer: completer),
   };
 
   dialogService.registerCustomDialogBuilders(builders);

@@ -17,12 +17,14 @@ class PinnedMessagesController {
       return;
     }
 
+    final overlay = Overlay.of(context);
+
     _entry = OverlayEntry(
       builder: (ctx) => Stack(
         children: [
           Positioned.fill(
             child: GestureDetector(
-              behavior: HitTestBehavior.translucent,
+              behavior: HitTestBehavior.opaque,
               onTap: hide,
             ),
           ),
@@ -35,7 +37,7 @@ class PinnedMessagesController {
       ),
     );
 
-    Overlay.of(context).insert(_entry!);
+    overlay.insert(_entry!);
   }
 
   static void hide() {

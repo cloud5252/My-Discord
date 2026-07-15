@@ -18,7 +18,7 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey _pinButtonKey = GlobalKey();
+    final GlobalKey pinButtonKey = GlobalKey();
     final chatViewModel = getParentViewModel<ChatViewModel>(context);
     return Container(
       height: 48,
@@ -33,7 +33,6 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
       ),
       child: LayoutBuilder(
         builder: (context, constraints) {
-          // Available width ke hisaab se search bar ka max size decide karo
           final isNarrow = constraints.maxWidth < 500;
           // final showSearch = searchMaxWidth > 30;
           return Row(
@@ -60,11 +59,11 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
                 onTap: () {},
               ),
               _HeaderIcon(
-                key: _pinButtonKey,
+                key: pinButtonKey,
                 icon: Icons.push_pin,
                 tooltip: 'Pinned Messages',
                 onTap: () {
-                  final renderBox = _pinButtonKey.currentContext!
+                  final renderBox = pinButtonKey.currentContext!
                       .findRenderObject() as RenderBox;
                   final position = renderBox.localToGlobal(Offset.zero);
                   final size = renderBox.size;
