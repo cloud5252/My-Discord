@@ -9,7 +9,7 @@ class FriendsSearchBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: double.infinity,
-      height: 36,
+      height: 40,
       child: TextField(
         style: const TextStyle(color: Colors.white, fontSize: 14),
         cursorColor: Colors.white,

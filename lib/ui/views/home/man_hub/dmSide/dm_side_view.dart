@@ -13,107 +13,116 @@ class DmSideView extends StackedView<DmSideViewModel> {
   @override
   Widget builder(
       BuildContext context, DmSideViewModel viewModel, Widget? child) {
-    return Container(
-      clipBehavior: Clip.antiAlias,
-      decoration: BoxDecoration(
-          color: const Color(0xFF121214),
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(15),
-          ),
-          border: Border(
-            top: BorderSide(
-              color: Colors.grey.shade700,
-              width: 0.2,
-            ),
-            left: BorderSide(
-              color: Colors.grey.shade700,
-              width: 0.2,
-            ),
-          )),
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Container(
-                height: 35,
-                width: double.infinity,
-                color: Colors.white.withOpacity(0.1),
-                alignment: Alignment.center,
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: const Text(
-                  'Find or start a conversation',
-                  style: TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.bold,
-                  ),
-                  overflow: TextOverflow.ellipsis,
-                ),
+    return Stack(
+      children: [
+        Container(
+          clipBehavior: Clip.antiAlias,
+          decoration: BoxDecoration(
+              color: const Color(0xFF121214),
+              borderRadius: const BorderRadius.only(
+                topLeft: Radius.circular(15),
               ),
-            ),
-          ),
-          Container(
-            height: 0.5,
-            color: Colors.grey.shade700,
-          ),
-          const SizedBox(height: 6),
-          _SidebarTab(
-            icon: Icons.people,
-            label: 'Friends',
-            tab: SidebarTab.friends,
-            viewModel: viewModel,
-          ),
-          _SidebarTab(
-            icon: Icons.mark_email_unread_outlined,
-            label: 'Message Requests',
-            tab: SidebarTab.messageRequests,
-            viewModel: viewModel,
-          ),
-          _SidebarTab(
-            icon: Icons.monetization_on_outlined,
-            label: 'Nitro',
-            tab: SidebarTab.nitro,
-            viewModel: viewModel,
-          ),
-          _SidebarTab(
-            icon: Icons.storefront_outlined,
-            label: 'Shop',
-            tab: SidebarTab.shop,
-            viewModel: viewModel,
-            badge: 'NEW',
-          ),
-          _SidebarTab(
-            icon: Icons.checklist_outlined,
-            label: 'Quests',
-            tab: SidebarTab.quests,
-            viewModel: viewModel,
-          ),
-          const Padding(
-            padding: EdgeInsets.fromLTRB(16, 16, 8, 4),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Direct Messages',
-                    style: TextStyle(
-                      color: Color(0xFF80848E),
-                      fontSize: 11,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.5,
+              border: Border(
+                top: BorderSide(
+                  color: Colors.grey.shade700,
+                  width: 0.2,
+                ),
+                left: BorderSide(
+                  color: Colors.grey.shade700,
+                  width: 0.2,
+                ),
+              )),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 7, vertical: 6),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Container(
+                    height: 36,
+                    width: double.infinity,
+                    color: Colors.white.withOpacity(0.1),
+                    alignment: Alignment.center,
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: const Text(
+                      'Find or start a conversation',
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
                 ),
-                Icon(Icons.add, color: Color(0xFF80848E), size: 18),
-              ],
-            ),
+              ),
+              Container(
+                height: 0.5,
+                color: Colors.grey.shade700,
+              ),
+              const SizedBox(height: 6),
+              _SidebarTab(
+                icon: Icons.people,
+                label: 'Friends',
+                tab: SidebarTab.friends,
+                viewModel: viewModel,
+              ),
+              _SidebarTab(
+                icon: Icons.mark_email_unread_outlined,
+                label: 'Message Requests',
+                tab: SidebarTab.messageRequests,
+                viewModel: viewModel,
+              ),
+              _SidebarTab(
+                icon: Icons.monetization_on_outlined,
+                label: 'Nitro',
+                tab: SidebarTab.nitro,
+                viewModel: viewModel,
+              ),
+              _SidebarTab(
+                icon: Icons.storefront_outlined,
+                label: 'Shop',
+                tab: SidebarTab.shop,
+                viewModel: viewModel,
+                badge: 'NEW',
+              ),
+              _SidebarTab(
+                icon: Icons.checklist_outlined,
+                label: 'Quests',
+                tab: SidebarTab.quests,
+                viewModel: viewModel,
+              ),
+              const Padding(
+                padding: EdgeInsets.fromLTRB(16, 16, 8, 4),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        'Direct Messages',
+                        style: TextStyle(
+                          color: Color(0xFF80848E),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
+                    ),
+                    Icon(Icons.add, color: Color(0xFF80848E), size: 18),
+                  ],
+                ),
+              ),
+              const Expanded(
+                child: DmSideFraindWidget(),
+              ),
+            ],
           ),
-          const Expanded(
-            child: DmSideFraindWidget(),
-          ),
-          const _BottomUserBar(),
-        ],
-      ),
+        ),
+        // Positioned(
+        //   bottom: 5,
+        //   right: 5,
+        //   left: 5,
+        //   child: _BottomUserBar(),
+        // )
+      ],
     );
   }
 
@@ -201,70 +210,6 @@ class _SidebarTab extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _BottomUserBar extends StatelessWidget {
-  const _BottomUserBar({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 52,
-      // color: const Color(0xFF232428),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        children: [
-          Stack(
-            children: [
-              const CircleAvatar(
-                radius: 16,
-                backgroundColor: Color(0xFF5865F2),
-                child: Icon(Icons.person, color: Colors.white, size: 16),
-              ),
-              Positioned(
-                bottom: 0,
-                right: 0,
-                child: Container(
-                  width: 10,
-                  height: 10,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF747F8D),
-                    shape: BoxShape.circle,
-                    border:
-                        Border.all(color: const Color(0xFF232428), width: 2),
-                  ),
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(width: 8),
-          const Expanded(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Programer',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w600)),
-                Text('Invisible',
-                    style: TextStyle(color: Color(0xFF80848E), fontSize: 11)),
-              ],
-            ),
-          ),
-          const Icon(Icons.mic_off_outlined,
-              color: Color(0xFF80848E), size: 18),
-          const SizedBox(width: 8),
-          const Icon(Icons.headset_outlined,
-              color: Color(0xFF80848E), size: 18),
-          const SizedBox(width: 8),
-          const Icon(Icons.settings_outlined,
-              color: Color(0xFF80848E), size: 18),
-        ],
       ),
     );
   }

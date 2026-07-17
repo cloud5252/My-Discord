@@ -98,7 +98,7 @@ class ChatInputField extends StatelessWidget {
                 hintMaxLines: 1,
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
-                  vertical: 20,
+                  vertical: 18,
                 ),
                 prefixIcon:
                     const Icon(Icons.add_circle, color: Color(0xFFd5d7de)),

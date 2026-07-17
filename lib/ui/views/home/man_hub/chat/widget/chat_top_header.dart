@@ -26,7 +26,15 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
       decoration: BoxDecoration(
         border: Border(
           bottom: BorderSide(
-            color: Colors.grey.shade600,
+            color: Colors.grey.shade700,
+            width: 0.2,
+          ),
+          top: BorderSide(
+            color: Colors.grey.shade700,
+            width: 0.2,
+          ),
+          left: BorderSide(
+            color: Colors.grey.shade700,
             width: 0.2,
           ),
         ),
@@ -89,7 +97,7 @@ class ChatTopHeader extends StatelessWidget implements PreferredSizeWidget {
               const SizedBox(width: 8),
               ConstrainedBox(
                 constraints: BoxConstraints(
-                  maxWidth: isNarrow ? 80 : 200,
+                  maxWidth: isNarrow ? 80 : 280,
                   minWidth: 80,
                 ),
                 child: _SearchBar(),
@@ -109,12 +117,12 @@ class _HeaderIcon extends StatelessWidget {
   final bool rotate;
 
   const _HeaderIcon({
-    Key? key, // 👈 add karo
+    Key? key,
     required this.icon,
     required this.tooltip,
     required this.onTap,
     this.rotate = false,
-  }) : super(key: key); // 👈 add karo
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -154,7 +162,8 @@ class _SearchBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 32,
+      width: double.infinity,
+      height: 35,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),

@@ -35,32 +35,38 @@ class HomeView extends StackedView<HomeViewModel> {
           )
         ],
         centerTitle: true,
-        backgroundColor: const Color(0xFF121214),
+        backgroundColor: const Color(0xFF040405),
         toolbarHeight: 33,
         automaticallyImplyLeading: false,
         titleSpacing: 16,
         title: _tabtag(title: viewModel.appBarTitle),
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(1),
-          child: Container(color: const Color(0xFF1E1F22), height: 1.5),
-        ),
       ),
       body: Container(
         decoration: BoxDecoration(
           color: const Color(0XFF121214),
           border: Border(
             left: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
-            top: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
+            // top: BorderSide(color: Colors.grey.withOpacity(0.2), width: 0.5),
           ),
         ),
-        child: Row(
+        child: Stack(
           children: [
-            const SizedBox(width: 50, child: ServerSidebar()),
-            const SizedBox(width: 270, child: DmSideView()),
-            Expanded(
-              child: viewModel.currentView is SizedBox
-                  ? const FraindHubView()
-                  : viewModel.currentView,
+            Row(
+              children: [
+                const SizedBox(width: 50, child: ServerSidebar()),
+                const SizedBox(width: 320, child: DmSideView()),
+                Expanded(
+                  child: viewModel.currentView is SizedBox
+                      ? const FraindHubView()
+                      : viewModel.currentView,
+                ),
+              ],
+            ),
+            Positioned(
+              bottom: 5,
+              left: 5,
+              right: MediaQuery.of(context).size.width - 365,
+              child: SizedBox(child: _BottomUserBar()),
             ),
           ],
         ),
@@ -149,5 +155,74 @@ class _FriendHeaderIcon extends StatelessWidget {
         ),
       ),
     ).withDiscordTooltip(tooltip, preferBelow: true);
+  }
+}
+
+class _BottomUserBar extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 52,
+      padding: const EdgeInsets.symmetric(horizontal: 8),
+      decoration: BoxDecoration(
+        color: const Color(0xFF232428),
+        borderRadius: const BorderRadius.all(Radius.circular(8)),
+        border: Border.all(
+          color: const Color(0xFF3A3C42),
+          width: 1,
+        ),
+      ),
+      child: Row(
+        children: [
+          Stack(
+            children: [
+              const CircleAvatar(
+                radius: 16,
+                backgroundColor: Color(0xFF5865F2),
+                child: Icon(Icons.person, color: Colors.white, size: 16),
+              ),
+              Positioned(
+                bottom: 0,
+                right: 0,
+                child: Container(
+                  width: 10,
+                  height: 10,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF747F8D),
+                    shape: BoxShape.circle,
+                    border:
+                        Border.all(color: const Color(0xFF232428), width: 2),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 8),
+          const Expanded(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Programer',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600)),
+                Text('Invisible',
+                    style: TextStyle(color: Color(0xFF80848E), fontSize: 11)),
+              ],
+            ),
+          ),
+          const Icon(Icons.mic_off_outlined,
+              color: Color(0xFF80848E), size: 18),
+          const SizedBox(width: 8),
+          const Icon(Icons.headset_outlined,
+              color: Color(0xFF80848E), size: 18),
+          const SizedBox(width: 8),
+          const Icon(Icons.settings_outlined,
+              color: Color(0xFF80848E), size: 18),
+        ],
+      ),
+    );
   }
 }

@@ -57,8 +57,8 @@ class ChatView extends StackedView<ChatViewModel> {
                     }
                     if (showProfile) {
                       return Padding(
-                        padding: const EdgeInsets.only(
-                            right: 10, top: 10, bottom: 10),
+                        padding:
+                            const EdgeInsets.only(right: 5, top: 5, bottom: 5),
                         child: ProfilePanel(userId: chatWithId),
                       );
                     } else {
@@ -79,7 +79,7 @@ class ChatView extends StackedView<ChatViewModel> {
       mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           child: CallbackShortcuts(
             bindings: {
               const SingleActivator(LogicalKeyboardKey.enter): () {
