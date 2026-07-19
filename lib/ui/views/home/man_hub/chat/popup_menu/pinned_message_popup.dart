@@ -196,7 +196,9 @@ class _PinnedMessageTile extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+                    padding: EdgeInsets.only(
+                      bottom: message.reactions.isNotEmpty ? 4 : 10,
+                    ),
                     child: Text(
                       message.messageText ?? '',
                       style: TextStyle(
@@ -205,6 +207,11 @@ class _PinnedMessageTile extends StatelessWidget {
                       ),
                     ),
                   ),
+                  if (message.reactions.isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: _buildReactionsPreview(message),
+                    ),
                 ],
               ),
             ),
@@ -308,4 +315,39 @@ class _UnpinButton extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildReactionsPreview(MessageModel message) {
+  return Wrap(
+    spacing: 6,
+    runSpacing: 4,
+    children: message.reactions.entries.map((entry) {
+      final emoji = entry.key;
+      final count = entry.value.length;
+
+      return Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: const Color(0xFF2B2D31),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: const Color(0xFF5865F2), width: 1),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 13)),
+            const SizedBox(width: 4),
+            Text(
+              count.toString(),
+              style: const TextStyle(
+                color: Color(0xFF5865F2),
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      );
+    }).toList(),
+  );
 }

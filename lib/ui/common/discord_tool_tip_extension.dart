@@ -88,8 +88,10 @@ class _TooltipBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Material(
+      type: MaterialType.transparency,
       child: Container(
         height: 35,
+        clipBehavior: Clip.antiAlias,
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
         decoration: BoxDecoration(
           color: const Color(0xFF262629),

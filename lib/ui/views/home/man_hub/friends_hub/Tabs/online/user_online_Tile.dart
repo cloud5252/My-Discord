@@ -3,13 +3,13 @@
 import 'package:flutter/material.dart';
 import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
 
-class Usertile extends StatelessWidget {
+class UserOnlineTile extends StatelessWidget {
   final String text;
   final String status;
   final void Function()? ontap;
   final _hovered = ValueNotifier<bool>(false);
 
-  Usertile({
+  UserOnlineTile({
     super.key,
     required this.text,
     this.status = 'offline',
@@ -45,14 +45,34 @@ class Usertile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Row(
-                    children: [ 
-                      const Stack(
+                    children: [
+                      Stack(
                         children: [
-                          CircleAvatar( 
+                          const CircleAvatar(
                             radius: 19,
                             backgroundColor: Color(0xFF80848E),
                             child: Icon(Icons.discord,
                                 color: Colors.white, size: 22),
+                          ),
+                          Positioned(
+                            right: 0,
+                            bottom: 0,
+                            child: Container(
+                              height: 12,
+                              width: 12,
+                              decoration: BoxDecoration(
+                                color: status.toLowerCase() == 'online'
+                                    ? const Color(0xFF23A55A)
+                                    : const Color(0xFF80848E),
+                                shape: BoxShape.circle,
+                                border: Border.all(
+                                  color: isHovered
+                                      ? const Color(0xFF35373C)
+                                      : const Color(0xFF1a1a1e),
+                                  width: 2,
+                                ),
+                              ),
+                            ),
                           ),
                         ],
                       ),
