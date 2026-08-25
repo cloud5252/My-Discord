@@ -1,15 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/models/user_model.dart';
-import 'package:my_discord/service/FB_Auth/Authentication.dart';
+import 'package:my_discord/service/FB_Auth/registration_auth.dart';
 import 'package:stacked/stacked.dart';
 
 class OnlineViewModel extends BaseViewModel {
-  final _auth = locator<Authentication>();
+  final _auth = locator<registrationAuth>();
   Stream<List<UserModel>> getUsersStream() {
     final myUid = _auth.getCurrentuser()?.uid;
-    final _firestore = FirebaseFirestore.instance;
-    return _firestore
+    final firestore = FirebaseFirestore.instance;
+    return firestore
         .collection('Users')
         .where('status', isEqualTo: 'online')
         .snapshots()

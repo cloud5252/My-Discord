@@ -1,7 +1,6 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:my_discord/models/hive_user_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/dmSide/dm_side_view_model.dart';
 import 'package:my_discord/ui/common/hover_builder.dart';
@@ -13,45 +12,37 @@ class DmSideFraindWidget extends ViewModelWidget<DmSideViewModel> {
 
   @override
   Widget build(BuildContext context, DmSideViewModel viewModel) {
-    final box = Hive.box<HiveUserModel>('friends_box');
+    final friends = viewModel.friends;
 
-    return StreamBuilder<BoxEvent>(
-      stream: box.watch(),
-      builder: (context, snapshot) {
-        final friends = box.values.toList();
+    if (viewModel.isBusy && friends.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+        ),
+      );
+    }
 
-        if (viewModel.isBusy && friends.isEmpty) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: CircularProgressIndicator(
-                  color: Colors.white, strokeWidth: 2),
-            ),
-          );
-        }
+    if (friends.isEmpty) {
+      return const Center(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 20),
+          child: Text(
+            'No friends yet.',
+            style: TextStyle(color: Color(0xFFB5BAC1), fontSize: 13),
+          ),
+        ),
+      );
+    }
 
-        if (friends.isEmpty) {
-          return const Center(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 20),
-              child: Text(
-                'No friends yet.',
-                style: TextStyle(color: Color(0xFFB5BAC1), fontSize: 13),
-              ),
-            ),
-          );
-        }
-
-        return ListView.builder(
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: viewModel.friends.length,
-          itemBuilder: (context, index) {
-            final friend = viewModel.friends[index];
-            return _buildFriendTile(friend, viewModel);
-          },
-        );
+    return ListView.builder(
+      padding: EdgeInsets.zero,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: friends.length,
+      itemBuilder: (context, index) {
+        final friend = friends[index];
+        return _buildFriendTile(friend, viewModel);
       },
     );
   }

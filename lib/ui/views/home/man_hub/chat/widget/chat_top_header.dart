@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_discord/service/chat_service/viewService.dart';
+import 'package:my_discord/service/viewService.dart';
 import 'package:my_discord/ui/common/discord_tool_tip_extension.dart';
 import 'package:my_discord/ui/common/hover_builder.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';

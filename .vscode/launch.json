@@ -21,6 +21,12 @@
                 "-d",
                 "windows"
             ]
+        },
+        {
+            "name": "Flutter Mobile",
+            "type": "dart",
+            "request": "launch",
+            "program": "lib/main.dart"
         }
     ]
 }

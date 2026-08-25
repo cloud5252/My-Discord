@@ -1,15 +1,15 @@
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/app/app.router.dart';
 import 'package:my_discord/models/contect_model.dart';
-import 'package:my_discord/service/FB_Auth/Authentication.dart';
-import 'package:my_discord/service/chat_service/viewService.dart';
+import 'package:my_discord/service/FB_Auth/registration_auth.dart';
+import 'package:my_discord/service/viewService.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 enum FriendFilter { online, all, pending, blocked, addfraind }
 
 class FraindHubViewModel extends BaseViewModel implements Initialisable {
-  final _auth = locator<Authentication>();
+  final _auth = locator<registrationAuth>();
   final _navigationService = locator<NavigationService>();
   final _viewService = locator<ViewService>();
 

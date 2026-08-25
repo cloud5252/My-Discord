@@ -45,10 +45,10 @@ class Usertile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
                   child: Row(
-                    children: [ 
+                    children: [
                       const Stack(
                         children: [
-                          CircleAvatar( 
+                          CircleAvatar(
                             radius: 19,
                             backgroundColor: Color(0xFF80848E),
                             child: Icon(Icons.discord,
@@ -83,17 +83,20 @@ class Usertile extends StatelessWidget {
                           ],
                         ),
                       ),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _buildActionButton(Icons.chat_bubble, isHovered, () {
-                            if (ontap != null) ontap!();
-                          }).withDiscordTooltip('Message'),
-                          const SizedBox(width: 8),
-                          _buildActionButton(Icons.more_vert, isHovered, () {})
-                              .withDiscordTooltip('More'),
-                        ],
-                      ),
+                      if (isHovered)
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildActionButton(Icons.chat_bubble, isHovered,
+                                () {
+                              if (ontap != null) ontap!();
+                            }).withDiscordTooltip('Message'),
+                            const SizedBox(width: 8),
+                            _buildActionButton(
+                                    Icons.more_vert, isHovered, () {})
+                                .withDiscordTooltip('More'),
+                          ],
+                        ),
                     ],
                   ),
                 ),

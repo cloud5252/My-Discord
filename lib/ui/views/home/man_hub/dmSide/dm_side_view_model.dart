@@ -1,8 +1,10 @@
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/models/hive_user_model.dart';
-import 'package:my_discord/service/chat_service/viewService.dart';
-import 'package:my_discord/service/hive_service/hive_service.dart';
+import 'package:my_discord/service/viewService.dart';
 import 'package:my_discord/ui/views/home/man_hub/message_request_tab/messsag_request_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/nitro_tab/nitro_view.dart';
 import 'package:my_discord/ui/views/home/man_hub/quests_tab/quests_view.dart';
@@ -15,11 +17,12 @@ enum SidebarTab { friends, messageRequests, nitro, shop, quests }
 
 class DmSideViewModel extends BaseViewModel implements Initialisable {
   final _viewService = locator<ViewService>();
-
-  final _myHiveService = locator<HiveService>();
+  final _firestore = FirebaseFirestore.instance;
 
   List<HiveUserModel> _friends = [];
   List<HiveUserModel> get friends => _friends;
+
+  StreamSubscription? _friendsSubscription;
 
   SidebarTab? _activeTab = SidebarTab.friends;
   SidebarTab? get activeTab => _activeTab;
@@ -28,16 +31,47 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
   @override
   void initialise() {
     _viewService.addListener(_onViewChanged);
-    loadFriends();
-
-    _myHiveService.watchFriends().listen((event) {
-      loadFriends();
-    });
+    _listenToFriends();
   }
 
-  void loadFriends() {
-    _friends = _myHiveService.getCachedFriends();
-    notifyListeners();
+  void _listenToFriends() {
+    final myUid = FirebaseAuth.instance.currentUser?.uid;
+    if (myUid == null) return;
+
+    setBusy(true);
+
+    _friendsSubscription = _firestore
+        .collection('Users')
+        .doc(myUid)
+        .collection('friends')
+        .snapshots()
+        .listen((snapshot) async {
+      final List<HiveUserModel> loadedFriends = [];
+
+      for (var doc in snapshot.docs) {
+        final data = doc.data();
+        final friendId = data['friendId'] as String;
+
+        final userDoc =
+            await _firestore.collection('Users').doc(friendId).get();
+        if (!userDoc.exists) continue;
+        final userData = userDoc.data()!;
+
+        loadedFriends.add(HiveUserModel(
+          uid: friendId,
+          username: userData['username'] ?? '',
+          displayName:
+              userData['displayName'] ?? data['friendName'] ?? 'Unknown',
+          email: userData['email'] ?? data['friendEmail'] ?? '',
+          createdAt: DateTime.now(),
+          status: userData['status'] ?? 'offline',
+        ));
+      }
+
+      _friends = loadedFriends;
+      setBusy(false);
+      notifyListeners();
+    });
   }
 
   void _onViewChanged() {
@@ -47,6 +81,7 @@ class DmSideViewModel extends BaseViewModel implements Initialisable {
   @override
   void dispose() {
     _viewService.removeListener(_onViewChanged);
+    _friendsSubscription?.cancel();
     super.dispose();
   }
 

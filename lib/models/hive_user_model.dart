@@ -1,25 +1,9 @@
-import 'package:hive_ce/hive.dart';
-
-part 'hive_user_model.g.dart';
-
-@HiveType(typeId: 0)
 class HiveUserModel {
-  @HiveField(0)
   final String uid;
-
-  @HiveField(1)
   final String username;
-
-  @HiveField(2)
   final String displayName;
-
-  @HiveField(3)
   final String email;
-
-  @HiveField(4)
   final DateTime createdAt;
-
-  @HiveField(5)
   final String status;
 
   HiveUserModel({
@@ -31,6 +15,19 @@ class HiveUserModel {
     required this.status,
   });
 
+  factory HiveUserModel.fromMap(Map<String, dynamic> map) {
+    return HiveUserModel(
+      uid: map['uid'] ?? '',
+      username: map['username'] ?? '',
+      displayName: map['displayName'] ?? '',
+      email: map['email'] ?? '',
+      createdAt: map['createdAt'] != null
+          ? DateTime.parse(map['createdAt'])
+          : DateTime.now(),
+      status: map['status'] ?? 'offline',
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return {
       'uid': uid,
@@ -41,5 +38,4 @@ class HiveUserModel {
       'status': status,
     };
   }
-  
 }

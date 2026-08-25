@@ -85,5 +85,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'ckjan-a8f1c.firebasestorage.app',
     measurementId: 'G-E22QEM5LB1',
   );
-
 }

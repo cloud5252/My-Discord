@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:my_discord/app/app.router.dart';
-import 'package:my_discord/service/FB_Auth/Authentication.dart';
+import 'package:my_discord/service/FB_Auth/registration_auth.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 import 'package:my_discord/app/app.locator.dart';
@@ -13,8 +13,8 @@ class SigInViewModel extends BaseViewModel implements Initialisable {
 
   final _navigationService = locator<NavigationService>();
   final _snackbarService = locator<SnackbarService>();
-  final fbauth = locator<Authentication>();
-  final auth = locator<Authentication>();
+  final fbauth = locator<registrationAuth>();
+  final auth = locator<registrationAuth>();
 
   final FocusNode passwordFocusNode = FocusNode();
   final FocusNode emailFocusNode = FocusNode();

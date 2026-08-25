@@ -6,7 +6,7 @@ class DiscordContextMenu {
   static String? _currentMessageId;
 
   static bool get isOpen => _overlayEntry != null;
-  
+
   static void hide() {
     _remove();
   }

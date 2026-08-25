@@ -122,6 +122,44 @@ class _MessageBubbleWidgetState extends State<MessageBubbleWidget> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  if (widget.showHeader &&
+                      widget.message.replyToMessageId != null)
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 2),
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Text.rich(
+                              TextSpan(
+                                children: [
+                                   
+                                  // TextSpan(
+                                  //   text:
+                                  //       '${widget.message.replyToSender ?? "Someone"}  ',
+                                  //   style: const TextStyle(
+                                  //     color: Color(0xFFDBDEE1),
+                                  //     fontWeight: FontWeight.bold,
+                                  //     fontStyle: FontStyle.italic,
+                                  //     fontSize: 13,
+                                  //   ),
+                                  // ),
+                                  TextSpan(
+                                    text: widget.message.replyToText ?? "",
+                                    style: const TextStyle(
+                                      color: Color(0xFF80848E),
+                                      fontStyle: FontStyle.italic,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
                   if (widget.showHeader)
                     Row(
                       children: [

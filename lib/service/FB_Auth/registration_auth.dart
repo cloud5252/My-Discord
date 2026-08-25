@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_ce/hive.dart';
 import 'package:my_discord/models/hive_user_model.dart';
 
-class Authentication {
-  static final Authentication _instance = Authentication._internal();
-  factory Authentication() => _instance;
-  Authentication._internal();
+// ignore: camel_case_types
+class registrationAuth {
+  static final registrationAuth _instance = registrationAuth._internal();
+  factory registrationAuth() => _instance;
+  registrationAuth._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -53,9 +53,6 @@ class Authentication {
           .collection('Users')
           .doc(firebaseUser.uid)
           .set(newUser.toMap());
-
-      var currentUserBox = Hive.box<HiveUserModel>('current_user_box');
-      await currentUserBox.put(firebaseUser.uid, newUser);
 
       return userCredential;
     } on FirebaseAuthException catch (e) {

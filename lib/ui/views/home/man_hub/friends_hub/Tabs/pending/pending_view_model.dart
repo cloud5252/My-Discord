@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_discord/app/app.locator.dart';
-import 'package:my_discord/service/FB_Auth/Authentication.dart';
+import 'package:my_discord/service/FB_Auth/registration_auth.dart';
 import 'package:stacked/stacked.dart';
 
 class PendingViewModel extends BaseViewModel implements Initialisable {
   final _firestore = FirebaseFirestore.instance;
-  final _auth = locator<Authentication>();
+  final _auth = locator<registrationAuth>();
 
   List<Map<String, dynamic>> incomingRequests = [];
   List<Map<String, dynamic>> outgoingRequests = [];

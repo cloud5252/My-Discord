@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/models/user_model.dart';
-import 'package:my_discord/service/FB_Auth/Authentication.dart';
+import 'package:my_discord/service/FB_Auth/registration_auth.dart';
 import 'package:stacked/stacked.dart';
 
 class AllFraindViewModel extends BaseViewModel {
-  final _auth = locator<Authentication>();
+  final _auth = locator<registrationAuth>();
   final _firestore = FirebaseFirestore.instance;
 
   Stream<List<UserModel>> getUsersStream() {

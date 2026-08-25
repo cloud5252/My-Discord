@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:my_discord/models/messsage_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/chat_view_model.dart';
 import 'package:my_discord/ui/views/home/man_hub/chat/widget/message_bubble_widget.dart';
@@ -29,8 +30,8 @@ class ChatMessageList extends StatelessWidget {
         );
 
         return ListView.builder(
+          scrollCacheExtent: const ScrollCacheExtent.pixels(1000),
           reverse: true,
-          cacheExtent: 1000,
           padding: EdgeInsets.zero,
           controller: viewModel.scrollController,
           itemCount: messages.length + 1,

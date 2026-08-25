@@ -5,16 +5,16 @@ import 'package:flutter/services.dart';
 import 'package:my_discord/app/app.dialogs.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/models/messsage_model.dart';
-import 'package:my_discord/service/FB_Auth/Authentication.dart';
+import 'package:my_discord/service/FB_Auth/registration_auth.dart';
 import 'package:my_discord/service/chat_service/chat_service.dart';
-import 'package:my_discord/service/chat_service/viewService.dart';
+import 'package:my_discord/service/viewService.dart';
 import 'package:stacked/stacked.dart';
 import 'package:stacked_services/stacked_services.dart';
 
 class ChatViewModel extends ReactiveViewModel implements Initialisable {
   final _dialogService = locator<DialogService>();
 
-  final _auth = locator<Authentication>();
+  final _auth = locator<registrationAuth>();
   final _chatService = locator<ChatService>();
   final viewService = locator<ViewService>();
   final String receiverId;
@@ -43,7 +43,10 @@ class ChatViewModel extends ReactiveViewModel implements Initialisable {
 
   Stream<List<MessageModel>> get messagesStream =>
       _chatService.getMessages(receiverId);
-  // Stream<List<MessageModel>>? get messagesStream => null;
+  Stream<List<MessageModel>> get pinnedMessagesStream => messagesStream.map(
+        (messages) => messages.where((m) => m.isPinned == true).toList(),
+      );
+
   @override
   void initialise() {
     messageController.addListener(notifyListeners);
@@ -121,11 +124,6 @@ class ChatViewModel extends ReactiveViewModel implements Initialisable {
     if (editingMessage != null) {
       final newText = edittextController.text.trim();
       if (newText.isEmpty) return;
-
-      editingMessage!.messageText = newText;
-      editingMessage!.isEdited = true;
-      await editingMessage!.save();
-      _chatService.emitMessages(editingMessage!.chatRoomId!);
 
       final messageToEdit = editingMessage!;
       editingMessage = null;
@@ -226,12 +224,6 @@ class ChatViewModel extends ReactiveViewModel implements Initialisable {
       reactions[emoji] = usersForEmoji;
     }
 
-    message.reactions = reactions;
-
-    notifyListeners();
-
-    await message.save();
-
     _chatService.syncReactionToFirestore(
         message: message, reactions: reactions);
   }
@@ -268,22 +260,10 @@ class ChatViewModel extends ReactiveViewModel implements Initialisable {
   }
 
   Future<void> pinMessage(MessageModel message) async {
-    message.isPinned = true;
-    await message.save();
-    notifyListeners();
-
     _chatService.syncPinToFirestore(message: message, isPinned: true);
   }
 
   Future<void> unpinMessage(MessageModel message) async {
-    message.isPinned = false;
-    await message.save();
-    notifyListeners();
-
     _chatService.syncPinToFirestore(message: message, isPinned: false);
   }
-
-  Stream<List<MessageModel>> get pinnedMessagesStream => messagesStream.map(
-        (messages) => messages.where((m) => m.isPinned == true).toList(),
-      );
 }

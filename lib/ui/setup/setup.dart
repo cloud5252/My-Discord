@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-  import 'package:stacked_services/stacked_services.dart';
+import 'package:stacked_services/stacked_services.dart';
 import 'package:my_discord/app/app.locator.dart';
 import 'package:my_discord/app/app_enums.dart';
 
